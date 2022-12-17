@@ -24,13 +24,6 @@ export default function App() {
             }}
           >
             <Stack.Screen
-              name="Categories"
-              options={{
-                headerShown: false,
-              }}
-              component={CategorieScreen}
-            />
-            <Stack.Screen
               name="Login"
               component={LoginScreen}
               options={{
@@ -38,6 +31,13 @@ export default function App() {
               }}
             />
             <Stack.Screen name="Smoke Calculator" component={UserScreen} />
+            <Stack.Screen
+              name="Categories"
+              options={{
+                headerShown: false,
+              }}
+              component={CategorieScreen}
+            />
             <Stack.Screen name="CategorieView" component={UserViewScreen} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
           </Stack.Navigator>
