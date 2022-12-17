@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "http://192.168.56.1:8000";
+const url = "https://whale-app-hkbku.ondigitalocean.app";
 
 const createUser = (data) => {
   return axios.post(url + "/send-user-info/create-user", data);

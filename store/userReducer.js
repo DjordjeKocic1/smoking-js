@@ -6,6 +6,7 @@ const userSlice = createSlice({
   initialState: {
     user: {},
     isLoading: false,
+    isUpdated:false,
   },
   reducers: {
     fetchStart: (state, action) => {

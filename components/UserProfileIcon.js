@@ -2,13 +2,17 @@ import { Dimensions, Pressable, StyleSheet, View } from "react-native";
 
 import { FontAwesome } from "@expo/vector-icons";
 
-export const UserProfileIcon = ({ user }) => {
+export const UserProfileIcon = ({ onPress }) => {
   return (
     <View style={styles.pressableContent}>
-      <Pressable style={{ padding: 10 }} android_ripple={{ color: "#c39351" }}>
+      <Pressable
+        onPress={onPress}
+        style={{ padding: 10 }}
+        android_ripple={{ color: "#c39351" }}
+      >
         <FontAwesome
           name="user"
-          size={Dimensions.get("window").width < 380 ? 15 : 20}
+          size={Dimensions.get("window").width < 380 ? 20 : 20}
           color="#c39351"
         />
       </Pressable>
@@ -18,13 +22,9 @@ export const UserProfileIcon = ({ user }) => {
 
 const styles = StyleSheet.create({
   pressableContent: {
-    position: "absolute",
-    right: 20,
-    top: 40,
-    zIndex: 99,
-    width: Dimensions.get("window").width < 380 ? 33 : 44,
-    height: Dimensions.get("window").width < 380 ? 33 : 44,
-    borderRadius:Dimensions.get("window").width < 380 ? 33 / 2 : 44 / 2,
+    width: Dimensions.get("window").width < 380 ? 44 : 44,
+    height: Dimensions.get("window").width < 380 ? 44 : 44,
+    borderRadius: Dimensions.get("window").width < 380 ? 44 / 2 : 44 / 2,
     backgroundColor: "#222325",
     borderWidth: 0,
     borderColor: "#222325",

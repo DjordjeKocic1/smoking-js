@@ -1,9 +1,11 @@
-import CategorieScreen from "./screens/CategorieScreen";
-import CategrieViewScreen from "./screens/CategorieViewScreen";
-import HomeScreen from "./screens/HomeScreen";
+import { CategorieScreen } from "./screens/CategorieScreen";
+import LoginScreen from "./screens/LoginScreen";
 import { NavigationContainer } from "@react-navigation/native";
+import { ProfileScreen } from "./screens/ProfileScreen";
 import { Provider } from "react-redux";
 import { StatusBar } from "expo-status-bar";
+import UserScreen from "./screens/UserScreen";
+import UserViewScreen from "./screens/UserViewScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { store } from "./store/store";
 
@@ -22,25 +24,22 @@ export default function App() {
             }}
           >
             <Stack.Screen
-              name="Home"
-              component={HomeScreen}
+              name="Categories"
               options={{
                 headerShown: false,
               }}
+              component={CategorieScreen}
             />
             <Stack.Screen
-              name="Smoke Calculator"
-              component={CategorieScreen}
+              name="Login"
+              component={LoginScreen}
               options={{
                 headerShown: false,
-                headerBackVisible: false,
-                headerTitleAlign: "center",
-                headerTitleStyle: {
-                  fontSize: 20,
-                },
               }}
             />
-            <Stack.Screen name="CategorieView" component={CategrieViewScreen} />
+            <Stack.Screen name="Smoke Calculator" component={UserScreen} />
+            <Stack.Screen name="CategorieView" component={UserViewScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

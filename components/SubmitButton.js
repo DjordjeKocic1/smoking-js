@@ -1,6 +1,6 @@
 import * as Font from "expo-font";
 
-import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useEffect, useState } from "react";
 
 export const SubmitButton = (props) => {
@@ -42,9 +42,10 @@ export const SubmitButton = (props) => {
 const styles = StyleSheet.create({
   submitButton: {
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 20,
     backgroundColor: "#222325",
     color: "white",
     borderRadius: 5,
+    marginTop: 20,
   },
 });

@@ -3,12 +3,12 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useLayoutEffect } from "react";
 
-function CategrieViewScreen({ navigation, route }) {
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      title: route.params.name,
-    });
-  }, [route, navigation]);
+function UserViewScreen({ navigation, route }) {
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     title: route.params.name,
+  //   });
+  // }, [route, navigation]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -39,4 +39,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CategrieViewScreen;
+export default UserViewScreen;
