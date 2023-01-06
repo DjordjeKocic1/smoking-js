@@ -1,5 +1,3 @@
-import * as Font from "expo-font";
-
 import {
   Animated,
   NativeModules,
@@ -8,158 +6,58 @@ import {
   Text,
   View,
 } from "react-native";
+import { getCategories, selectCategories } from "../store/categorieReducer";
+import { selectUser, updateUser } from "../store/userReducer";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
-import { Entypo } from "@expo/vector-icons";
-import { Fontisto } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
 import { SubmitButton } from "../components/SubmitButton";
+import { backButtonHandler } from "../helper/helpers";
+import { renderIcons } from "../helper/iconsHelper";
 
 const { UIManager } = NativeModules;
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
-export const CategorieScreen = ({ navigation }) => {
-  const [fontsLoaded, setFontsLoaded] = useState(false);
+const CategorieScreen = ({ navigation }) => {
   const [activeNextButton, setActiveNextButton] = useState(false);
-  const [contents, setContent] = useState([
-    {
-      name: "Travel",
-      icon: Fontisto,
-      iconName: "ship",
-      checked: false,
-      style: {
-        borderBottomW: 0.5,
-        color: "#222325",
-      },
-    },
-    {
-      name: "Books",
-      icon: Ionicons,
-      iconName: "book-outline",
-      checked: false,
-      style: {
-        borderBottomW: 0.5,
-        color: "#222325",
-      },
-    },
-    {
-      name: "Technology",
-      icon: Entypo,
-      iconName: "laptop",
-      checked: false,
-      style: {
-        borderBottomW: 0.5,
-        color: "#222325",
-      },
-    },
-    {
-      name: "Food & Drink",
-      icon: MaterialCommunityIcons,
-      iconName: "food-apple-outline",
-      checked: false,
-      style: {
-        borderBottomW: 0.5,
-        color: "#222325",
-      },
-    },
-    {
-      name: "Fitness",
-      icon: Ionicons,
-      iconName: "md-fitness-sharp",
-      checked: false,
-      style: {
-        borderBottomW: 0.5,
-        color: "#222325",
-      },
-    },
-    {
-      name: "Music",
-      icon: Entypo,
-      iconName: "folder-music",
-      checked: false,
-      style: {
-        borderBottomW: 0.5,
-        color: "#222325",
-      },
-    },
-    {
-      name: "Home Decor",
-      icon: Ionicons,
-      iconName: "home",
-      checked: false,
-      style: {
-        borderBottomW: 0.5,
-        color: "#222325",
-      },
-    },
-    {
-      name: "Online Courses",
-      icon: MaterialIcons,
-      iconName: "book-online",
-      checked: false,
-      style: {
-        borderBottomW: 0.5,
-        color: "#222325",
-      },
-    },
-    {
-      name: "Wardrobe",
-      icon: MaterialCommunityIcons,
-      iconName: "wardrobe-outline",
-      checked: false,
-      style: {
-        borderBottomW: 0.5,
-        color: "#222325",
-      },
-    },
-    {
-      name: "Gardening",
-      icon: MaterialIcons,
-      iconName: "eco",
-      checked: false,
-      style: {
-        borderBottomW: 0.5,
-        color: "#222325",
-      },
-    },
-    {
-      name: "Pets",
-      icon: MaterialIcons,
-      iconName: "pets",
-      checked: false,
-      style: {
-        borderBottomW: 0.5,
-        color: "#222325",
-      },
-    },
-    {
-      name: "Finance",
-      icon: MaterialCommunityIcons,
-      iconName: "finance",
-      checked: false,
-      style: {
-        borderBottomW: 0.5,
-        color: "#222325",
-      },
-    },
-  ]);
+  const { categories } = useSelector(selectCategories);
+  const { user } = useSelector(selectUser);
+  const dispatch = useDispatch();
+  const [contents, setContent] = useState([]);
+
   useEffect(() => {
-    loadFonts();
+    dispatch(getCategories());
+  }, [dispatch]);
+
+  useEffect(() => {
+    backButtonHandler(navigation, "Smoke Calculator");
   }, []);
 
-  const loadFonts = async () => {
-    await Font.loadAsync({
-      "HammersmithOne-Bold": require("../assets/fonts/HammersmithOne-Regular.ttf"),
-    });
-    setFontsLoaded(true);
-  };
+  useEffect(() => {
+    !!categories &&
+      categories.length > 0 &&
+      setContent(
+        categories.map((categorie) => {
+          return {
+            _id: categorie._id,
+            name: categorie.name,
+            checked: false,
+            style: { borderBottomW: 0.5, color: "#222325" },
+          };
+        })
+      );
+  }, [categories]);
 
   const onSubmitHandler = () => {
-    navigation.replace("Login");
+    let checkedContents = contents.filter((content) => content.checked);
+    let dataToSend = {
+      userVerified: true,
+      categories: checkedContents,
+    };
+    dispatch(updateUser(dataToSend, user._id));
+    navigation.replace("VerifyScreen");
   };
 
   const onPressCategorieHandler = (name) => {
@@ -177,10 +75,6 @@ export const CategorieScreen = ({ navigation }) => {
     );
     setActiveNextButton(true);
   };
-
-  if (!fontsLoaded) {
-    return;
-  }
 
   return (
     <View style={styles.mainContainer}>
@@ -214,11 +108,7 @@ export const CategorieScreen = ({ navigation }) => {
                   style={styles.pressableContent}
                   android_ripple={{ borderless: true }}
                 >
-                  <content.icon
-                    name={content.iconName}
-                    size={24}
-                    color={content.style.color}
-                  />
+                  {renderIcons(content.name)}
                   <Text style={styles.innerText}>{content.name}</Text>
                 </Pressable>
               </View>
@@ -297,3 +187,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+
+export default CategorieScreen;

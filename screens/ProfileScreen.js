@@ -1,8 +1,6 @@
 import * as DocumentPicker from "expo-document-picker";
-import * as Font from "expo-font";
 
 import {
-  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -18,37 +16,38 @@ import { BackButton } from "../components/BackButton";
 import { Feather } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
+import { backButtonHandler } from "../helper/helpers";
 import { useLayoutEffect } from "react";
 
 export const ProfileScreen = ({ navigation }) => {
   const { user } = useSelector(selectUser);
-  const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.user.isLoading);
-  const {isUpdated} = useSelector(selectUser)
-  const [fontsLoaded, setFontsLoaded] = useState(false);
+  const dispatch = useDispatch();
+
   const [userProfile, setUserProfile] = useState({
     name: "",
     email: "",
     address: "",
     city: "",
+    image: "",
   });
+
+  useEffect(() => {
+    backButtonHandler(navigation, "HomeScreen");
+  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: "",
-      headerShadowVisible: false,
-      headerLeft: () => (
-        <BackButton where={"Smoke Calculator"} navigation={navigation} />
+      headerTitle: !!user && user.name.toUpperCase(),
+      headerRight: () => (
+        <BackButton where={"HomeScreen"} navigation={navigation} />
       ),
+      headerStyle: {
+        backgroundColor: "#C39351",
+      },
+      headerTintColor: "white",
     });
-  }, [navigation]);
-
-  const loadFonts = async () => {
-    await Font.loadAsync({
-      "HammersmithOne-Bold": require("../assets/fonts/HammersmithOne-Regular.ttf"),
-    });
-    setFontsLoaded(true);
-  };
+  }, [navigation, user]);
 
   const onNameChangeHandler = (enteredValue) => {
     setUserProfile((prev) => {
@@ -83,32 +82,41 @@ export const ProfileScreen = ({ navigation }) => {
     });
   };
   const submittionHandler = () => {
-    const data = { ...userProfile };
-    dispatch(updateUser(data, user._id));
+    const dataTosend = {
+      email: userProfile.email,
+      name: userProfile.name,
+      userBasicInfo: {
+        address: userProfile.address,
+        city: userProfile.city,
+      },
+    };
+    dispatch(updateUser(dataTosend, user._id));
   };
 
   const testFile = () => {
     DocumentPicker.getDocumentAsync({ type: "image/*" })
-      .then((res) => console.log(res))
+      .then((res) => {
+        dispatch(updateUser({ image: res.uri }, user._id));
+      })
       .catch((err) => console.log(err));
   };
-
-  useEffect(() => {
-    loadFonts();
-  }, []);
 
   useEffect(() => {
     setUserProfile({
       email: !!user.email ? user.email : "",
       name: !!user.name ? user.name : "",
-      address: !!user.address ? user.address : "",
-      city: !!user.city ? user.city : "",
+      address:
+        !!user.userBasicInfo && !!user.userBasicInfo.address
+          ? user.userBasicInfo.address
+          : "",
+      city:
+        !!user.userBasicInfo && !!user.userBasicInfo.city
+          ? user.userBasicInfo.city
+          : "",
+      image: !!user.image ? user.image : "",
     });
   }, [user]);
 
-  if (!fontsLoaded) {
-    return;
-  }
   if (isLoading) {
     return <Loading />;
   }
@@ -130,7 +138,6 @@ export const ProfileScreen = ({ navigation }) => {
               name="edit-3"
               color="black"
             />
-            <Text style={styles.headerContainer_text}>{user.name}</Text>
           </View>
           <View style={styles.inputsContent}>
             <Text>Full Name</Text>
@@ -165,7 +172,6 @@ export const ProfileScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        {isUpdated && <UserUpdatedMessage/>}
         <SubmitButton onPress={submittionHandler}>Save Changes</SubmitButton>
       </View>
     </ScrollView>
@@ -215,7 +221,7 @@ const styles = StyleSheet.create({
   },
   editIcon: {
     position: "absolute",
-    bottom: 20,
+    bottom: 0,
     right: 0,
     borderWidth: 1,
     borderColor: "#c39351",

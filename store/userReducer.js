@@ -6,17 +6,12 @@ const userSlice = createSlice({
   initialState: {
     user: {},
     isLoading: false,
-    isUpdated:false,
   },
   reducers: {
     fetchStart: (state, action) => {
       state.isLoading = true;
     },
-    create: (state, action) => {
-      state.user = action.payload;
-      state.isLoading = false;
-    },
-    update: (state, action) => {
+    fetchSuccess: (state, action) => {
       state.user = action.payload;
       state.isLoading = false;
     },
@@ -26,7 +21,7 @@ const userSlice = createSlice({
   },
 });
 
-export const { fetchStart, create, update, fetchError } = userSlice.actions;
+export const { fetchStart, fetchSuccess, fetchError } = userSlice.actions;
 
 export const createUser = (data) => {
   return (dispatch) => {
@@ -34,27 +29,27 @@ export const createUser = (data) => {
     http
       .createUser(data)
       .then((response) => {
-        dispatch(create(response.data.user));
+        dispatch(fetchSuccess(response.data.user));
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         dispatch(fetchError());
       });
   };
 };
+
 export const updateUser = (data, id) => {
   return (dispatch) => {
     dispatch(fetchStart());
     http
       .updateUser(data, id)
       .then((response) => {
-        dispatch(update(response.data.user));
+        dispatch(fetchSuccess(response.data.user));
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         dispatch(fetchError());
       });
   };
 };
+
 export const selectUser = (state) => state.user;
 export default userSlice.reducer;

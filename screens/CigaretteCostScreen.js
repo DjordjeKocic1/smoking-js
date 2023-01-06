@@ -1,6 +1,5 @@
-import * as Font from "expo-font";
-
 import {
+  Alert,
   Dimensions,
   Image,
   Pressable,
@@ -16,9 +15,10 @@ import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
+import { backButtonHandlerAlert } from "../helper/helpers";
 import { useLayoutEffect } from "react";
 
-function UserScreen({ navigation }) {
+const CigaretteCostScreen = ({ navigation }) => {
   const { user } = useSelector(selectUser);
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.user.isLoading);
@@ -30,7 +30,6 @@ function UserScreen({ navigation }) {
   const [counter, setCounter] = useState(1);
   const [amount, setAmount] = useState("");
   const [cigarettesInPack, setCigarettesInPack] = useState("");
-  const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -39,24 +38,19 @@ function UserScreen({ navigation }) {
     });
   }, [navigation]);
 
-  const loadFonts = async () => {
-    await Font.loadAsync({
-      "HammersmithOne-Bold": require("../assets/fonts/HammersmithOne-Regular.ttf"),
-    });
-    setFontsLoaded(true);
-  };
-
   useEffect(() => {
-    loadFonts();
+    backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
   }, []);
 
   useEffect(() => {
-    !!user.cigarettes ? setCounter(parseFloat(user.cigarettes)) : setCounter(1);
-    !!user.packCigarettesPrice
-      ? setAmount(user.packCigarettesPrice)
+    !!user && !!user.smokingInfo && !!user.smokingInfo.cigarettes
+      ? setCounter(parseFloat(user.smokingInfo.cigarettes))
+      : setCounter(1);
+    !!user && !!user.smokingInfo && !!user.smokingInfo.packCigarettesPrice
+      ? setAmount(user.smokingInfo.packCigarettesPrice)
       : setAmount("");
-    !!user.cigarettesInPack
-      ? setCigarettesInPack(user.cigarettesInPack)
+    !!user && !!user.smokingInfo && !!user.smokingInfo.cigarettesInPack
+      ? setCigarettesInPack(user.smokingInfo.cigarettesInPack)
       : setCigarettesInPack("");
   }, [user]);
 
@@ -81,18 +75,37 @@ function UserScreen({ navigation }) {
 
   const submittionHandler = () => {
     const dataToSend = {
-      cigarettes: counter.toString(),
-      packCigarettesPrice: amount.toString(),
-      cigarettesInPack: cigarettesInPack.toString(),
+      smokingInfo: {
+        cigarettes: counter.toString(),
+        packCigarettesPrice: amount.toString(),
+        cigarettesInPack: cigarettesInPack.toString(),
+      },
     };
+    if (amount == "" || cigarettesInPack == "") {
+      return Alert.alert(
+        "Are you sure",
+        "We need infomation about how much do you smoke and the costs",
+        [
+          {
+            text: "Cancel",
+            onPress: () => null,
+            style: "cancel",
+          },
+          {
+            text: "YES",
+            onPress: () => {
+              dispatch(updateUser(dataToSend, user._id));
+              navigation.replace("Categories");
+            },
+          },
+        ]
+      );
+    }
 
     dispatch(updateUser(dataToSend, user._id));
     navigation.replace("Categories");
   };
 
-  if (!fontsLoaded) {
-    return;
-  }
   if (isLoading) {
     return <Loading />;
   }
@@ -278,7 +291,7 @@ function UserScreen({ navigation }) {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -341,4 +354,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UserScreen;
+export default CigaretteCostScreen;

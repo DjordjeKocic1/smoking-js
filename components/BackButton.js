@@ -1,9 +1,9 @@
 import * as Font from "expo-font";
 
-import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useEffect, useState } from "react";
 
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
 export const BackButton = ({ navigation, where }) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -27,7 +27,7 @@ export const BackButton = ({ navigation, where }) => {
         onPress={() => navigation.replace(where)}
         style={styles.submitButton}
       >
-        <Ionicons name="caret-back-outline" size={24} color="black" />
+        <AntDesign name="back" size={24} color="white" />
       </Pressable>
     </View>
   );
@@ -35,7 +35,11 @@ export const BackButton = ({ navigation, where }) => {
 
 const styles = StyleSheet.create({
   submitButton: {
-    color: "white",
     borderRadius: 5,
+    padding: 10,
+  },
+  submitText: {
+    color: "white",
+    fontFamily: "HammersmithOne-Bold",
   },
 });
