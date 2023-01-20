@@ -1,7 +1,9 @@
 import * as DocumentPicker from "expo-document-picker";
 
 import {
+  Animated,
   Image,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -17,12 +19,14 @@ import { Feather } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
 import { backButtonHandler } from "../helper/helpers";
+import { countries } from "../utils/countries";
 import { useLayoutEffect } from "react";
 
 export const ProfileScreen = ({ navigation }) => {
   const { user } = useSelector(selectUser);
   const isLoading = useSelector((state) => state.user.isLoading);
   const dispatch = useDispatch();
+  const [countriesAr, setCountriesAr] = useState(countries);
 
   const [userProfile, setUserProfile] = useState({
     name: "",
@@ -82,12 +86,15 @@ export const ProfileScreen = ({ navigation }) => {
     });
   };
   const submittionHandler = () => {
+    const countrySelected = countriesAr.find((count) => count.checked);
     const dataTosend = {
       email: userProfile.email,
       name: userProfile.name,
       userBasicInfo: {
         address: userProfile.address,
         city: userProfile.city,
+        country: countrySelected.name,
+        flag: countrySelected.flag,
       },
     };
     dispatch(updateUser(dataTosend, user._id));
@@ -101,20 +108,46 @@ export const ProfileScreen = ({ navigation }) => {
       .catch((err) => console.log(err));
   };
 
+  const onCountryChangeHanlder = (country) => {
+    Animated.spring();
+    setCountriesAr(
+      countriesAr.map((cont) => {
+        if (cont.id == country.id) {
+          return { ...cont, checked: true, opacity: 1 };
+        } else {
+          return { ...cont, checked: false, opacity: 0.3 };
+        }
+      })
+    );
+  };
+
   useEffect(() => {
-    setUserProfile({
-      email: !!user.email ? user.email : "",
-      name: !!user.name ? user.name : "",
-      address:
-        !!user.userBasicInfo && !!user.userBasicInfo.address
-          ? user.userBasicInfo.address
-          : "",
-      city:
-        !!user.userBasicInfo && !!user.userBasicInfo.city
-          ? user.userBasicInfo.city
-          : "",
-      image: !!user.image ? user.image : "",
-    });
+    if (!!user) {
+      setUserProfile({
+        email: !!user.email ? user.email : "",
+        name: !!user.name ? user.name : "",
+        address:
+          !!user.userBasicInfo && !!user.userBasicInfo.address
+            ? user.userBasicInfo.address
+            : "",
+        city:
+          !!user.userBasicInfo && !!user.userBasicInfo.city
+            ? user.userBasicInfo.city
+            : "",
+        image: !!user.image ? user.image : "",
+      });
+      setCountriesAr(
+        countriesAr.map((count) =>
+          !!user.userBasicInfo &&
+          !!user.userBasicInfo.country &&
+          count.name == user.userBasicInfo.country
+            ? { ...count, checked: true, opacity: 1 }
+            : { ...count, checked: false, opacity: 0.3 }
+        )
+      );
+    }
+
+    return () => {};
   }, [user]);
 
   if (isLoading) {
@@ -158,6 +191,7 @@ export const ProfileScreen = ({ navigation }) => {
           <View style={styles.inputsContent}>
             <Text>Address</Text>
             <TextInput
+              placeholder="your street address"
               onChangeText={onAddressChangeHandler}
               value={userProfile.address}
               style={styles.input}
@@ -166,10 +200,40 @@ export const ProfileScreen = ({ navigation }) => {
           <View style={styles.inputsContent}>
             <Text>City</Text>
             <TextInput
+              placeholder="your city"
               onChangeText={onCityChangeHandler}
               value={userProfile.city}
               style={styles.input}
             />
+          </View>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.countryBoxText}>Your Country?</Text>
+          <View style={styles.countryBox}>
+            {countriesAr.map((country) => {
+              return (
+                <Pressable
+                  onPress={() => onCountryChangeHanlder(country)}
+                  android_ripple={{
+                    color: "#c39351",
+                    foreground: true,
+                    radius: 100,
+                  }}
+                  style={[
+                    styles.countryBoxFlags,
+                    {
+                      opacity: country.opacity && country.opacity,
+                    },
+                  ]}
+                  key={country.id}
+                >
+                  <Image
+                    style={{ width: 70, height: 40 }}
+                    source={{ uri: country.flag }}
+                  />
+                </Pressable>
+              );
+            })}
           </View>
         </View>
         <SubmitButton onPress={submittionHandler}>Save Changes</SubmitButton>
@@ -196,6 +260,23 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: "#222325",
     marginTop: 20,
+  },
+  countryBox: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    flexWrap: "wrap",
+  },
+  countryBoxFlags: {
+    marginBottom: 5,
+    borderWidth: 0.5,
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  countryBoxText: {
+    textAlign: "center",
+    paddingVertical: 15,
+    fontFamily: "HammersmithOne-Bold",
   },
   headerContainer: {
     position: "relative",

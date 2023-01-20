@@ -65,6 +65,8 @@ const LoginScreen = ({ navigation }) => {
       easing: Easing.bounce,
       useNativeDriver: false,
     }).start();
+
+    return () => {};
   }, [movingAnim]);
 
   useEffect(() => {
@@ -73,6 +75,7 @@ const LoginScreen = ({ navigation }) => {
         getUserData(response.authentication.accessToken);
       }
     }
+    return () => {};
   }, [response]);
 
   if (isLoading) {

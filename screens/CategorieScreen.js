@@ -48,6 +48,7 @@ const CategorieScreen = ({ navigation }) => {
           };
         })
       );
+    return () => {};
   }, [categories]);
 
   const onSubmitHandler = () => {

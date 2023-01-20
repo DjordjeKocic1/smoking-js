@@ -69,6 +69,8 @@ const VerifyScreen = ({ navigation }) => {
         });
       }
     });
+
+    return () => {};
   }, [opText]);
 
   return (

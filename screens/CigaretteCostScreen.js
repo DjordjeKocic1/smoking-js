@@ -52,6 +52,8 @@ const CigaretteCostScreen = ({ navigation }) => {
     !!user && !!user.smokingInfo && !!user.smokingInfo.cigarettesInPack
       ? setCigarettesInPack(user.smokingInfo.cigarettesInPack)
       : setCigarettesInPack("");
+
+    return () => {};
   }, [user]);
 
   const increaseHander = () => {
