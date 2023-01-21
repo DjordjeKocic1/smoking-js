@@ -7,10 +7,9 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 import Physics, { resetPipes } from "./Physicts";
-
 import { Box } from "./Box";
 import { CigAnimation } from "../../../../gameUtils/CigAnimation";
 import { Floor } from "./Floor";
@@ -21,6 +20,8 @@ import Matter from "matter-js";
 import { useEffect } from "react";
 import { useRef } from "react";
 import { useState } from "react";
+import { useLayoutEffect } from "react";
+import { backButtonHandler } from "../../../../helper/helpers";
 
 const Constants = {
   MAX_WIDTH: Dimensions.get("screen").width,
@@ -31,19 +32,26 @@ const Constants = {
   BIRD_HEIGHT: 41,
 };
 
-export const SliceFall = () => {
+export const SliceFall = ({ navigation }) => {
+  const [gameEngine, setGameEngine] = useState(null);
   const [running, setRunning] = useState(true);
   const [score, setScore] = useState(0);
   const [isTapped, setTapped] = useState(false);
+  const [isClockEx, setIsClockEx] = useState(false);
+  const [clock, setClock] = useState({
+    minutes: 1,
+    sec: 10,
+  });
   const op = useRef(new Animated.Value(1)).current;
   const gameOverAnim = useRef(
     new Animated.Value(Constants.MAX_HEIGHT - 20)
   ).current;
 
-  let gameEngine = null;
-  
+  useEffect(() => {
+    backButtonHandler(navigation, "HomeScreen");
+  }, []);
 
-  const setupWorld = () => {
+  function setupWorld() {
     let engine = Matter.Engine.create({ enableSleeping: false });
     let world = engine.world;
 
@@ -96,7 +104,7 @@ export const SliceFall = () => {
     };
   }
 
-  const onEvent = (e) => {
+  function onEvent(e) {
     if (e.type === "tapped") {
       Animated.timing(op, {
         toValue: 0,
@@ -109,27 +117,26 @@ export const SliceFall = () => {
       });
     }
     if (e.type === "game-over") {
-      //Alert.alert("Game Over");
       setRunning(false);
     } else if (e.type === "score") {
       setScore(score + 1);
     }
   }
 
-  const reset =()=> {
+  const reset = () => {
     Animated.timing(gameOverAnim, {
       toValue: Constants.MAX_HEIGHT - 20,
       duration: 500,
       useNativeDriver: false,
-    }).start(({finished}) => {
-      if(!!finished){
+    }).start(({ finished }) => {
+      if (!!finished) {
         resetPipes();
         gameEngine.swap(setupWorld());
         setRunning(true);
         setScore(0);
       }
     });
-  }
+  };
 
   useEffect(() => {
     if (!running) {
@@ -137,10 +144,39 @@ export const SliceFall = () => {
         toValue: 0,
         duration: 700,
         useNativeDriver: false,
-        easing:Easing.circle
+        easing: Easing.circle,
       }).start();
     }
-  }, [gameOverAnim,running]);
+  }, [gameOverAnim, running]);
+
+  useLayoutEffect(() => {
+    let time = setInterval(() => {
+      if (clock.minutes == 0 && clock.sec == 0) {
+        setIsClockEx(true);
+        clearInterval(time);
+      } else {
+        if (clock.sec <= 0) {
+          setClock((prev) => {
+            return {
+              minutes: prev.minutes - 1,
+              sec: 60,
+            };
+          });
+        } else {
+          setClock((prev) => {
+            return {
+              ...prev,
+              sec: prev.sec - 10,
+            };
+          });
+        }
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(time);
+    };
+  }, [clock]);
 
   return (
     <View style={styles.container}>
@@ -149,9 +185,9 @@ export const SliceFall = () => {
         style={[styles.backgroundImage]}
         resizeMode="stretch"
       />
-      <CigAnimation/>
+      <CigAnimation clock={clock} />
       <GameEngine
-        ref={(ref) => (gameEngine = ref)}
+        ref={(ref) => setGameEngine(ref)}
         systems={[Physics]}
         entities={setupWorld()}
         onEvent={onEvent}
@@ -188,7 +224,7 @@ export const SliceFall = () => {
           </Animated.View>
         </View>
       )}
-      {!running && (
+      {!running && !isClockEx && (
         <View
           style={{
             position: "absolute",
@@ -213,35 +249,98 @@ export const SliceFall = () => {
             ]}
           >
             <Text style={styles.gameOverText}>Game Over</Text>
-            <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
-            <Pressable style={[styles.resetBtn,{backgroundColor:'green'}]} onPress={reset}>
-              <Text
-                style={{
-                  color: "white",
-                  textAlign: "center",
-                  padding: 10,
-                  fontSize:20,
-                  fontFamily: "HammersmithOne-Bold",
-                }}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Pressable
+                style={[styles.resetBtn, { backgroundColor: "green" }]}
+                onPress={reset}
               >
-                Try Again
-              </Text>
-            </Pressable>
-            <Pressable style={[styles.resetBtn,{backgroundColor:'red'}]} onPress={reset}>
-              <Text
-                style={{
-                  color: "white",
-                  textAlign: "center",
-                  padding: 10,
-                  fontSize:20,
-                  fontFamily: "HammersmithOne-Bold",
-                }}
+                <Text
+                  style={{
+                    color: "white",
+                    textAlign: "center",
+                    padding: 10,
+                    fontSize: 20,
+                    fontFamily: "HammersmithOne-Bold",
+                  }}
+                >
+                  Try Again
+                </Text>
+              </Pressable>
+              <Pressable
+                style={[styles.resetBtn, { backgroundColor: "red" }]}
+                onPress={reset}
               >
-                Exit
-              </Text>
-            </Pressable>
+                <Text
+                  style={{
+                    color: "white",
+                    textAlign: "center",
+                    padding: 10,
+                    fontSize: 20,
+                    fontFamily: "HammersmithOne-Bold",
+                  }}
+                >
+                  Exit
+                </Text>
+              </Pressable>
             </View>
           </Animated.View>
+        </View>
+      )}
+      {isClockEx && (
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+        >
+          <View style={[styles.gameOver]}>
+            <Text
+              style={{
+                fontSize: 17,
+                fontFamily: "HammersmithOne-Bold",
+                textAlign: "center",
+                marginBottom: 15,
+              }}
+            >
+              Congratulations you didn't smoke
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Pressable
+                style={[styles.resetBtn, { backgroundColor: "green" }]}
+                onPress={() => navigation.replace("HomeScreen")}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    textAlign: "center",
+                    padding: 10,
+                    fontSize: 20,
+                    fontFamily: "HammersmithOne-Bold",
+                  }}
+                >
+                  Continue
+                </Text>
+              </Pressable>
+            </View>
+          </View>
         </View>
       )}
     </View>
@@ -303,8 +402,8 @@ const styles = StyleSheet.create({
   gameOverText: {
     fontSize: 20,
     fontFamily: "HammersmithOne-Bold",
-    textAlign:'center',
-    marginBottom:10
+    textAlign: "center",
+    marginBottom: 10,
   },
   resetBtn: {
     flexDirection: "row",
@@ -312,8 +411,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginVertical: 0,
     marginHorizontal: 10,
-    borderWidth:1,
-    borderColor:'transparent',
-    borderRadius:5
+    borderWidth: 1,
+    borderColor: "transparent",
+    borderRadius: 5,
   },
 });

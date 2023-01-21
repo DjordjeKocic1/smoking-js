@@ -1,4 +1,6 @@
 import {
+  Animated,
+  Easing,
   Image,
   ImageBackground,
   Pressable,
@@ -18,14 +20,27 @@ import { selectUser } from "../store/userReducer";
 import { useEffect } from "react";
 import { useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
+import { useRef } from "react";
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useSelector(selectUser);
   const isLoading = useSelector((state) => state.user.isLoading);
+  const beatingVal = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
   }, []);
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.timing(beatingVal, {
+        toValue: 1.1,
+        duration: 700,
+        useNativeDriver: true,
+        easing: Easing.bounce,
+      })
+    ).start();
+  }, [beatingVal]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -58,11 +73,23 @@ const HomeScreen = ({ navigation }) => {
     >
       <View style={styles.stats}>
         <View>
-          <MaterialIcons name="monetization-on" size={24} color="green" />
+          <Image
+            style={{ width: 30, height: 30 }}
+            resizeMode="contain"
+            source={require("../assets/images/games/money.png")}
+          />
+          {/* <MaterialIcons name="monetization-on" size={24} color="green" /> */}
           <Text style={styles.statsheader}>+0</Text>
         </View>
         <View>
-          <FontAwesome name="heartbeat" size={24} color="red" />
+          <Animated.View style={{ transform: [{ scale: beatingVal }] }}>
+            <Image
+              style={{ width: 30, height: 30, marginBottom: 2 }}
+              resizeMode="contain"
+              source={require("../assets/images/games/heart.png")}
+            />
+            {/* <FontAwesome name="heartbeat" size={24} color="red" /> */}
+          </Animated.View>
           <Text style={styles.statsheader}>0%</Text>
         </View>
         <View>
@@ -73,7 +100,10 @@ const HomeScreen = ({ navigation }) => {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.container}>
           <View style={styles.innerContainer}>
-            <Pressable onPress={()=> navigation.navigate("Savings")} style={styles.innerContainerBox}>
+            <Pressable
+              onPress={() => navigation.navigate("Savings")}
+              style={styles.innerContainerBox}
+            >
               <Text style={styles.innerText}>Savings</Text>
               <Image
                 source={require("../assets/images/economy.png")}
@@ -82,7 +112,10 @@ const HomeScreen = ({ navigation }) => {
             </Pressable>
           </View>
           <View style={styles.innerContainer}>
-            <Pressable onPress={()=> navigation.navigate("Games")} style={styles.innerContainerBox}>
+            <Pressable
+              onPress={() => navigation.navigate("Games")}
+              style={styles.innerContainerBox}
+            >
               <Text style={styles.innerText}>Stop It</Text>
               <Image
                 source={require("../assets/images/game.png")}

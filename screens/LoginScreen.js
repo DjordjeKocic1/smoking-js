@@ -16,6 +16,7 @@ import { SubmitButton } from "../components/SubmitButton";
 import { createUser } from "../store/userReducer";
 import { useDispatch } from "react-redux";
 import { useRef } from "react";
+import { backButtonHandlerAlert } from "../helper/helpers";
 
 const { UIManager } = NativeModules;
 
@@ -34,6 +35,10 @@ const LoginScreen = ({ navigation }) => {
     androidClientId:
       "161017013722-jjkuhc3onnma7f38mpp1uds1t4u21cno.apps.googleusercontent.com",
   });
+
+  useEffect(() => {
+    backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
+  }, []);
 
   const goToNextPage = () => {
     navigation.replace("LoadingScreen");

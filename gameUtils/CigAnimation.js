@@ -1,9 +1,9 @@
 import {
   Animated,
   Dimensions,
-  Easing,
   Image,
   StyleSheet,
+  Text,
   View,
 } from "react-native";
 
@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import { useRef } from "react";
 import { useState } from "react";
 
-export const CigAnimation = () => {
+export const CigAnimation = ({ clock }) => {
   const cig1Op = useRef(new Animated.Value(1)).current;
   const [cig1ShowDirt, setCig1ShowDirt] = useState(false);
 
@@ -26,94 +26,40 @@ export const CigAnimation = () => {
   const [cig4ShowDirt, setCig4ShowDirt] = useState(false);
 
   const cig5Op = useRef(new Animated.Value(1)).current;
-  const [cig5ShowDirt, setCig5ShowDirt] = useState(false);
-
-  const cig6Op = useRef(new Animated.Value(1)).current;
-  const [cig6ShowDirt, setCig6ShowDirt] = useState(false);
-
-  const cig7Op = useRef(new Animated.Value(1)).current;
-  const [cig7ShowDirt, setCig7ShowDirt] = useState(false);
-
-  const cig8Op = useRef(new Animated.Value(1)).current;
-  const [cig8ShowDirt, setCig8ShowDirt] = useState(false);
-
-  const cig9Op = useRef(new Animated.Value(1)).current;
-  const [cig9ShowDirt, setCig9ShowDirt] = useState(false);
 
   useEffect(() => {
     Animated.timing(cig1Op, {
       toValue: 0,
-      duration: 2000,
+      duration: 300,
+      delay: 2000,
       useNativeDriver: false,
     }).start(({ finished }) => {
       if (!!finished) {
         setCig1ShowDirt(true);
         Animated.timing(cig2Op, {
           toValue: 0,
-          duration: 2000,
+          duration: 300,
+          delay: 2000,
           useNativeDriver: false,
         }).start(({ finished }) => {
           if (!!finished) {
             setCig2ShowDirt(true);
             Animated.timing(cig3Op, {
               toValue: 0,
-              duration: 2000,
+              delay: 2000,
+              duration: 300,
               useNativeDriver: false,
             }).start(({ finished }) => {
               if (!!finished) {
                 setCig3ShowDirt(true);
                 Animated.timing(cig4Op, {
                   toValue: 0,
-                  duration: 2000,
+                  duration: 300,
+                  delay: 2000,
                   useNativeDriver: false,
                 }).start(({ finished }) => {
                   if (!!finished) {
                     setCig4ShowDirt(true);
-                    Animated.timing(cig5Op, {
-                      toValue: 0,
-                      duration: 2000,
-                      useNativeDriver: false,
-                    }).start(({ finished }) => {
-                      if (!!finished) {
-                        setCig5ShowDirt(true);
-                        Animated.timing(cig6Op, {
-                          toValue: 0,
-                          duration: 2000,
-                          useNativeDriver: false,
-                        }).start(({ finished }) => {
-                          if (!!finished) {
-                            setCig6ShowDirt(true);
-                            Animated.timing(cig7Op, {
-                              toValue: 0,
-                              duration: 2000,
-                              useNativeDriver: false,
-                            }).start(({ finished }) => {
-                              if (!!finished) {
-                                setCig7ShowDirt(true);
-                                Animated.timing(cig8Op, {
-                                  toValue: 0,
-                                  duration: 2000,
-                                  useNativeDriver: false,
-                                }).start(({ finished }) => {
-                                  if (!!finished) {
-                                    setCig8ShowDirt(true);
-                                    Animated.timing(cig9Op, {
-                                      toValue: 0,
-                                      duration: 2000,
-                                      useNativeDriver: false,
-                                    }).start(({ finished }) => {
-                                      if (!!finished) {
-                                        setCig9ShowDirt(true);
-                                      }
-                                    });
-                                  }
-                                });
-                              }
-                            });
-                          }
-                        });
-                      }
-                    });
                   }
                 });
               }
@@ -137,69 +83,12 @@ export const CigAnimation = () => {
           resizeMode="stretch"
         />
         <View style={styles.cigWhite}>
-          <Image resizeMode="stretch" source={Images.cig2} />
-        </View>
-        <View style={styles.cigWhite}>
-          <Image resizeMode="stretch" source={Images.cig2} />
-        </View>
-        <View style={styles.cigWhite}>
           <Image
             resizeMode="stretch"
-            source={cig9ShowDirt ? Images.cig3 : Images.cig2}
+            style={{ width: 20 }}
+            source={Images.cig2}
           />
         </View>
-        <Animated.View
-          style={[
-            styles.cigWhite,
-            {
-              opacity: cig9Op,
-            },
-          ]}
-        >
-          <Image
-            resizeMode="stretch"
-            source={cig8ShowDirt ? Images.cig3 : Images.cig2}
-          />
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.cigWhite,
-            {
-              opacity: cig8Op,
-            },
-          ]}
-        >
-          <Image
-            resizeMode="stretch"
-            source={cig7ShowDirt ? Images.cig3 : Images.cig2}
-          />
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.cigWhite,
-            {
-              opacity: cig7Op,
-            },
-          ]}
-        >
-          <Image
-            resizeMode="stretch"
-            source={cig6ShowDirt ? Images.cig3 : Images.cig2}
-          />
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.cigWhite,
-            {
-              opacity: cig6Op,
-            },
-          ]}
-        >
-          <Image
-            resizeMode="stretch"
-            source={cig5ShowDirt ? Images.cig3 : Images.cig2}
-          />
-        </Animated.View>
         <Animated.View
           style={[
             styles.cigWhite,
@@ -211,6 +100,7 @@ export const CigAnimation = () => {
           <Image
             resizeMode="stretch"
             source={cig4ShowDirt ? Images.cig3 : Images.cig2}
+            style={{ width: 20 }}
           />
         </Animated.View>
         <Animated.View
@@ -224,6 +114,7 @@ export const CigAnimation = () => {
           <Image
             resizeMode="stretch"
             source={cig3ShowDirt ? Images.cig3 : Images.cig2}
+            style={{ width: 20 }}
           />
         </Animated.View>
         <Animated.View
@@ -237,6 +128,7 @@ export const CigAnimation = () => {
           <Image
             resizeMode="stretch"
             source={cig2ShowDirt ? Images.cig3 : Images.cig2}
+            style={{ width: 20 }}
           />
         </Animated.View>
         <Animated.View
@@ -250,6 +142,7 @@ export const CigAnimation = () => {
           <Image
             resizeMode="stretch"
             source={cig1ShowDirt ? Images.cig3 : Images.cig2}
+            style={{ width: 20 }}
           />
         </Animated.View>
         <Animated.View
@@ -260,8 +153,17 @@ export const CigAnimation = () => {
             },
           ]}
         >
-          <Image resizeMode="stretch" source={Images.cig3} />
+          <Image
+            resizeMode="stretch"
+            source={Images.cig3}
+            style={{ width: 20 }}
+          />
         </Animated.View>
+      </View>
+      <View style={styles.timer}>
+        <Text style={styles.timerText}>
+          0{clock.minutes}:{clock.sec}
+        </Text>
       </View>
     </View>
   );
@@ -276,6 +178,9 @@ const styles = StyleSheet.create({
     width: Dimensions.get("screen").width,
     paddingVertical: 20,
     zIndex: 999,
+    borderBottomWidth: 5,
+    borderBottomColor: "#C39351",
+    borderRadius: 10,
   },
   cig: {
     flexDirection: "row",
@@ -283,7 +188,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cigWhite: {
-    width: 10,
+    width: 20,
     height: 19,
   },
+  timer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  timerText: { fontSize: 20, fontFamily: "HammersmithOne-Bold" },
 });
