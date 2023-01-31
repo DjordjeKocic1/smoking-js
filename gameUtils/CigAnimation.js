@@ -1,200 +1,199 @@
-import {
-  Animated,
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Animated, Easing, Image, StyleSheet, View } from "react-native";
+import { selectUser, updateUser } from "../store/userReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useRef, useState } from "react";
 
 import Images from "../assets/Images";
-import { useEffect } from "react";
-import { useRef } from "react";
-import { useState } from "react";
 
-export const CigAnimation = ({ clock }) => {
-  const cig1Op = useRef(new Animated.Value(1)).current;
-  const [cig1ShowDirt, setCig1ShowDirt] = useState(false);
+export const CigAnimation = ({ onCigFinishHandler }) => {
+  const { user } = useSelector(selectUser);
+  const dispatch = useDispatch();
 
-  const cig2Op = useRef(new Animated.Value(1)).current;
-  const [cig2ShowDirt, setCig2ShowDirt] = useState(false);
-
-  const cig3Op = useRef(new Animated.Value(1)).current;
-  const [cig3ShowDirt, setCig3ShowDirt] = useState(false);
-
-  const cig4Op = useRef(new Animated.Value(1)).current;
-  const [cig4ShowDirt, setCig4ShowDirt] = useState(false);
-
-  const cig5Op = useRef(new Animated.Value(1)).current;
+  const [onFinAnimation, setOnFinAnim] = useState(false);
+  const [clock, setClock] = useState({
+    minutes: 0,
+    sec: 59,
+  });
+  const cigImageW = useRef(new Animated.Value(100)).current;
 
   useEffect(() => {
-    Animated.timing(cig1Op, {
-      toValue: 0,
-      duration: 300,
-      delay: 2000,
-      useNativeDriver: false,
-    }).start(({ finished }) => {
-      if (!!finished) {
-        setCig1ShowDirt(true);
-        Animated.timing(cig2Op, {
-          toValue: 0,
-          duration: 300,
-          delay: 2000,
-          useNativeDriver: false,
-        }).start(({ finished }) => {
-          if (!!finished) {
-            setCig2ShowDirt(true);
-            Animated.timing(cig3Op, {
-              toValue: 0,
-              delay: 2000,
-              duration: 300,
-              useNativeDriver: false,
-            }).start(({ finished }) => {
-              if (!!finished) {
-                setCig3ShowDirt(true);
-                Animated.timing(cig4Op, {
-                  toValue: 0,
-                  duration: 300,
-                  delay: 2000,
-                  useNativeDriver: false,
-                }).start(({ finished }) => {
-                  if (!!finished) {
-                    setCig4ShowDirt(true);
-                  }
-                });
-              }
-            });
-          }
+    if (onFinAnimation) {
+      onCigFinishHandler(onFinAnimation);
+    }
+  }, [onFinAnimation]);
+
+  useEffect(() => {
+    let time = setInterval(() => {
+      if (clock.minutes == 0 && clock.sec == 0) {
+        setClock({
+          minutes: 0,
+          sec: 58,
         });
+      } else {
+        if (clock.sec <= 0) {
+          setClock((prev) => {
+            return {
+              minutes: prev.minutes - 1,
+              sec: 59,
+            };
+          });
+        } else {
+          setClock((prev) => {
+            return {
+              ...prev,
+              sec: prev.sec - 1,
+            };
+          });
+        }
       }
-    });
+    }, 1000);
+
+    return () => {
+      clearInterval(time);
+    };
+  }, [clock]);
+
+  useEffect(() => {
+    if (!onFinAnimation) {
+      Animated.timing(cigImageW, {
+        toValue: 0,
+        delay: 2000,
+        duration: 1000000,
+        useNativeDriver: false,
+        easing: Easing.linear,
+      }).start(({ finished }) => {
+        if (!!finished) {
+          setOnFinAnim(true);
+          let dataToUpdate;
+          if (user.savedInfo) {
+            dataToUpdate = {
+              savedInfo: {
+                ...user.savedInfo,
+                cigarettesAvoided:
+                  user.consumptionInfo.cigarettesAvoided +
+                  user.savedInfo.cigarettesAvoided,
+              },
+            };
+          } else {
+            dataToUpdate = {
+              consumptionInfo: {
+                ...user.consumptionInfo,
+                cigarettesAvoided: user.consumptionInfo.cigarettesAvoided + 1,
+              },
+            };
+          }
+
+          dispatch(updateUser(dataToUpdate, user._id));
+        }
+      });
+    } else {
+      Animated.timing(cigImageW, {
+        toValue: 100,
+        duration: 100,
+        useNativeDriver: false,
+        easing: Easing.linear,
+      }).start(({ finished }) => {
+        if (finished) {
+          setOnFinAnim(false);
+        }
+      });
+    }
 
     return () => {};
-  }, [cig1Op]);
+  }, [user, onFinAnimation]);
+
   return (
     <View style={styles.container}>
       <View style={styles.cig}>
         <Image
-          source={Images["cig1"]}
+          source={Images["cigImg"]}
           style={{
             width: 60,
             height: 20,
           }}
           resizeMode="stretch"
         />
-        <View style={styles.cigWhite}>
+        <Animated.View
+          style={[
+            {
+              position: "relative",
+              width: cigImageW,
+            },
+          ]}
+        >
           <Image
             resizeMode="stretch"
-            style={{ width: 20 }}
             source={Images.cig2}
+            style={{ width: "100%", height: 20 }}
           />
-        </View>
-        <Animated.View
+        </Animated.View>
+        <View
           style={[
-            styles.cigWhite,
             {
-              opacity: cig5Op,
+              position: "relative",
+              flexDirection: "row",
             },
           ]}
         >
           <Image
-            resizeMode="stretch"
-            source={cig4ShowDirt ? Images.cig3 : Images.cig2}
-            style={{ width: 20 }}
+            source={Images.cigSmoke}
+            style={{ position: "absolute", right: -30, top: -100, width: 50 }}
+            resizeMode="contain"
           />
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.cigWhite,
-            {
-              opacity: cig4Op,
-            },
-          ]}
-        >
-          <Image
-            resizeMode="stretch"
-            source={cig3ShowDirt ? Images.cig3 : Images.cig2}
-            style={{ width: 20 }}
-          />
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.cigWhite,
-            {
-              opacity: cig3Op,
-            },
-          ]}
-        >
-          <Image
-            resizeMode="stretch"
-            source={cig2ShowDirt ? Images.cig3 : Images.cig2}
-            style={{ width: 20 }}
-          />
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.cigWhite,
-            {
-              opacity: cig2Op,
-            },
-          ]}
-        >
-          <Image
-            resizeMode="stretch"
-            source={cig1ShowDirt ? Images.cig3 : Images.cig2}
-            style={{ width: 20 }}
-          />
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.cigWhite,
-            {
-              opacity: cig1Op,
-            },
-          ]}
-        >
+          <View
+            style={{
+              width: 3,
+              height: 21,
+              backgroundColor: "#d21010",
+              opacity: 0.7,
+            }}
+          ></View>
+          <View
+            style={{
+              width: 5,
+              height: 21,
+              backgroundColor: "#332f2f",
+              borderWidth: 0.5,
+              borderTopRightRadius: 3,
+              borderBottomRightRadius: 3,
+              opacity: 0.7,
+            }}
+          ></View>
+
           <Image
             resizeMode="stretch"
             source={Images.cig3}
-            style={{ width: 20 }}
+            style={{ width: 20, height: 22, transform: [{ translateX: -5 }] }}
           />
-        </Animated.View>
+        </View>
       </View>
-      <View style={styles.timer}>
+      {/* <View style={styles.timer}>
         <Text style={styles.timerText}>
-          0{clock.minutes}:{clock.sec}
+          0{clock.minutes}:
+          {clock.sec >= 0 && clock.sec < 10 ? "0" + clock.sec : clock.sec}
         </Text>
-      </View>
+      </View> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: Dimensions.get("screen").width,
-    paddingVertical: 20,
-    zIndex: 999,
-    borderBottomWidth: 5,
-    borderBottomColor: "#C39351",
-    borderRadius: 10,
+    paddingTop: 50,
+    paddingBottom: 10,
+    alignItems: "center",
+    justifyContent: "flex-end",
+    backgroundColor: "#e1d5c9",
   },
   cig: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
-  cigWhite: {
-    width: 20,
-    height: 19,
-  },
   timer: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 5,
   },
-  timerText: { fontSize: 20, fontFamily: "HammersmithOne-Bold" },
+  timerText: { fontSize: 15, fontFamily: "HammersmithOne-Bold" },
 });

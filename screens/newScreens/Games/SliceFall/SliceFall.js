@@ -10,18 +10,18 @@ import {
   View,
 } from "react-native";
 import Physics, { resetPipes } from "./Physicts";
+
 import { Box } from "./Box";
-import { CigAnimation } from "../../../../gameUtils/CigAnimation";
+import { Entypo } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { Floor } from "./Floor";
 import { GameEngine } from "react-native-game-engine";
 import Images from "../../../../assets/Images";
-import { MaterialIcons } from "@expo/vector-icons";
 import Matter from "matter-js";
+import { backButtonHandlerAlert } from "../../../../helper/helpers";
 import { useEffect } from "react";
 import { useRef } from "react";
 import { useState } from "react";
-import { useLayoutEffect } from "react";
-import { backButtonHandler } from "../../../../helper/helpers";
 
 const Constants = {
   MAX_WIDTH: Dimensions.get("screen").width,
@@ -37,18 +37,13 @@ export const SliceFall = ({ navigation }) => {
   const [running, setRunning] = useState(true);
   const [score, setScore] = useState(0);
   const [isTapped, setTapped] = useState(false);
-  const [isClockEx, setIsClockEx] = useState(false);
-  const [clock, setClock] = useState({
-    minutes: 1,
-    sec: 10,
-  });
   const op = useRef(new Animated.Value(1)).current;
   const gameOverAnim = useRef(
     new Animated.Value(Constants.MAX_HEIGHT - 20)
   ).current;
 
   useEffect(() => {
-    backButtonHandler(navigation, "HomeScreen");
+    backButtonHandlerAlert("Hold on!", "Are you sure you want to exit game?");
   }, []);
 
   function setupWorld() {
@@ -108,7 +103,7 @@ export const SliceFall = ({ navigation }) => {
     if (e.type === "tapped") {
       Animated.timing(op, {
         toValue: 0,
-        duration: 1000,
+        duration: 500,
         useNativeDriver: false,
       }).start(({ finished }) => {
         if (finished) {
@@ -149,35 +144,6 @@ export const SliceFall = ({ navigation }) => {
     }
   }, [gameOverAnim, running]);
 
-  useLayoutEffect(() => {
-    let time = setInterval(() => {
-      if (clock.minutes == 0 && clock.sec == 0) {
-        setIsClockEx(true);
-        clearInterval(time);
-      } else {
-        if (clock.sec <= 0) {
-          setClock((prev) => {
-            return {
-              minutes: prev.minutes - 1,
-              sec: 60,
-            };
-          });
-        } else {
-          setClock((prev) => {
-            return {
-              ...prev,
-              sec: prev.sec - 10,
-            };
-          });
-        }
-      }
-    }, 1000);
-
-    return () => {
-      clearInterval(time);
-    };
-  }, [clock]);
-
   return (
     <View style={styles.container}>
       <Image
@@ -185,7 +151,6 @@ export const SliceFall = ({ navigation }) => {
         style={[styles.backgroundImage]}
         resizeMode="stretch"
       />
-      <CigAnimation clock={clock} />
       <GameEngine
         ref={(ref) => setGameEngine(ref)}
         systems={[Physics]}
@@ -195,47 +160,57 @@ export const SliceFall = ({ navigation }) => {
       >
         <StatusBar hidden={true} />
       </GameEngine>
+      <View
+        style={{
+          position: "absolute",
+          top: 10,
+          left: Constants.MAX_WIDTH / 2.5,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+          opacity: 0.7,
+        }}
+      >
+        <Text
+          style={{
+            color: "white",
+            fontSize: 50,
+            fontFamily: "HammersmithOne-Bold",
+          }}
+        >
+          {score}
+        </Text>
+      </View>
       {!isTapped && (
-        <View
-          style={{
-            position: "absolute",
-            left: 0,
-            bottom: 50,
-            zIndex: 999,
-            paddingVertical: 20,
-            paddingHorizontal: 40,
-            backgroundColor: "white",
-            width: Constants.MAX_WIDTH,
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-            alignItems: "center",
-            borderWidth: 10,
-            borderColor: "orange",
-            borderRadius: 10,
-          }}
+        <Animated.View
+          style={[
+            styles.infoContainer,
+            {
+              opacity: op,
+            },
+          ]}
         >
-          <Animated.View style={{ alignItems: "center", opacity: op }}>
-            <MaterialIcons name="touch-app" size={30} color="black" />
-            <Text
-              style={{ textAlign: "center", fontFamily: "HammersmithOne-Bold" }}
-            >
-              Tap on screen to rise
+          <Entypo
+            name="info-with-circle"
+            size={20}
+            color="black"
+            style={{ position: "absolute", left: 10, top: 7 }}
+          />
+          <View style={{ alignItems: "flex-start", position: "relative" }}>
+            <Text style={{ fontFamily: "HammersmithOne-Bold" }}>
+              -Tap on screen to rise
             </Text>
-          </Animated.View>
-        </View>
+            <Text style={{ fontFamily: "HammersmithOne-Bold" }}>
+              -Avoid blocks
+            </Text>
+            <Text style={{ fontFamily: "HammersmithOne-Bold" }}>
+              -Try not to smoke for a 5 minutes
+            </Text>
+          </View>
+        </Animated.View>
       )}
-      {!running && !isClockEx && (
-        <View
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+      {!running && (
+        <View style={styles.gameOverContainer}>
           <Animated.View
             style={[
               styles.gameOver,
@@ -249,98 +224,37 @@ export const SliceFall = ({ navigation }) => {
             ]}
           >
             <Text style={styles.gameOverText}>Game Over</Text>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
+            <View style={{ alignItems: "center", marginBottom: 10 }}>
+              <Text
+                style={{
+                  marginBottom: 5,
+                  fontFamily: "HammersmithOne-Bold",
+                  borderBottomWidth: 0.2,
+                  borderBottomColor: "#222325",
+                }}
+              >
+                <Feather name="award" size={15} color="#c39351" /> Your Best:{" "}
+                {score} <Feather name="award" size={15} color="#c39351" />
+              </Text>
+              <Text style={{ fontFamily: "HammersmithOne-Bold" }}>
+                Score: {score}
+              </Text>
+            </View>
+            <View style={styles.centeredContent}>
               <Pressable
                 style={[styles.resetBtn, { backgroundColor: "green" }]}
                 onPress={reset}
               >
-                <Text
-                  style={{
-                    color: "white",
-                    textAlign: "center",
-                    padding: 10,
-                    fontSize: 20,
-                    fontFamily: "HammersmithOne-Bold",
-                  }}
-                >
-                  Try Again
-                </Text>
+                <Text style={styles.gameOverContainerTryAgain}>Continue</Text>
               </Pressable>
               <Pressable
                 style={[styles.resetBtn, { backgroundColor: "red" }]}
-                onPress={reset}
+                onPress={() => navigation.pop()}
               >
-                <Text
-                  style={{
-                    color: "white",
-                    textAlign: "center",
-                    padding: 10,
-                    fontSize: 20,
-                    fontFamily: "HammersmithOne-Bold",
-                  }}
-                >
-                  Exit
-                </Text>
+                <Text style={styles.gameOverContainerExit}>Exit</Text>
               </Pressable>
             </View>
           </Animated.View>
-        </View>
-      )}
-      {isClockEx && (
-        <View
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 9999,
-          }}
-        >
-          <View style={[styles.gameOver]}>
-            <Text
-              style={{
-                fontSize: 17,
-                fontFamily: "HammersmithOne-Bold",
-                textAlign: "center",
-                marginBottom: 15,
-              }}
-            >
-              Congratulations you didn't smoke
-            </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Pressable
-                style={[styles.resetBtn, { backgroundColor: "green" }]}
-                onPress={() => navigation.replace("HomeScreen")}
-              >
-                <Text
-                  style={{
-                    color: "white",
-                    textAlign: "center",
-                    padding: 10,
-                    fontSize: 20,
-                    fontFamily: "HammersmithOne-Bold",
-                  }}
-                >
-                  Continue
-                </Text>
-              </Pressable>
-            </View>
-          </View>
         </View>
       )}
     </View>
@@ -351,6 +265,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  centeredContent: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   gameHeader: {
     position: "absolute",
@@ -414,5 +333,67 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "transparent",
     borderRadius: 5,
+  },
+  infoContainer: {
+    position: "absolute",
+    left: 0,
+    bottom: 50,
+    zIndex: 999,
+    paddingVertical: 20,
+    paddingHorizontal: 40,
+    backgroundColor: "white",
+    width: Constants.MAX_WIDTH,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    borderWidth: 5,
+    borderColor: "#c39351",
+    borderRadius: 10,
+  },
+  gameOverContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  gameOverContainerTryAgain: {
+    color: "white",
+    textAlign: "center",
+    padding: 10,
+    fontSize: 20,
+    fontFamily: "HammersmithOne-Bold",
+  },
+  gameOverContainerExit: {
+    color: "white",
+    textAlign: "center",
+    padding: 10,
+    fontSize: 20,
+    fontFamily: "HammersmithOne-Bold",
+  },
+  finContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 9999,
+  },
+  finContainerText: {
+    fontSize: 17,
+    fontFamily: "HammersmithOne-Bold",
+    textAlign: "center",
+    marginBottom: 15,
+  },
+  finContainerText2: {
+    color: "white",
+    textAlign: "center",
+    padding: 10,
+    fontSize: 20,
+    fontFamily: "HammersmithOne-Bold",
   },
 });

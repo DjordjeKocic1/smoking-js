@@ -10,6 +10,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { backButtonHandler, backButtonHandlerAlert } from "../helper/helpers";
 import { selectUser, updateUser } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -18,7 +19,6 @@ import { BackButton } from "../components/BackButton";
 import { Feather } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
-import { backButtonHandler } from "../helper/helpers";
 import { countries } from "../utils/countries";
 import { useLayoutEffect } from "react";
 
@@ -27,6 +27,7 @@ export const ProfileScreen = ({ navigation }) => {
   const isLoading = useSelector((state) => state.user.isLoading);
   const dispatch = useDispatch();
   const [countriesAr, setCountriesAr] = useState(countries);
+  const [screenLoaded, setScreenLoaded] = useState(false);
 
   const [userProfile, setUserProfile] = useState({
     name: "",
@@ -37,20 +38,20 @@ export const ProfileScreen = ({ navigation }) => {
   });
 
   useEffect(() => {
-    backButtonHandler(navigation, "HomeScreen");
+    backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
   }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: !!user && user.name.toUpperCase(),
-      headerRight: () => (
-        <BackButton where={"HomeScreen"} navigation={navigation} />
-      ),
+      headerTitle: !!user && !!user.name && user.name.toUpperCase(),
       headerStyle: {
         backgroundColor: "#C39351",
       },
+      headerShown: false,
+      headerBackVisible: false,
       headerTintColor: "white",
     });
+    setScreenLoaded(true);
   }, [navigation, user]);
 
   const onNameChangeHandler = (enteredValue) => {
@@ -155,7 +156,8 @@ export const ProfileScreen = ({ navigation }) => {
   }
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1, position: "relative" }}>
+      <BackButton navigation={navigation} where={"UserScreen"} />
       <View style={styles.container}>
         <View style={styles.innerContainer}>
           <View style={styles.headerContainer}>
@@ -165,12 +167,6 @@ export const ProfileScreen = ({ navigation }) => {
                 source={{ uri: user.image }}
               />
             </View>
-            <Feather
-              onPress={testFile}
-              style={styles.editIcon}
-              name="edit-3"
-              color="black"
-            />
           </View>
           <View style={styles.inputsContent}>
             <Text>Full Name</Text>

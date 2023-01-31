@@ -5,13 +5,13 @@ import {
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { selectUser, updateUser } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
+import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
@@ -22,14 +22,9 @@ const CigaretteCostScreen = ({ navigation }) => {
   const { user } = useSelector(selectUser);
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.user.isLoading);
-  const [inputFocused, setInputFocused] = useState({
-    inputFirst: false,
-    inputSecund: false,
-    inputT: false,
-  });
-  const [counter, setCounter] = useState(1);
-  const [amount, setAmount] = useState("");
-  const [cigarettesInPack, setCigarettesInPack] = useState("");
+  const [counter, setCounter] = useState(0);
+  const [amount, setAmount] = useState(0);
+  const [cigarettesInPack, setCigarettesInPack] = useState(0);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -42,45 +37,24 @@ const CigaretteCostScreen = ({ navigation }) => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
   }, []);
 
-  useEffect(() => {
-    !!user && !!user.smokingInfo && !!user.smokingInfo.cigarettes
-      ? setCounter(parseFloat(user.smokingInfo.cigarettes))
-      : setCounter(1);
-    !!user && !!user.smokingInfo && !!user.smokingInfo.packCigarettesPrice
-      ? setAmount(user.smokingInfo.packCigarettesPrice)
-      : setAmount("");
-    !!user && !!user.smokingInfo && !!user.smokingInfo.cigarettesInPack
-      ? setCigarettesInPack(user.smokingInfo.cigarettesInPack)
-      : setCigarettesInPack("");
-
-    return () => {};
-  }, [user]);
-
-  const increaseHander = () => {
-    setCounter((prev) => prev + 1);
+  const increaseHander = (state, innerState) => {
+    state(innerState + 1);
   };
   const increaseLongHander = () => {
     setCounter((prev) => prev + 10);
   };
 
-  const decreaseHander = () => {
-    setCounter((prev) => (prev == 0 ? prev : prev - 1));
-  };
-
-  const amountChangeHandler = (enteredValue) => {
-    setAmount(enteredValue.replace(/[^0-9*\.]/g, ""));
-  };
-
-  const cigarettesInPackChangeHandler = (enteredValue) => {
-    setCigarettesInPack(enteredValue.replace(/[^0-9*]/g, ""));
+  const decreaseHander = (state, innerState) => {
+    state(innerState - 1);
   };
 
   const submittionHandler = () => {
     const dataToSend = {
-      smokingInfo: {
-        cigarettes: counter.toString(),
-        packCigarettesPrice: amount.toString(),
-        cigarettesInPack: cigarettesInPack.toString(),
+      consumptionInfo: {
+        cigarettesDay: counter,
+        packCigarettesPrice: amount == "" ? 20 : amount,
+        cigarettesInPack: cigarettesInPack == "" ? 20 : cigarettesInPack,
+        cigarettesAvoided: 0,
       },
     };
     if (amount == "" || cigarettesInPack == "") {
@@ -97,7 +71,7 @@ const CigaretteCostScreen = ({ navigation }) => {
             text: "YES",
             onPress: () => {
               dispatch(updateUser(dataToSend, user._id));
-              navigation.replace("Categories");
+              navigation.replace("SmokingScreen");
             },
           },
         ]
@@ -105,7 +79,7 @@ const CigaretteCostScreen = ({ navigation }) => {
     }
 
     dispatch(updateUser(dataToSend, user._id));
-    navigation.replace("Categories");
+    navigation.replace("SmokingScreen");
   };
 
   if (isLoading) {
@@ -131,15 +105,8 @@ const CigaretteCostScreen = ({ navigation }) => {
       </View>
       <View style={styles.mainContainer}>
         <View style={styles.pressebleContent}>
-          <Text
-            style={[
-              styles.pressebleText,
-              { color: inputFocused.inputFirst ? "#c39351" : "#222325" },
-            ]}
-          >
-            Cigarettes/Day
-          </Text>
-          <View style={{ flexDirection: "row" }}>
+          <Text style={[styles.pressebleText]}>Cigarettes/Day</Text>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text style={styles.counter}>{counter}</Text>
             <View
               style={[
@@ -148,145 +115,88 @@ const CigaretteCostScreen = ({ navigation }) => {
               ]}
             >
               <Pressable
-                onPress={decreaseHander}
+                onPress={() => decreaseHander(setCounter, counter)}
                 style={styles.button}
                 android_ripple={{ color: "#c39351" }}
-                onPressIn={() =>
-                  setInputFocused((prev) => {
-                    return {
-                      ...prev,
-                      inputFirst: true,
-                    };
-                  })
-                }
-                onPressOut={() =>
-                  setInputFocused((prev) => {
-                    return {
-                      ...prev,
-                      inputFirst: false,
-                    };
-                  })
-                }
               >
                 <Ionicons name="remove" size={20} color="#222325" />
               </Pressable>
             </View>
             <View style={styles.buttonContent}>
               <Pressable
-                onPress={increaseHander}
-                onLongPress={increaseLongHander}
+                onPress={() => increaseHander(setCounter, counter)}
                 style={styles.button}
                 android_ripple={{ color: "#c39351" }}
-                onPressIn={() =>
-                  setInputFocused((prev) => {
-                    return {
-                      ...prev,
-                      inputFirst: true,
-                    };
-                  })
-                }
-                onPressOut={() =>
-                  setInputFocused((prev) => {
-                    return {
-                      ...prev,
-                      inputFirst: false,
-                    };
-                  })
-                }
               >
                 <Ionicons name="add" size={20} color="#222325" />
               </Pressable>
             </View>
           </View>
         </View>
-        <View style={[styles.pressebleContent]}>
-          <Text
-            style={[
-              styles.pressebleText,
-              { color: inputFocused.inputT ? "#c39351" : "#222325" },
-            ]}
-          >
-            Cigarettes/Pack
-          </Text>
-          <View style={styles.inputsContent}>
-            <Text
-              style={{
-                color: "#222325",
-                fontFamily: "HammersmithOne-Bold",
-                fontSize: Dimensions.get("window").width < 380 ? 12 : 15,
-              }}
+        <View style={styles.pressebleContent}>
+          <Text style={[styles.pressebleText]}>Pack of Cigarette Cost</Text>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={styles.counter}>${amount}</Text>
+            <View
+              style={[
+                styles.buttonContent,
+                { marginRight: Dimensions.get("window").width < 380 ? 5 : 15 },
+              ]}
             >
-              Cigarettes
-            </Text>
-            <TextInput
-              onChangeText={cigarettesInPackChangeHandler}
-              value={cigarettesInPack}
-              style={styles.input}
-              keyboardType="number-pad"
-              placeholder="0"
-              onPressIn={() =>
-                setInputFocused((prev) => {
-                  return {
-                    ...prev,
-                    inputT: true,
-                  };
-                })
-              }
-              onPressOut={() =>
-                setInputFocused((prev) => {
-                  return {
-                    ...prev,
-                    inputT: false,
-                  };
-                })
-              }
-            />
+              <Pressable
+                onPress={() => decreaseHander(setAmount, amount)}
+                style={styles.button}
+                android_ripple={{ color: "#c39351" }}
+              >
+                <Ionicons name="remove" size={20} color="#222325" />
+              </Pressable>
+            </View>
+            <View style={styles.buttonContent}>
+              <Pressable
+                onPress={() => increaseHander(setAmount, amount)}
+                style={styles.button}
+                android_ripple={{ color: "#c39351" }}
+              >
+                <Ionicons name="add" size={20} color="#222325" />
+              </Pressable>
+            </View>
           </View>
         </View>
-        <View style={[styles.pressebleContent]}>
-          <Text
-            style={[
-              styles.pressebleText,
-              { color: inputFocused.inputSecund ? "#c39351" : "#222325" },
-            ]}
-          >
-            Pack of Cigarettes Cost
-          </Text>
-          <View style={styles.inputsContent}>
-            <Text
-              style={{
-                color: "#222325",
-                fontFamily: "HammersmithOne-Bold",
-                fontSize: Dimensions.get("window").width < 380 ? 12 : 15,
-              }}
+
+        <View style={styles.pressebleContent}>
+          <Text style={[styles.pressebleText]}>Cigarette in a Pack</Text>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={styles.counter}>{cigarettesInPack}</Text>
+            <View
+              style={[
+                styles.buttonContent,
+                { marginRight: Dimensions.get("window").width < 380 ? 5 : 15 },
+              ]}
             >
-              Amount
-            </Text>
-            <TextInput
-              onChangeText={amountChangeHandler}
-              value={amount}
-              style={styles.input}
-              keyboardType="number-pad"
-              placeholder="$10"
-              onPressIn={() =>
-                setInputFocused((prev) => {
-                  return {
-                    ...prev,
-                    inputSecund: true,
-                  };
-                })
-              }
-              onPressOut={() =>
-                setInputFocused((prev) => {
-                  return {
-                    ...prev,
-                    inputSecund: false,
-                  };
-                })
-              }
-            />
+              <Pressable
+                onPress={() =>
+                  decreaseHander(setCigarettesInPack, cigarettesInPack)
+                }
+                style={styles.button}
+                android_ripple={{ color: "#c39351" }}
+              >
+                <Ionicons name="remove" size={20} color="#222325" />
+              </Pressable>
+            </View>
+            <View style={styles.buttonContent}>
+              <Pressable
+                onPress={() =>
+                  increaseHander(setCigarettesInPack, cigarettesInPack)
+                }
+                style={styles.button}
+                android_ripple={{ color: "#c39351" }}
+              >
+                <Ionicons name="add" size={20} color="#222325" />
+              </Pressable>
+            </View>
           </View>
         </View>
+
         <View style={{ marginVertical: 30 }}>
           <SubmitButton onPress={submittionHandler}>{"Done"}</SubmitButton>
         </View>
@@ -325,7 +235,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   pressebleText: {
-    fontSize: Dimensions.get("window").width < 380 ? 17 : 20,
+    fontSize: 17,
     color: "#222325",
     fontFamily: "HammersmithOne-Bold",
   },
@@ -340,7 +250,7 @@ const styles = StyleSheet.create({
   },
   button: { flex: 1, justifyContent: "center", alignItems: "center" },
   counter: {
-    fontSize: Dimensions.get("window").width < 380 ? 24 : 24,
+    fontSize: 16,
     marginRight: 10,
     color: "#222325",
     fontFamily: "HammersmithOne-Bold",

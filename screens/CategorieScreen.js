@@ -61,21 +61,27 @@ const CategorieScreen = ({ navigation }) => {
     navigation.replace("VerifyScreen");
   };
 
-  const onPressCategorieHandler = (name) => {
+  const onPressCategorieHandler = (cont) => {
     Animated.spring();
+
     setContent(
-      contents.map((content) =>
-        content.name == name
+      contents.map((content) => {
+        return content.name == cont.name
           ? {
               ...content,
-              checked: true,
-              style: { borderBottomW: 6, color: "#c39351" },
+              checked: content.checked ? false : true,
+              style: !content.checked
+                ? { borderBottomW: 6, color: "#c39351" }
+                : { borderBottomW: 0.5, color: "#c39351" },
             }
-          : { ...content }
-      )
+          : { ...content };
+      })
     );
+
     setActiveNextButton(true);
   };
+
+  console.log(contents);
 
   return (
     <View style={styles.mainContainer}>
@@ -105,7 +111,7 @@ const CategorieScreen = ({ navigation }) => {
                 ]}
               >
                 <Pressable
-                  onPress={() => onPressCategorieHandler(content.name)}
+                  onPress={() => onPressCategorieHandler(content)}
                   style={styles.pressableContent}
                   android_ripple={{ borderless: true }}
                 >

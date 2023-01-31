@@ -120,7 +120,7 @@ const Physics = (entities, { touches, time, dispatch }) => {
     .forEach((t) => {
       if (!hadTouches) {
         if (world.gravity.y === 0.0) {
-          world.gravity.y = 1.2;
+          world.gravity.y = 0.5;
 
           dispatch({ type: "tapped" });
 
@@ -190,7 +190,7 @@ const Physics = (entities, { touches, time, dispatch }) => {
   tick += 1;
   if (tick % 5 === 0) {
     pose = pose + 1;
-    if (pose > 3) {
+    if (pose >= 3) {
       pose = 1;
     }
     entities.initialBox.pose = pose;

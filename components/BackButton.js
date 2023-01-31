@@ -3,7 +3,7 @@ import * as Font from "expo-font";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useEffect, useState } from "react";
 
-import { AntDesign } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 
 export const BackButton = ({ navigation, where }) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -22,12 +22,12 @@ export const BackButton = ({ navigation, where }) => {
   }
 
   return (
-    <View>
+    <View style={{ position: "absolute", right: 10, top: 0, zIndex: 999 }}>
       <Pressable
-        onPress={() => navigation.replace(where)}
+        onPress={() => navigation.navigate(where)}
         style={styles.submitButton}
       >
-        <AntDesign name="back" size={24} color="white" />
+        <Entypo name="arrow-bold-left" size={30} color="black" />
       </Pressable>
     </View>
   );
@@ -37,9 +37,5 @@ const styles = StyleSheet.create({
   submitButton: {
     borderRadius: 5,
     padding: 10,
-  },
-  submitText: {
-    color: "white",
-    fontFamily: "HammersmithOne-Bold",
   },
 });

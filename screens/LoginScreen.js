@@ -13,10 +13,10 @@ import { useEffect, useState } from "react";
 
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
+import { backButtonHandlerAlert } from "../helper/helpers";
 import { createUser } from "../store/userReducer";
 import { useDispatch } from "react-redux";
 import { useRef } from "react";
-import { backButtonHandlerAlert } from "../helper/helpers";
 
 const { UIManager } = NativeModules;
 
@@ -29,6 +29,7 @@ const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const movingAnim = useRef(new Animated.Value(-10)).current;
+  const [submitClick,setSubmitClick] = useState(false);
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId:
       "161017013722-jjlndnhdi43o1i50qk32uluful7jhgan.apps.googleusercontent.com",
@@ -108,7 +109,9 @@ const LoginScreen = ({ navigation }) => {
           />
         </View>
         <SubmitButton
+          disabled={submitClick}
           onPress={() => {
+            setSubmitClick(true)
             promptAsync({ showInRecents: true });
           }}
         >

@@ -1,5 +1,7 @@
 import { Animated } from "react-native";
 import Images from "../../../../assets/Images";
+import { useEffect } from "react";
+import { useState } from "react";
 
 export const Box = ({ size, body, color, engine, pose }) => {
   let animatedValue = new Animated.Value(body.velocity.y);
@@ -13,7 +15,6 @@ export const Box = ({ size, body, color, engine, pose }) => {
     outputRange: ["-20deg", "0deg", "15deg", "45deg"],
     extrapolate: "clamp",
   });
-  let image = Images["rocket" + pose];
 
   return (
     <Animated.Image
@@ -21,16 +22,15 @@ export const Box = ({ size, body, color, engine, pose }) => {
         position: "absolute",
         left: x,
         top: y,
-        width: width,
-        height: height,
-        transform: [{ rotate: rotation }],
+        width: 50,
+        height: 50,
       }}
       resizeMode="stretch"
       source={
         !!engine.detector.pairs &&
         engine.detector.pairs.collisionStart.length > 0
           ? Images["rocketGameOver"]
-          : image
+          : Images["rocket" + pose]
       }
     />
   );

@@ -55,8 +55,8 @@ const LoadingScreen = ({ navigation }) => {
         iterations: 1,
       }
     ).start(({ finished }) => {
-      if (finished) {
-        !!user && !!user.userVerified
+      if (!!finished) {
+        !!user && user.userVerified
           ? navigation.replace("HomeScreen")
           : navigation.replace("Smoke Calculator");
       }
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#e1d5c9",
     justifyContent: "center",
     alignItems: "center",
-    position:'relative'
+    position: "relative",
   },
   containerInner: {
     flexDirection: "row",

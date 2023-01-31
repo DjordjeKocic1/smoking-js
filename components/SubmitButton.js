@@ -21,7 +21,7 @@ export const SubmitButton = (props) => {
     <View>
       <Pressable
         {...props}
-        style={styles.submitButton}
+        style={[styles.submitButton]}
         android_ripple={{ color: "#6A7152" }}
       >
         <Text

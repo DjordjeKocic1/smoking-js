@@ -14,7 +14,6 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
 import { useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
 import { useState } from "react";
@@ -116,7 +115,8 @@ const styles = StyleSheet.create({
   nav: {
     position: "absolute",
     bottom: 0,
-
+    flex: 1,
+    // backgroundColor: "#222325",
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -125,6 +125,11 @@ const styles = StyleSheet.create({
   innerNav: {
     alignItems: "center",
     paddingHorizontal: 15,
-    paddingVertical: 15,
+    paddingVertical: 5,
+  },
+  innerNavText: {
+    color: "black",
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: 12,
   },
 });

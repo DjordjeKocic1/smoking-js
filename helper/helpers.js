@@ -2,7 +2,7 @@ import { Alert, BackHandler } from "react-native";
 
 export const backButtonHandler = (navigation, path) => {
   const backAction = () => {
-    navigation.replace(path);
+    navigation.navigate(path);
     return true;
   };
 
@@ -32,5 +32,21 @@ export const backButtonHandlerAlert = (alertMsg, alertQuestion) => {
     backAction
   );
 
-  return () => backHandler.remove();
+  return () => backHandler.exitApp();
+};
+
+export const costOfCigarette = (packCost, cigInPack) => {
+  return +packCost / +cigInPack;
+};
+
+export const costOfCigaretteAday = (packCost, cigInPack, cigPerDay) => {
+  return (+packCost / +cigInPack) * +cigPerDay;
+};
+
+export const costOfCigaretteAmonth = (packCost, cigInPack, cigPerDay) => {
+  return (+packCost / +cigInPack) * +cigPerDay * 30;
+};
+
+export const costOfCigaretteAyear = (packCost, cigInPack, cigPerDay) => {
+  return (+packCost / +cigInPack) * +cigPerDay * 365;
 };
