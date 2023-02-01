@@ -10,10 +10,6 @@ const updateUser = (data, id) => {
   return axios.put(url + `/send-user-info/update-user/${id}`, data);
 };
 
-const updateUserCosts = (data, id) => {
-  return axios.put(url + `/send-user-info/update-user-costs/${id}`, data);
-};
-
 const categoriesGet = () => {
   return axios.get(url + "/send-user-info/categories");
 };
@@ -21,6 +17,5 @@ const categoriesGet = () => {
 export const http = {
   createUser,
   updateUser,
-  updateUserCosts,
   categoriesGet,
 };

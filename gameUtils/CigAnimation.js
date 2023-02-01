@@ -58,7 +58,7 @@ export const CigAnimation = ({ onCigFinishHandler }) => {
       Animated.timing(cigImageW, {
         toValue: 0,
         delay: 2000,
-        duration: 1000000,
+        duration: 300000,
         useNativeDriver: false,
         easing: Easing.linear,
       }).start(({ finished }) => {

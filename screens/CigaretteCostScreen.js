@@ -40,8 +40,8 @@ const CigaretteCostScreen = ({ navigation }) => {
   const increaseHander = (state, innerState) => {
     state(innerState + 1);
   };
-  const increaseLongHander = () => {
-    setCounter((prev) => prev + 10);
+  const increaseLongHander = (state, innerState) => {
+    state(innerState + 10);
   };
 
   const decreaseHander = (state, innerState) => {
@@ -125,6 +125,7 @@ const CigaretteCostScreen = ({ navigation }) => {
             <View style={styles.buttonContent}>
               <Pressable
                 onPress={() => increaseHander(setCounter, counter)}
+                onLongPress={() => increaseLongHander(setCounter, counter)}
                 style={styles.button}
                 android_ripple={{ color: "#c39351" }}
               >
@@ -154,6 +155,7 @@ const CigaretteCostScreen = ({ navigation }) => {
             <View style={styles.buttonContent}>
               <Pressable
                 onPress={() => increaseHander(setAmount, amount)}
+                onLongPress={() => increaseLongHander(setAmount, amount)}
                 style={styles.button}
                 android_ripple={{ color: "#c39351" }}
               >
@@ -162,7 +164,6 @@ const CigaretteCostScreen = ({ navigation }) => {
             </View>
           </View>
         </View>
-
         <View style={styles.pressebleContent}>
           <Text style={[styles.pressebleText]}>Cigarette in a Pack</Text>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -187,6 +188,9 @@ const CigaretteCostScreen = ({ navigation }) => {
               <Pressable
                 onPress={() =>
                   increaseHander(setCigarettesInPack, cigarettesInPack)
+                }
+                onLongPress={() =>
+                  increaseLongHander(setCigarettesInPack, cigarettesInPack)
                 }
                 style={styles.button}
                 android_ripple={{ color: "#c39351" }}
@@ -235,7 +239,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   pressebleText: {
-    fontSize: 17,
+    fontSize: 18,
     color: "#222325",
     fontFamily: "HammersmithOne-Bold",
   },
@@ -250,7 +254,7 @@ const styles = StyleSheet.create({
   },
   button: { flex: 1, justifyContent: "center", alignItems: "center" },
   counter: {
-    fontSize: 16,
+    fontSize: 18,
     marginRight: 10,
     color: "#222325",
     fontFamily: "HammersmithOne-Bold",

@@ -8,18 +8,17 @@ import {
   Text,
   View,
 } from "react-native";
+import { selectUser, updateUser } from "../store/userReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { BottomNav } from "../components/BottomNav";
+import { Loading } from "../components/Loading";
 import { MaterialIcons } from "@expo/vector-icons";
 import { backButtonHandlerAlert } from "../helper/helpers";
-import { selectUser } from "../store/userReducer";
-import { useEffect } from "react";
-import { useLayoutEffect } from "react";
-import { useRef } from "react";
-import { useSelector } from "react-redux";
 
 const UserScreen = ({ navigation }) => {
   const { user } = useSelector(selectUser);
+  const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.user.isLoading);
   const heartBeat = useRef(new Animated.Value(1)).current;
 
@@ -51,11 +50,31 @@ const UserScreen = ({ navigation }) => {
     ).start();
   }, [heartBeat]);
 
+  useEffect(() => {
+    if (!!user.smokingInfo && user.smokingInfo.isQuiting) {
+      const msDiff =
+        new Date().getTime() -
+        new Date(user.smokingInfo.dateOfQuiting).getTime();
+      let dataToSend = {
+        smokingInfo: {
+          ...user.smokingInfo,
+          noSmokingDays: Math.floor(msDiff / (1000 * 60 * 60 * 24)),
+        },
+      };
+      dispatch(updateUser(dataToSend, user._id));
+    }
+
+    return () => {};
+  }, [dispatch]);
+
   let userconsumptionInfoCheck =
     !!user && !!user.consumptionInfo.cigarettesAvoided;
 
-  let userconsumptionInfoCheckCost =
-    !!user && !!user.consumptionInfo.cigarettesAvoidedCost;
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  console.log(user);
 
   return (
     <View style={styles.mainContainer}>
@@ -80,9 +99,6 @@ const UserScreen = ({ navigation }) => {
                 ? user.savedInfo.cigarettesAvoidedCost +
                   !!user.consumptionInfo.cigarettesAvoidedCost
                 : user.consumptionInfo.cigarettesAvoidedCost}
-              {/* {userconsumptionInfoCheckCost
-                ? user.consumptionInfo.cigarettesAvoidedCost.toFixed(1)
-                : 0} */}
               $
             </Text>
           </View>
@@ -108,18 +124,30 @@ const UserScreen = ({ navigation }) => {
               %
             </Text>
           </View>
-          <View style={{ alignItems: "center" }}>
-            <MaterialIcons name="smoke-free" size={27} color="black" />
-            <Text style={styles.statsheader}>
-              {!!user.savedInfo && !!user.savedInfo.cigarettesAvoided
-                ? user.savedInfo.cigarettesAvoided +
-                  !!user.consumptionInfo.cigarettesAvoided
-                : user.consumptionInfo.cigarettesAvoided}
-              {/* {userconsumptionInfoCheck ? user.consumptionInfo.cigarettesAvoided : 0} */}
-            </Text>
-          </View>
+          {!!user.smokingInfo && !user.smokingInfo.isQuiting ? (
+            <View style={{ alignItems: "center" }}>
+              <MaterialIcons name="smoke-free" size={27} color="black" />
+              <Text style={styles.statsheader}>
+                {!!user.savedInfo && !!user.savedInfo.cigarettesAvoided
+                  ? user.savedInfo.cigarettesAvoided +
+                    !!user.consumptionInfo.cigarettesAvoided
+                  : user.consumptionInfo.cigarettesAvoided}
+              </Text>
+            </View>
+          ) : (
+            <View style={{ alignItems: "center" }}>
+              <MaterialIcons name="smoke-free" size={27} color="black" />
+              <Text style={styles.statsheader}>
+                <Text style={{ fontSize: 17 }}>
+                  {!!user.smokingInfo && !!user.smokingInfo.noSmokingDays
+                    ? user.smokingInfo.noSmokingDays
+                    : 0}
+                </Text>
+                /<Text style={{ fontSize: 9 }}>day</Text>
+              </Text>
+            </View>
+          )}
         </View>
-
         <View style={styles.container}>
           <View style={styles.innerContainer}>
             <Pressable
@@ -127,7 +155,11 @@ const UserScreen = ({ navigation }) => {
               style={styles.innerContainerBox}
               android_ripple={{ color: "#c39351" }}
             >
-              <Text style={styles.innerText}>Costs</Text>
+              <Text style={styles.innerText}>
+                {!!user && !!user.smokingInfo && user.smokingInfo.isQuiting
+                  ? "Savings"
+                  : "Costs"}
+              </Text>
               <Image
                 source={require("../assets/images/economy.png")}
                 style={{ width: 100, height: 100 }}
@@ -146,11 +178,46 @@ const UserScreen = ({ navigation }) => {
               />
             </Pressable>
           </View>
-          <View style={styles.innerContainer}>
+          <View style={[styles.innerContainer]}>
+            {!!user.smokingInfo && !user.smokingInfo.isQuiting && (
+              <View
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  bottom: 0,
+                  right: 0,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 13,
+                    fontFamily: "HammersmithOne-Bold",
+                    textAlign: "center",
+                    transform: [
+                      {
+                        rotate: "45deg",
+                      },
+                    ],
+                  }}
+                >
+                  Not available in slow quit mode!
+                </Text>
+              </View>
+            )}
             <Pressable
+              disabled={!user.smokingInfo.isQuiting}
               onPress={() => navigation.navigate("Health")}
               android_ripple={{ color: "#c39351" }}
-              style={styles.innerContainerBox}
+              style={[
+                styles.innerContainerBox,
+                {
+                  opacity:
+                    !!user.smokingInfo && user.smokingInfo.isQuiting ? 1 : 0.3,
+                },
+              ]}
             >
               <Text style={styles.innerText}>Health Tracker</Text>
               <Image
@@ -165,9 +232,9 @@ const UserScreen = ({ navigation }) => {
               android_ripple={{ color: "#c39351" }}
               style={styles.innerContainerBox}
             >
-              <Text style={styles.innerText}>Training</Text>
+              <Text style={styles.innerText}>Mentor</Text>
               <Image
-                source={require("../assets/images/advice.png")}
+                source={require("../assets/images/community.png")}
                 style={styles.innerContainerImg}
               />
             </Pressable>
@@ -211,19 +278,6 @@ const UserScreen = ({ navigation }) => {
               />
             </Pressable>
           </View>
-          {/* <View style={styles.innerContainer}>
-            <Pressable
-              onPress={() => navigation.navigate("Chats")}
-              android_ripple={{ color: "#c39351" }}
-              style={styles.innerContainerBox}
-            >
-              <Text style={styles.innerText}>Community</Text>
-              <Image
-                source={require("../assets/images/community.png")}
-                style={styles.innerContainerImg}
-              />
-            </Pressable>
-          </View> */}
           <View style={styles.innerContainer}>
             <Pressable
               onPress={() => navigation.navigate("Tips")}
@@ -237,15 +291,6 @@ const UserScreen = ({ navigation }) => {
               />
             </Pressable>
           </View>
-          {/* <View style={styles.innerContainer}>
-            <View style={styles.innerContainerBox}>
-              <Text style={styles.innerText}>Settings</Text>
-              <Image
-                source={require("../assets/images/settings.png")}
-                style={styles.innerContainerImg}
-              />
-            </View>
-          </View> */}
         </View>
       </ScrollView>
     </View>

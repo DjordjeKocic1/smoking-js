@@ -7,21 +7,15 @@ import {
   Text,
   View,
 } from "react-native";
-import {
-  selectUser,
-  updateUser,
-  updateUserCosts,
-} from "../../store/userReducer";
+import { selectUser, updateUser } from "../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useRef, useState } from "react";
 
 import { BackButton } from "../../components/BackButton";
 import { Ionicons } from "@expo/vector-icons";
 import { Loading } from "../../components/Loading";
 import { SubmitButton } from "../../components/SubmitButton";
 import { backButtonHandlerAlert } from "../../helper/helpers";
-import { useEffect } from "react";
-import { useRef } from "react";
-import { useState } from "react";
 
 export const Savings = ({ navigation }) => {
   const { user } = useSelector(selectUser);
@@ -120,6 +114,8 @@ export const Savings = ({ navigation }) => {
     setIsUpdate(false);
   };
 
+  console.log(user);
+
   if (isLoading) {
     return <Loading />;
   }
@@ -151,11 +147,21 @@ export const Savings = ({ navigation }) => {
             style={{ width: 50, height: 50 }}
           />
           <Text style={[styles.savingText]}>Cigarette daily</Text>
-          <Text style={[styles.savingText, { color: "red" }]}>
-            -
-            {!!user && !!user.savedInfo && user.savedInfo.cigarettesDailyCost
-              ? user.savedInfo.cigarettesDailyCost.toFixed(1)
-              : user.consumptionInfo.cigarettesDailyCost.toFixed(1)}
+          <Text
+            style={[
+              styles.savingText,
+              {
+                color:
+                  !!user.smokingInfo && user.smokingInfo.isQuiting
+                    ? "green"
+                    : "red",
+              },
+            ]}
+          >
+            {!!user.smokingInfo && user.smokingInfo.isQuiting ? "+" : "-"}
+            {!!user.savedInfo && user.savedInfo.cigarettesDailyCost
+              ? user.savedInfo.cigarettesDailyCost
+              : user.consumptionInfo.cigarettesDailyCost}
             $
           </Text>
         </View>
@@ -166,11 +172,21 @@ export const Savings = ({ navigation }) => {
             style={{ width: 50, height: 50 }}
           />
           <Text style={[styles.savingText]}>Cigarette monthly</Text>
-          <Text style={[styles.savingText, { color: "red" }]}>
-            -
-            {!!user && !!user.savedInfo && !!user.savedInfo.cigarettesMontlyCost
-              ? user.savedInfo.cigarettesMontlyCost.toFixed(1)
-              : user.consumptionInfo.cigarettesMontlyCost.toFixed(1)}
+          <Text
+            style={[
+              styles.savingText,
+              {
+                color:
+                  !!user.smokingInfo && user.smokingInfo.isQuiting
+                    ? "green"
+                    : "red",
+              },
+            ]}
+          >
+            {!!user.smokingInfo && user.smokingInfo.isQuiting ? "+" : "-"}
+            {!!user.savedInfo && !!user.savedInfo.cigarettesMontlyCost
+              ? user.savedInfo.cigarettesMontlyCost
+              : user.consumptionInfo.cigarettesMontlyCost}
             $
           </Text>
         </View>
@@ -181,11 +197,21 @@ export const Savings = ({ navigation }) => {
             style={{ width: 50, height: 50 }}
           />
           <Text style={[styles.savingText]}>Cigarette yearly</Text>
-          <Text style={[styles.savingText, { color: "red" }]}>
-            -
-            {!!user && !!user.savedInfo && !!user.savedInfo.cigarettesYearlyCost
-              ? user.savedInfo.cigarettesYearlyCost.toFixed(1)
-              : user.consumptionInfo.cigarettesYearlyCost.toFixed(1)}
+          <Text
+            style={[
+              styles.savingText,
+              {
+                color:
+                  !!user.smokingInfo && user.smokingInfo.isQuiting
+                    ? "green"
+                    : "red",
+              },
+            ]}
+          >
+            {!!user.smokingInfo && user.smokingInfo.isQuiting ? "+" : "-"}
+            {!!user.savedInfo && !!user.savedInfo.cigarettesYearlyCost
+              ? user.savedInfo.cigarettesYearlyCost
+              : user.consumptionInfo.cigarettesYearlyCost}
             $
           </Text>
         </View>
@@ -196,11 +222,21 @@ export const Savings = ({ navigation }) => {
             style={{ width: 100, height: 50 }}
           />
           <Text style={[styles.savingText]}>Cigarette 5 Years</Text>
-          <Text style={[styles.savingText, { color: "red" }]}>
-            -
-            {!!user && !!user.savedInfo && !!user.savedInfo.cigarettes5YearCost
-              ? user.savedInfo.cigarettes5YearCost.toFixed(1)
-              : user.consumptionInfo.cigarettes5YearCost.toFixed(1)}
+          <Text
+            style={[
+              styles.savingText,
+              {
+                color:
+                  !!user.smokingInfo && user.smokingInfo.isQuiting
+                    ? "green"
+                    : "red",
+              },
+            ]}
+          >
+            {!!user.smokingInfo && user.smokingInfo.isQuiting ? "+" : "-"}
+            {!!user.savedInfo && !!user.savedInfo.cigarettes5YearCost
+              ? user.savedInfo.cigarettes5YearCost
+              : user.consumptionInfo.cigarettes5YearCost}
             $
           </Text>
         </View>
@@ -211,136 +247,186 @@ export const Savings = ({ navigation }) => {
             style={{ width: 100, height: 50 }}
           />
           <Text style={[styles.savingText]}>Cigarette 10 Years</Text>
-          <Text style={[styles.savingText, { color: "red" }]}>
-            -
-            {!!user && !!user.savedInfo && !!user.savedInfo.cigarettes10YearCost
-              ? user.savedInfo.cigarettes10YearCost.toFixed(1)
-              : user.consumptionInfo.cigarettes10YearCost.toFixed(1)}
+          <Text
+            style={[
+              styles.savingText,
+              {
+                color:
+                  !!user.smokingInfo && user.smokingInfo.isQuiting
+                    ? "green"
+                    : "red",
+              },
+            ]}
+          >
+            {!!user.smokingInfo && user.smokingInfo.isQuiting ? "+" : "-"}
+            {!!user.savedInfo && !!user.savedInfo.cigarettes10YearCost
+              ? user.savedInfo.cigarettes10YearCost
+              : user.consumptionInfo.cigarettes10YearCost}
             $
           </Text>
         </View>
       </View>
-      <Pressable
-        onPress={() => setIsUpdate(!isUpdate)}
-        style={[styles.updateCost]}
-        android_ripple={{ color: "white" }}
-      >
-        <Text style={[styles.savingText, { color: "white", fontSize: 17 }]}>
-          {isUpdate
-            ? "You did? Congratulations!"
-            : "You cut down on smoking? Click"}
-        </Text>
-      </Pressable>
-      {isUpdate && (
-        <>
-          <View
+      {!!user.smokingInfo && !user.smokingInfo.isQuiting && (
+        <Pressable
+          onPress={() => setIsUpdate(!isUpdate)}
+          style={[styles.updateCost]}
+          android_ripple={{ color: "white" }}
+        >
+          <Text style={[styles.savingText, { color: "white", fontSize: 17 }]}>
+            {isUpdate
+              ? "You did? Congratulations!"
+              : "You cut down on smoking? Click"}
+          </Text>
+        </Pressable>
+      )}
+      {isUpdate &&
+        !!user &&
+        !!user.smokingInfo &&
+        !user.smokingInfo.isQuiting && (
+          <>
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                justifyContent: "center",
+              }}
+            >
+              <View style={styles.updateCostInner}>
+                <Text style={styles.updateCostInnerText1}>Cigarette/Day</Text>
+                <Text style={styles.updateCostInnerText2}>{cigarettesDay}</Text>
+                <Animated.View
+                  style={[
+                    styles.updateCostInnerPress,
+                    { transform: [{ translateY: moveAnime }] },
+                  ]}
+                >
+                  <Pressable
+                    onPress={() =>
+                      removechangeHandler(setCounter, cigarettesDay)
+                    }
+                    style={{ backgroundColor: "#C39351" }}
+                    android_ripple={{ color: "white" }}
+                  >
+                    <Ionicons name="remove" size={30} color="white" />
+                  </Pressable>
+                </Animated.View>
+                {cigarettesDay < user.consumptionInfo.cigarettesDay && (
+                  <View style={[styles.refrash]}>
+                    <Pressable
+                      onPress={() =>
+                        setCounter(user.consumptionInfo.cigarettesDay)
+                      }
+                    >
+                      <Ionicons name="refresh" size={24} color="black" />
+                    </Pressable>
+                  </View>
+                )}
+              </View>
+              <View style={styles.updateCostInner}>
+                <Text style={styles.updateCostInnerText1}>Pack Costs</Text>
+                <Text style={styles.updateCostInnerText2}>
+                  {packCigarettesPrice}
+                </Text>
+                <Animated.View
+                  style={[
+                    styles.updateCostInnerPress,
+                    { transform: [{ translateY: moveAnime1 }] },
+                  ]}
+                >
+                  <Pressable
+                    onPress={() =>
+                      removechangeHandler(setAmount, packCigarettesPrice)
+                    }
+                    style={{ backgroundColor: "#C39351" }}
+                    android_ripple={{ color: "white" }}
+                  >
+                    <Ionicons name="remove" size={30} color="white" />
+                  </Pressable>
+                </Animated.View>
+                {packCigarettesPrice <
+                  user.consumptionInfo.packCigarettesPrice && (
+                  <View style={[styles.refrash]}>
+                    <Pressable
+                      onPress={() =>
+                        setAmount(user.consumptionInfo.packCigarettesPrice)
+                      }
+                    >
+                      <Ionicons name="refresh" size={24} color="black" />
+                    </Pressable>
+                  </View>
+                )}
+              </View>
+              <View style={styles.updateCostInner}>
+                <Text style={styles.updateCostInnerText1}>
+                  Cigarette in Pack
+                </Text>
+                <Text style={styles.updateCostInnerText2}>
+                  {cigarettesInPack}
+                </Text>
+                <Animated.View
+                  style={[
+                    styles.updateCostInnerPress,
+                    { transform: [{ translateY: moveAnime2 }] },
+                  ]}
+                >
+                  <Pressable
+                    onPress={() =>
+                      removechangeHandler(setCigarettesInPack, cigarettesInPack)
+                    }
+                    style={{ backgroundColor: "#C39351" }}
+                    android_ripple={{ color: "white" }}
+                  >
+                    <Ionicons name="remove" size={30} color="white" />
+                  </Pressable>
+                </Animated.View>
+                {cigarettesInPack < user.consumptionInfo.cigarettesInPack && (
+                  <View style={[styles.refrash]}>
+                    <Pressable
+                      onPress={() =>
+                        setCigarettesInPack(
+                          user.consumptionInfo.cigarettesInPack
+                        )
+                      }
+                    >
+                      <Ionicons name="refresh" size={24} color="black" />
+                    </Pressable>
+                  </View>
+                )}
+              </View>
+            </View>
+            <SubmitButton onPress={submitNewconsumptionInfoHanlder}>
+              Update
+            </SubmitButton>
+          </>
+        )}
+      {user.smokingInfo.isQuiting && (
+        <View style={{ marginTop: 10 }}>
+          <Text
             style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "center",
+              textAlign: "center",
+              fontFamily: "HammersmithOne-Bold",
+              fontSize: 17,
+              marginBottom: 5,
             }}
           >
-            <View style={styles.updateCostInner}>
-              <Text style={styles.updateCostInnerText1}>Cigarette/Day</Text>
-              <Text style={styles.updateCostInnerText2}>{cigarettesDay}</Text>
-              <Animated.View
-                style={[
-                  styles.updateCostInnerPress,
-                  { transform: [{ translateY: moveAnime }] },
-                ]}
-              >
-                <Pressable
-                  onPress={() => removechangeHandler(setCounter, cigarettesDay)}
-                  style={{ backgroundColor: "#C39351" }}
-                  android_ripple={{ color: "white" }}
-                >
-                  <Ionicons name="remove" size={30} color="white" />
-                </Pressable>
-              </Animated.View>
-              {cigarettesDay < user.consumptionInfo.cigarettesDay && (
-                <View style={[styles.refrash]}>
-                  <Pressable
-                    onPress={() =>
-                      setCounter(user.consumptionInfo.cigarettesDay)
-                    }
-                  >
-                    <Ionicons name="refresh" size={24} color="black" />
-                  </Pressable>
-                </View>
-              )}
-            </View>
-            <View style={styles.updateCostInner}>
-              <Text style={styles.updateCostInnerText1}>Pack Costs</Text>
-              <Text style={styles.updateCostInnerText2}>
-                {packCigarettesPrice}
-              </Text>
-              <Animated.View
-                style={[
-                  styles.updateCostInnerPress,
-                  { transform: [{ translateY: moveAnime1 }] },
-                ]}
-              >
-                <Pressable
-                  onPress={() =>
-                    removechangeHandler(setAmount, packCigarettesPrice)
-                  }
-                  style={{ backgroundColor: "#C39351" }}
-                  android_ripple={{ color: "white" }}
-                >
-                  <Ionicons name="remove" size={30} color="white" />
-                </Pressable>
-              </Animated.View>
-              {packCigarettesPrice <
-                user.consumptionInfo.packCigarettesPrice && (
-                <View style={[styles.refrash]}>
-                  <Pressable
-                    onPress={() =>
-                      setAmount(user.consumptionInfo.packCigarettesPrice)
-                    }
-                  >
-                    <Ionicons name="refresh" size={24} color="black" />
-                  </Pressable>
-                </View>
-              )}
-            </View>
-            <View style={styles.updateCostInner}>
-              <Text style={styles.updateCostInnerText1}>Cigarette in Pack</Text>
-              <Text style={styles.updateCostInnerText2}>
-                {cigarettesInPack}
-              </Text>
-              <Animated.View
-                style={[
-                  styles.updateCostInnerPress,
-                  { transform: [{ translateY: moveAnime2 }] },
-                ]}
-              >
-                <Pressable
-                  onPress={() =>
-                    removechangeHandler(setCigarettesInPack, cigarettesInPack)
-                  }
-                  style={{ backgroundColor: "#C39351" }}
-                  android_ripple={{ color: "white" }}
-                >
-                  <Ionicons name="remove" size={30} color="white" />
-                </Pressable>
-              </Animated.View>
-              {cigarettesInPack < user.consumptionInfo.cigarettesInPack && (
-                <View style={[styles.refrash]}>
-                  <Pressable
-                    onPress={() =>
-                      setCigarettesInPack(user.consumptionInfo.cigarettesInPack)
-                    }
-                  >
-                    <Ionicons name="refresh" size={24} color="black" />
-                  </Pressable>
-                </View>
-              )}
-            </View>
-          </View>
-          <SubmitButton onPress={submitNewconsumptionInfoHanlder}>
-            Update
-          </SubmitButton>
-        </>
+            Grand Savings per day
+          </Text>
+          <Text
+            style={{
+              color: "green",
+              fontSize: 25,
+              fontFamily: "HammersmithOne-Bold",
+              textAlign: "center",
+            }}
+          >
+            +
+            {!!user &&
+              !!user.consumptionInfo &&
+              user.consumptionInfo.cigarettesDailyCost *
+                user.smokingInfo.noSmokingDays}
+            $
+          </Text>
+        </View>
       )}
     </ScrollView>
   );

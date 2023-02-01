@@ -51,19 +51,5 @@ export const updateUser = (data, id) => {
   };
 };
 
-export const updateUserCosts = (data, id) => {
-  return (dispatch) => {
-    dispatch(fetchStart());
-    http
-      .updateUserCosts(data, id)
-      .then((response) => {
-        dispatch(fetchSuccess(response.data.user));
-      })
-      .catch(() => {
-        dispatch(fetchError());
-      });
-  };
-};
-
 export const selectUser = (state) => state.user;
 export default userSlice.reducer;

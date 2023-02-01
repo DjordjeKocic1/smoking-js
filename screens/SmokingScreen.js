@@ -15,11 +15,9 @@ export const SmokingScreen = ({ navigation }) => {
     let dataToSend = {
       smokingInfo: {
         isQuiting: isEnabled,
-        dateOfQuiting: new Date(),
+        dateOfQuiting: new Date().toDateString(),
       },
     };
-
-    console.log(dataToSend);
 
     dispatch(updateUser(dataToSend, user._id));
     navigation.replace("Categories");
