@@ -8,9 +8,9 @@ import {
   Text,
   View,
 } from "react-native";
-import { selectUser, updateUser } from "../store/userReducer";
+import { selectUser, updateUser, userHealth } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 import { Loading } from "../components/Loading";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -25,6 +25,12 @@ const UserScreen = ({ navigation }) => {
   useEffect(() => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
   }, []);
+
+  useEffect(() => {
+    if (!!user && !!user.smokingInfo && user.smokingInfo.isQuiting) {
+      dispatch(userHealth(user._id));
+    }
+  }, [dispatch]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -50,31 +56,9 @@ const UserScreen = ({ navigation }) => {
     ).start();
   }, [heartBeat]);
 
-  useEffect(() => {
-    if (!!user.smokingInfo && user.smokingInfo.isQuiting) {
-      const msDiff =
-        new Date().getTime() -
-        new Date(user.smokingInfo.dateOfQuiting).getTime();
-      let dataToSend = {
-        smokingInfo: {
-          ...user.smokingInfo,
-          noSmokingDays: Math.floor(msDiff / (1000 * 60 * 60 * 24)),
-        },
-      };
-      dispatch(updateUser(dataToSend, user._id));
-    }
-
-    return () => {};
-  }, [dispatch]);
-
-  let userconsumptionInfoCheck =
-    !!user && !!user.consumptionInfo.cigarettesAvoided;
-
   if (isLoading) {
     return <Loading />;
   }
-
-  console.log(user);
 
   return (
     <View style={styles.mainContainer}>
@@ -86,21 +70,40 @@ const UserScreen = ({ navigation }) => {
               resizeMode="contain"
               source={require("../assets/images/games/money.png")}
             />
-            <Text
-              style={[
-                styles.statsheader,
-                {
-                  color: userconsumptionInfoCheck ? "green" : "black",
-                },
-              ]}
-            >
-              +
-              {!!user.savedInfo && !!user.savedInfo.cigarettesAvoidedCost
-                ? user.savedInfo.cigarettesAvoidedCost +
-                  !!user.consumptionInfo.cigarettesAvoidedCost
-                : user.consumptionInfo.cigarettesAvoidedCost}
-              $
-            </Text>
+            {!!user.smokingInfo && user.smokingInfo.isQuiting ? (
+              <Text
+                style={[
+                  styles.statsheader,
+                  {
+                    color: "green",
+                  },
+                ]}
+              >
+                +
+                {user.consumptionInfo.cigarettesDailyCost *
+                  user.smokingInfo.noSmokingDays}
+                $
+              </Text>
+            ) : (
+              <Text
+                style={[
+                  styles.statsheader,
+                  {
+                    color:
+                      !!user && !!user.consumptionInfo.cigarettesAvoided
+                        ? "green"
+                        : "#222325",
+                  },
+                ]}
+              >
+                +
+                {!!user.savedInfo && !!user.savedInfo.cigarettesAvoidedCost
+                  ? user.savedInfo.cigarettesAvoidedCost +
+                    !!user.consumptionInfo.cigarettesAvoidedCost
+                  : user.consumptionInfo.cigarettesAvoidedCost}
+                $
+              </Text>
+            )}
           </View>
           <View style={{ alignItems: "center" }}>
             <Animated.View style={{ transform: [{ scale: heartBeat }] }}>
@@ -114,19 +117,19 @@ const UserScreen = ({ navigation }) => {
               style={[
                 styles.statsheader,
                 {
-                  color: userconsumptionInfoCheck ? "red" : "black",
+                  color: "red",
                 },
               ]}
             >
-              {userconsumptionInfoCheck
-                ? (user.consumptionInfo.cigarettesAvoided * 0.1).toFixed(1)
+              {!!user.healthInfo && !!user.healthInfo.avgHealth
+                ? user.healthInfo.avgHealth
                 : 0}
               %
             </Text>
           </View>
           {!!user.smokingInfo && !user.smokingInfo.isQuiting ? (
             <View style={{ alignItems: "center" }}>
-              <MaterialIcons name="smoke-free" size={27} color="black" />
+              <MaterialIcons name="smoke-free" size={27} color="#222325" />
               <Text style={styles.statsheader}>
                 {!!user.savedInfo && !!user.savedInfo.cigarettesAvoided
                   ? user.savedInfo.cigarettesAvoided +
@@ -136,7 +139,7 @@ const UserScreen = ({ navigation }) => {
             </View>
           ) : (
             <View style={{ alignItems: "center" }}>
-              <MaterialIcons name="smoke-free" size={27} color="black" />
+              <MaterialIcons name="smoke-free" size={27} color="#222325" />
               <Text style={styles.statsheader}>
                 <Text style={{ fontSize: 17 }}>
                   {!!user.smokingInfo && !!user.smokingInfo.noSmokingDays
@@ -228,7 +231,7 @@ const UserScreen = ({ navigation }) => {
           </View>
           <View style={styles.innerContainer}>
             <Pressable
-              onPress={() => navigation.navigate("Tips")}
+              onPress={() => navigation.navigate("Mentor")}
               android_ripple={{ color: "#c39351" }}
               style={styles.innerContainerBox}
             >
@@ -240,17 +243,31 @@ const UserScreen = ({ navigation }) => {
             </Pressable>
           </View>
           <View style={styles.innerContainer}>
-            <Pressable
-              onPress={() => navigation.navigate("Tips")}
-              android_ripple={{ color: "#c39351" }}
-              style={styles.innerContainerBox}
-            >
-              <Text style={styles.innerText}>Settings</Text>
-              <Image
-                source={require("../assets/images/settings.png")}
-                style={styles.innerContainerImg}
-              />
-            </Pressable>
+            {!!user.smokingInfo && user.smokingInfo.isQuiting ? (
+              <Pressable
+                onPress={() => navigation.navigate("Slow")}
+                android_ripple={{ color: "#c39351" }}
+                style={styles.innerContainerBox}
+              >
+                <Text style={styles.innerText}>Take it Slow</Text>
+                <Image
+                  source={require("../assets/images/clock.png")}
+                  style={styles.innerContainerImg}
+                />
+              </Pressable>
+            ) : (
+              <Pressable
+                onPress={() => navigation.navigate("QuitNow")}
+                android_ripple={{ color: "#c39351" }}
+                style={styles.innerContainerBox}
+              >
+                <Text style={styles.innerText}>Quit Now</Text>
+                <Image
+                  source={require("../assets/images/cigQuit.png")}
+                  style={styles.innerContainerImg}
+                />
+              </Pressable>
+            )}
           </View>
           <View style={styles.innerContainer}>
             <Pressable

@@ -100,7 +100,7 @@ export const BottomNav = ({ navigation }) => {
           >
             <routeC.icon
               color={
-                selected && selected.name == routeC.name ? "#C39351" : "black"
+                selected && selected.name == routeC.name ? "#C39351" : "#222325"
               }
             />
             <Text style={[styles.innerNavText]}>{routeC.title}</Text>
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   innerNavText: {
-    color: "black",
+    color: "#222325",
     fontFamily: "HammersmithOne-Bold",
     fontSize: 12,
   },

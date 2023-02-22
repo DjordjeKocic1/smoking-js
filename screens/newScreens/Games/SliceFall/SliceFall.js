@@ -193,7 +193,7 @@ export const SliceFall = ({ navigation }) => {
           <Entypo
             name="info-with-circle"
             size={20}
-            color="black"
+            color="#222325"
             style={{ position: "absolute", left: 10, top: 7 }}
           />
           <View style={{ alignItems: "flex-start", position: "relative" }}>

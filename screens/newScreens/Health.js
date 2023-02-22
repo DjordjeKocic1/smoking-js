@@ -1,241 +1,207 @@
 import {
-  Dimensions,
+  Animated,
+  Easing,
   Image,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import { useEffect, useRef } from "react";
 
 import { BackButton } from "../../components/BackButton";
-import CircularProgress from "react-native-circular-progress-indicator";
-import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
+import { Entypo } from "@expo/vector-icons";
+import { Loading } from "../../components/Loading";
 import { backButtonHandlerAlert } from "../../helper/helpers";
-import { useEffect } from "react";
-import { useState } from "react";
+import { selectUser } from "../../store/userReducer";
+import { useSelector } from "react-redux";
 
 export const Health = ({ navigation }) => {
-  const [heartV, setHeartV] = useState(10.2);
-  const [cellsV, setCellsV] = useState(20.2);
-  const [lungeV, setLungeV] = useState(50.2);
-  const [brainV, setBrainV] = useState(9.2);
-  const [bonesV, setBonesV] = useState(28);
-  const [phisV, setphisV] = useState(10.2);
+  const { user } = useSelector(selectUser);
+  const isLoading = useSelector((state) => state.user.isLoading);
+  const borderAnim = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.loop(
+      Animated.timing(borderAnim, {
+        toValue: 2,
+        duration: 1500,
+        easing: Easing.bounce,
+        useNativeDriver: false,
+      })
+    ).start();
+  }, [borderAnim]);
 
   useEffect(() => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
   }, []);
 
+  if (isLoading) return <Loading />;
+
+  const healthArr = [
+    {
+      name: "bloodPressure",
+      text1: "your blood flow is low",
+      text2: "your blood flow is improving",
+      img: require("../../assets/images/bloodvain.png"),
+    },
+    {
+      name: "COinBloodDecreases",
+      text1: "carbon monoxid in your blood is high",
+      text2: "carbon monoxide is reducing in your blood",
+      img: require("../../assets/images/coBlood.png"),
+    },
+    {
+      name: "heartRhythm",
+      text1: "heart rate is low",
+      text2: "heart rate is improving",
+      img: require("../../assets/images/heart.png"),
+    },
+    {
+      name: "physicalAndBodilyStrength",
+      text1: "physical ability is weak",
+      text2: "physical ability is improving",
+      img: require("../../assets/images/bones.png"),
+    },
+    {
+      name: "lungCapacity",
+      text1: "the lung capacity is small",
+      text2: "lung capacity is improving",
+      img: require("../../assets/images/lungs.png"),
+    },
+    {
+      name: "irritatingCough",
+      text1: "irritating cough is present",
+      text2: "irritating coughing will soon be gone",
+      img: require("../../assets/images/cough.png"),
+    },
+    {
+      name: "stressTolerance",
+      text1: "stress tolerance is low",
+      text2: "stress tolerance is improving",
+      img: require("../../assets/images/stress.png"),
+    },
+    {
+      name: "riskofKidneyCancer",
+      text1: "risk of kidney cancer is high",
+      text2: "risk of kidney cancer is low",
+      img: require("../../assets/images/kidneys.png"),
+    },
+    {
+      name: "riskofLungeCancer",
+      text1: "risk of lunge cancer is high",
+      text2: "risk of lunge cancer is low",
+      img: require("../../assets/images/lungecancer.png"),
+    },
+    {
+      name: "riskofStroke",
+      text1: "risk of stroke is high",
+      text2: "risk of stroke is low",
+      img: require("../../assets/images/stroke.png"),
+    },
+    {
+      name: "riskofThroatCancer",
+      text1: "risk of throat cancer is high",
+      text2: "risk of throat cancer is low",
+      img: require("../../assets/images/throatcancer.png"),
+    },
+    {
+      name: "riskofheartAttack",
+      text1: "risk of heart attack is high",
+      text2: "risk of heart attack is low",
+      img: require("../../assets/images/heartStroke.png"),
+    },
+  ];
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <BackButton navigation={navigation} where={"UserScreen"} />
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          flexWrap: "wrap",
-        }}
-      >
-        <View style={styles.progress}>
-          <Image
-            source={require("../../assets/images/heart.png")}
-            style={styles.progressImg}
-          />
-          <CircularProgress
-            delay={1000}
-            value={heartV}
-            inActiveStrokeColor={"#c3935130"}
-            progressValueStyle={styles.progressValue}
-            circleBackgroundColor="#e1d5c9"
-            activeStrokeColor="#c39351"
-            inActiveStrokeOpacity={0.2}
-            progressValueColor={"#c39351"}
-            progressFormatter={(value) => {
-              "worklet";
-              return value.toFixed(1); // 2 decimal places
-            }}
-            valueSuffix={"%"}
-          />
-          <Text
-            style={{
-              textAlign: "center",
-              fontFamily: "HammersmithOne-Bold",
-              fontSize: 12,
-              marginTop: 10,
-            }}
-          >
-            Blood/Heart
+      <View style={styles.avgHealth}>
+        <View style={styles.avgHealthHead}>
+          <Entypo name="arrow-bold-up" size={40} color="green" />
+          <Text style={[styles.text, { fontSize: 50, marginBottom: 0 }]}>
+            {!!user.healthInfo && user.healthInfo.avgHealth}%
           </Text>
         </View>
-        <View style={styles.progress}>
-          <Image
-            source={require("../../assets/images/cells.png")}
-            style={styles.progressImg}
-          />
-          <CircularProgress
-            delay={1500}
-            value={cellsV}
-            inActiveStrokeColor={"#c3935130"}
-            progressValueStyle={styles.progressValue}
-            circleBackgroundColor="#e1d5c9"
-            activeStrokeColor="#c39351"
-            inActiveStrokeOpacity={0.2}
-            progressValueColor={"#c39351"}
-            progressFormatter={(value) => {
-              "worklet";
-              return value.toFixed(1); // 2 decimal places
-            }}
-            valueSuffix={"%"}
-          />
-          <Text
-            style={{
-              textAlign: "center",
-              fontFamily: "HammersmithOne-Bold",
-              fontSize: 12,
-              marginTop: 10,
-            }}
-          >
-            Body Cells
-          </Text>
-        </View>
-        <View style={styles.progress}>
-          <Image
-            source={require("../../assets/images/lungs.png")}
-            style={styles.progressImg}
-          />
-          <CircularProgress
-            delay={2000}
-            value={lungeV}
-            inActiveStrokeColor={"#c3935130"}
-            progressValueStyle={styles.progressValue}
-            circleBackgroundColor="#e1d5c9"
-            activeStrokeColor="#c39351"
-            inActiveStrokeOpacity={0.2}
-            progressValueColor={"#c39351"}
-            progressFormatter={(value) => {
-              "worklet";
-              return value.toFixed(1); // 2 decimal places
-            }}
-            valueSuffix={"%"}
-          />
-          <Text
-            style={{
-              textAlign: "center",
-              fontFamily: "HammersmithOne-Bold",
-              fontSize: 12,
-              marginTop: 10,
-            }}
-          >
-            Respiratory system
-          </Text>
-        </View>
-        <View style={styles.progress}>
-          <Image
-            source={require("../../assets/images/brain.png")}
-            style={styles.progressImg}
-          />
-          <CircularProgress
-            delay={2500}
-            value={brainV}
-            inActiveStrokeColor={"#c3935130"}
-            progressValueStyle={styles.progressValue}
-            circleBackgroundColor="#e1d5c9"
-            activeStrokeColor="#c39351"
-            inActiveStrokeOpacity={0.2}
-            progressValueColor={"#c39351"}
-            progressFormatter={(value) => {
-              "worklet";
-              return value.toFixed(1); // 2 decimal places
-            }}
-            valueSuffix={"%"}
-          />
-          <Text
-            style={{
-              textAlign: "center",
-              fontFamily: "HammersmithOne-Bold",
-              fontSize: 12,
-              marginTop: 10,
-            }}
-          >
-            Nervous system
-          </Text>
-        </View>
-        <View style={styles.progress}>
-          <Image
-            source={require("../../assets/images/bonesMus.png")}
-            style={styles.progressImg}
-          />
-          <CircularProgress
-            delay={3000}
-            value={bonesV}
-            inActiveStrokeColor={"#c3935130"}
-            progressValueStyle={styles.progressValue}
-            circleBackgroundColor="#e1d5c9"
-            activeStrokeColor="#c39351"
-            inActiveStrokeOpacity={0.2}
-            progressValueColor={"#c39351"}
-            progressFormatter={(value) => {
-              "worklet";
-              return value.toFixed(1); // 2 decimal places
-            }}
-            valueSuffix={"%"}
-          />
-          <Text
-            style={{
-              textAlign: "center",
-              fontFamily: "HammersmithOne-Bold",
-              fontSize: 12,
-              marginTop: 10,
-            }}
-          >
-            Bones/Muscles
-          </Text>
-        </View>
-        <View style={styles.progress}>
-          <Image
-            source={require("../../assets/images/bones.png")}
-            style={styles.progressImg}
-          />
-          <CircularProgress
-            delay={3500}
-            value={phisV}
-            inActiveStrokeColor={"#c3935130"}
-            progressValueStyle={styles.progressValue}
-            circleBackgroundColor="#e1d5c9"
-            activeStrokeColor="#c39351"
-            inActiveStrokeOpacity={0.2}
-            progressValueColor={"#c39351"}
-            progressFormatter={(value) => {
-              "worklet";
-              return value.toFixed(1); // 2 decimal places
-            }}
-            valueSuffix={"%"}
-          />
-          <Text
-            style={{
-              textAlign: "center",
-              fontFamily: "HammersmithOne-Bold",
-              fontSize: 12,
-              marginTop: 10,
-            }}
-          >
-            Physical ability
-          </Text>
-        </View>
-      </View>
-      <View
-        style={{
-          backgroundColor: "#222325",
-          paddingHorizontal: 20,
-          paddingVertical: 5,
-          borderWidth: 0.5,
-          borderRadius: 5,
-        }}
-      >
-        <Text style={{ color: "white", fontFamily: "HammersmithOne-Bold" }}>
-          Detail view
+        <Text style={[styles.text, { fontSize: 15 }]}>Avg. Health</Text>
+        <Text
+          style={[
+            styles.text,
+            {
+              fontSize: 10,
+              marginTop: 0,
+              color:
+                !!user.healthInfo && user.healthInfo.avgHealth == 100
+                  ? "green"
+                  : "red",
+              zIndex: 2,
+            },
+          ]}
+        >
+          (
+          {!!user.healthInfo && user.healthInfo.avgHealth == 100
+            ? "Healthy"
+            : "Unhealthy"}
+          )
         </Text>
       </View>
+      <View style={styles.cardMain}>
+        {healthArr.map((value) => {
+          return (
+            <View key={value.name} style={styles.card}>
+              <Image source={value.img} style={styles.cardImage} />
+              <Text
+                style={[
+                  styles.text,
+                  { fontSize: 12, color: "#222325", marginBottom: 0 },
+                ]}
+              >
+                {!!user && !!user.healthInfo && user.healthInfo[value.name]}%
+              </Text>
+              <View style={styles.progressOuter}>
+                <Animated.View
+                  style={[
+                    styles.progressBarInner,
+                    {
+                      borderRightWidth: borderAnim,
+                      borderRightColor: "green",
+                      backgroundColor:
+                        !!user &&
+                        !!user.healthInfo &&
+                        user.healthInfo[value.name] > 50 &&
+                        user.healthInfo[value.name] != 100
+                          ? "#c39351"
+                          : user.healthInfo[value.name] == 100
+                          ? "green"
+                          : "#c39351",
+                      width: `${
+                        !!user &&
+                        !!user.healthInfo &&
+                        user.healthInfo[value.name]
+                          ? user.healthInfo[value.name]
+                          : 0
+                      }%`,
+                    },
+                  ]}
+                ></Animated.View>
+              </View>
+              <Text style={styles.text}>
+                {!!user &&
+                !!user.healthInfo &&
+                user.healthInfo[value.name] == 100
+                  ? value.text2
+                  : value.text1}
+              </Text>
+            </View>
+          );
+        })}
+      </View>
+      <Pressable
+        style={styles.helpBtn}
+        onPress={() => navigation.replace("Tips")}
+      >
+        <Text style={styles.helpBtnText}>Need help?</Text>
+      </Pressable>
     </ScrollView>
   );
 };
@@ -246,50 +212,63 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     backgroundColor: "#e1d5c9",
+    paddingTop: 70,
   },
-  outerProgress: {
-    width: Dimensions.get("screen").width / 1.2,
-    height: 15,
-    borderWidth: 0.5,
-    borderRadius: 5,
+  cardMain: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-evenly",
   },
-  outerProgressText: {
-    textAlign: "center",
-    fontFamily: "HammersmithOne-Bold",
-  },
-  innerProgress: {
-    height: 15,
-    borderWidth: 0.5,
-    borderRadius: 5,
-    borderColor: "e1d5c9",
+  card: { marginBottom: 10, width: 150, alignItems: "center" },
+  cardImage: {
+    width: 50,
+    height: 50,
+    resizeMode: "contain",
+    marginBottom: 5,
   },
   text: {
     textAlign: "center",
     fontFamily: "HammersmithOne-Bold",
-    fontSize: 17,
+    fontSize: 13,
+    marginTop: 5,
+    marginBottom: 10,
   },
-  progress: {
-    margin: 10,
-    position: "relative",
-    borderColor: "black",
-    borderBottomWidth: 0.2,
-    borderLeftWidth: 0.1,
-    borderRightWidth: 0.1,
-    borderRadius: 20,
-    padding: 10,
+  progressOuter: {
+    width: 100,
+    height: 15,
+    borderRadius: 2,
+    borderWidth: 0.1,
   },
-  progressImg: {
-    width: 50,
-    height: 50,
-    position: "absolute",
-    top: 30,
-    left: 45,
-    zIndex: 999,
-    resizeMode: "contain",
+  progressBarInner: {
+    height: 15,
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
   },
   progressValue: {
     fontFamily: "HammersmithOne-Bold",
     fontSize: 17,
-    marginTop: 70,
+  },
+  avgHealthHead: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  avgHealth: {
+    marginBottom: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  helpBtn: {
+    backgroundColor: "#222325",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    borderRadius: 5,
+  },
+  helpBtnText: {
+    color: "white",
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: 17,
   },
 });

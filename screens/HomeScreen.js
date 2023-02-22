@@ -1,26 +1,25 @@
 import { Animated, Easing } from "react-native";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { BottomNav } from "../components/BottomNav";
 import { Chats } from "./newScreens/Chats";
 import { CigAnimation } from "../gameUtils/CigAnimation";
 import { Games } from "./newScreens/Games";
 import { Goals } from "./newScreens/Goals";
 import { Health } from "./newScreens/Health";
 import { Info } from "../components/Info";
+import { Mentor } from "./newScreens/Mentor";
 import { ProfileScreen } from "./ProfileScreen";
+import { QuitNow } from "./newScreens/QuitNow";
 import { Savings } from "./newScreens/Savings";
 import { SliceFall } from "./newScreens/Games/SliceFall/SliceFall";
+import { Slow } from "./newScreens/Slow";
 import { Tips } from "./newScreens/Tips";
 import UserScreen from "./UserScreen";
 import { View } from "react-native-animatable";
 import { backButtonHandlerAlert } from "../helper/helpers";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { selectUser } from "../store/userReducer";
-import { useEffect } from "react";
-import { useLayoutEffect } from "react";
-import { useRef } from "react";
 import { useSelector } from "react-redux";
-import { useState } from "react";
 
 const Stack = createNativeStackNavigator();
 
@@ -106,6 +105,27 @@ const HomeScreen = ({ navigation }) => {
           <Stack.Screen
             name="Chats"
             component={Chats}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Slow"
+            component={Slow}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="QuitNow"
+            component={QuitNow}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Mentor"
+            component={Mentor}
             options={{
               headerShown: false,
             }}

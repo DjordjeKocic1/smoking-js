@@ -51,5 +51,19 @@ export const updateUser = (data, id) => {
   };
 };
 
+export const userHealth = (id) => {
+  return (dispatch) => {
+    dispatch(fetchStart());
+    http
+      .userHealthGet(id)
+      .then((response) => {
+        dispatch(fetchSuccess(response.data.user));
+      })
+      .catch(() => {
+        dispatch(fetchError());
+      });
+  };
+};
+
 export const selectUser = (state) => state.user;
 export default userSlice.reducer;

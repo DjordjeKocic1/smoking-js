@@ -10,6 +10,10 @@ const updateUser = (data, id) => {
   return axios.put(url + `/send-user-info/update-user/${id}`, data);
 };
 
+const userHealthGet = (id) => {
+  return axios.get(url + `/send-user-info/user-health/${id}`);
+};
+
 const categoriesGet = () => {
   return axios.get(url + "/send-user-info/categories");
 };
@@ -17,5 +21,6 @@ const categoriesGet = () => {
 export const http = {
   createUser,
   updateUser,
+  userHealthGet,
   categoriesGet,
 };

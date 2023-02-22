@@ -19,7 +19,7 @@ function UserViewScreen({ navigation, route }) {
               style={{ color: "white" }}
               name="md-star"
               size={24}
-              color="black"
+              color="#222325"
             />
           </Pressable>
         );

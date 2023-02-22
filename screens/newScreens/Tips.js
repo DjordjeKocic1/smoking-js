@@ -39,7 +39,22 @@ export const Tips = ({ navigation }) => {
         </Text>
         <View style={{ alignItems: "center" }}>
           <Text style={styles.tipsHeaderText}>
-            1. Try nicotine replacement therapy.
+            1. Prepare before you go 'Cold Turkey'.
+          </Text>
+          <Text
+            style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}
+          >
+            There’s more to it than just tossing your cigarettes out. Smoking is
+            an addiction. The brain is hooked on nicotine. Without it, you’ll go
+            through withdrawal. Line up support in advance. Ask your doctor
+            about all the methods that will help, such as quit-smoking classes
+            and apps, counseling, medication, and hypnosis. You’ll be ready for
+            the day you choose to quit.
+          </Text>
+        </View>
+        <View style={{ alignItems: "center", marginTop: 20 }}>
+          <Text style={styles.tipsHeaderText}>
+            2. Try nicotine replacement therapy.
           </Text>
           <Text
             style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}
@@ -51,9 +66,8 @@ export const Tips = ({ navigation }) => {
             stop-smoking drugs.
           </Text>
         </View>
-        <View style={{ alignItems: "center", marginTop: 20 }}></View>
         <View style={{ alignItems: "center", marginTop: 20 }}>
-          <Text style={styles.tipsHeaderText}>2. Avoid triggers.</Text>
+          <Text style={styles.tipsHeaderText}>3. Avoid triggers.</Text>
           <Text
             style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}
           >
@@ -63,7 +77,7 @@ export const Tips = ({ navigation }) => {
           </Text>
         </View>
         <View style={{ alignItems: "center", marginTop: 20 }}>
-          <Text style={styles.tipsHeaderText}>3. Delay.</Text>
+          <Text style={styles.tipsHeaderText}>4. Delay.</Text>
           <Text
             style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}
           >
@@ -75,7 +89,7 @@ export const Tips = ({ navigation }) => {
           </Text>
         </View>
         <View style={{ alignItems: "center", marginTop: 20 }}>
-          <Text style={styles.tipsHeaderText}>4. Chew on it.</Text>
+          <Text style={styles.tipsHeaderText}>5. Chew on it.</Text>
           <Text
             style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}
           >
@@ -85,7 +99,7 @@ export const Tips = ({ navigation }) => {
           </Text>
         </View>
         <View style={{ alignItems: "center", marginTop: 20 }}>
-          <Text style={styles.tipsHeaderText}>5. Don't have 'just one'.</Text>
+          <Text style={styles.tipsHeaderText}>6. Don't have 'just one'.</Text>
           <Text
             style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}
           >
@@ -97,7 +111,7 @@ export const Tips = ({ navigation }) => {
         </View>
         <View style={{ alignItems: "center", marginTop: 20 }}>
           <Text style={styles.tipsHeaderText}>
-            6. Try relaxation techniques.
+            7. Try relaxation techniques.
           </Text>
           <Text
             style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}
@@ -111,7 +125,7 @@ export const Tips = ({ navigation }) => {
         </View>
         <View style={{ alignItems: "center", marginTop: 20 }}>
           <Text style={styles.tipsHeaderText}>
-            7. Remind yourself of the benefits.
+            8. Remind yourself of the benefits.
           </Text>
           <Text
             style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}

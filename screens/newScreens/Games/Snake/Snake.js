@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 import Constants from "../../../../gameUtils/Constants";
-import { Entypo } from '@expo/vector-icons';
+import { Entypo } from "@expo/vector-icons";
 import { Food } from "./Food";
 import { GameEngine } from "react-native-game-engine";
 import { GameLoop } from "../../../../gameUtils/GameLoop";
@@ -28,7 +28,6 @@ export const Snake = () => {
   };
 
   const onEvent = (e) => {
-    console.log(e);
     if (e.type === "game-over") {
       setRunning(false);
     }
@@ -45,7 +44,14 @@ export const Snake = () => {
         size: 20,
         renderer: <Head />,
       },
-      food: { position: [randomBetween(0, Constants.GRID_SIZE - 1), randomBetween(0, Constants.GRID_SIZE - 1)], size: 20, renderer: <Food />},
+      food: {
+        position: [
+          randomBetween(0, Constants.GRID_SIZE - 1),
+          randomBetween(0, Constants.GRID_SIZE - 1),
+        ],
+        size: 20,
+        renderer: <Food />,
+      },
       tail: { size: 20, elements: [], renderer: <Tail /> },
     });
     setRunning(true);
@@ -53,39 +59,50 @@ export const Snake = () => {
 
   return (
     <ImageBackground
-    resizeMode="cover"
+      resizeMode="cover"
       style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
       source={require("../../../../assets/images/games/greenField.png")}
     >
-      <ImageBackground resizeMode="contain"  style={{  justifyContent: "center", alignItems: "center"}} source={require("../../../../assets/images/games/fence.png")}>
-      <GameEngine
-        style={[
-          {
-            width: boardSize,
-            height: boardSize,
-            flex: null,
-          },
-        ]}
-        ref={(ref) => setEngine(ref)}
-        systems={[GameLoop]}
-        entities={{
-          head: {
-            position: [0, 0],
-            size: 20,
-            updateFrequency: 10,
-            nextMove: 10,
-            xspeed: 1,
-            yspeed: 0,
-            renderer: <Head />,
-          },
-          food: { position: [randomBetween(0, Constants.GRID_SIZE - 1), randomBetween(0, Constants.GRID_SIZE - 1)], size: 20, renderer: <Food />},
-          tail: { size: 20, elements: [], renderer: <Tail /> },
-        }}
-        running={running}
-        onEvent={onEvent}
+      <ImageBackground
+        resizeMode="contain"
+        style={{ justifyContent: "center", alignItems: "center" }}
+        source={require("../../../../assets/images/games/fence.png")}
       >
-        <StatusBar hidden={true} />
-      </GameEngine>
+        <GameEngine
+          style={[
+            {
+              width: boardSize,
+              height: boardSize,
+              flex: null,
+            },
+          ]}
+          ref={(ref) => setEngine(ref)}
+          systems={[GameLoop]}
+          entities={{
+            head: {
+              position: [0, 0],
+              size: 20,
+              updateFrequency: 10,
+              nextMove: 10,
+              xspeed: 1,
+              yspeed: 0,
+              renderer: <Head />,
+            },
+            food: {
+              position: [
+                randomBetween(0, Constants.GRID_SIZE - 1),
+                randomBetween(0, Constants.GRID_SIZE - 1),
+              ],
+              size: 20,
+              renderer: <Food />,
+            },
+            tail: { size: 20, elements: [], renderer: <Tail /> },
+          }}
+          running={running}
+          onEvent={onEvent}
+        >
+          <StatusBar hidden={true} />
+        </GameEngine>
       </ImageBackground>
       <Button title="New Game" onPress={reset} />
       <View style={styles.controls}>
@@ -95,7 +112,7 @@ export const Snake = () => {
               engine.dispatch({ type: "move-up" });
             }}
           >
-            <Entypo name="arrow-bold-up" size={50} color="black" />
+            <Entypo name="arrow-bold-up" size={50} color="#222325" />
           </TouchableOpacity>
         </View>
         <View style={styles.controlRow}>
@@ -104,7 +121,7 @@ export const Snake = () => {
               engine.dispatch({ type: "move-left" });
             }}
           >
-            <Entypo name="arrow-bold-left" size={50} color="black" />
+            <Entypo name="arrow-bold-left" size={50} color="#222325" />
           </TouchableOpacity>
           <View style={[styles.control, { backgroundColor: null }]} />
           <TouchableOpacity
@@ -112,7 +129,7 @@ export const Snake = () => {
               engine.dispatch({ type: "move-right" });
             }}
           >
-            <Entypo name="arrow-bold-right" size={50} color="black" />
+            <Entypo name="arrow-bold-right" size={50} color="#222325" />
           </TouchableOpacity>
         </View>
         <View style={styles.controlRow}>
@@ -121,7 +138,7 @@ export const Snake = () => {
               engine.dispatch({ type: "move-down" });
             }}
           >
-            <Entypo name="arrow-bold-down" size={50} color="black" />
+            <Entypo name="arrow-bold-down" size={50} color="#222325" />
           </TouchableOpacity>
         </View>
       </View>
@@ -131,7 +148,7 @@ export const Snake = () => {
 
 const styles = StyleSheet.create({
   controls: {
-    marginTop:20,
+    marginTop: 20,
     flexDirection: "column",
   },
   controlRow: {
@@ -145,7 +162,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     backgroundColor: "blue",
-    justifyContent:'center',
-    alignItems:'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

@@ -54,17 +54,7 @@ export const Info = ({ text, user }) => {
             color: "green",
           }}
         >
-          +{!!user && calcAvoidedSavings} $
-        </Text>
-        <Text
-          style={{
-            textAlign: "center",
-            fontFamily: "HammersmithOne-Bold",
-            fontSize: 12,
-            color: "red",
-          }}
-        >
-          +0.1% <Entypo name="heart" size={12} color="red" />
+          +{!!user && calcAvoidedSavings.toFixed(1)} $
         </Text>
       </View>
     </Animated.View>

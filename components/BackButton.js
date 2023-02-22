@@ -27,7 +27,7 @@ export const BackButton = ({ navigation, where }) => {
         onPress={() => navigation.navigate(where)}
         style={styles.submitButton}
       >
-        <Entypo name="arrow-bold-left" size={30} color="black" />
+        <Entypo name="arrow-bold-left" size={30} color="#222325" />
       </Pressable>
     </View>
   );

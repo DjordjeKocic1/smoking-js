@@ -19,7 +19,7 @@ export const Floor = ({ size, body, color }) => {
         height: height,
         overflow: "hidden",
         flexDirection: "row",
-        backgroundColor: "black",
+        backgroundColor: "#222325",
       }}
     >
       {Array.apply(null, Array(imageIterations)).map((el, idx) => {

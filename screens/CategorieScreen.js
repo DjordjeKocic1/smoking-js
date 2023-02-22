@@ -81,8 +81,6 @@ const CategorieScreen = ({ navigation }) => {
     setActiveNextButton(true);
   };
 
-  console.log(contents);
-
   return (
     <View style={styles.mainContainer}>
       <View

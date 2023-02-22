@@ -165,6 +165,9 @@ export const ProfileScreen = ({ navigation }) => {
                 source={{ uri: user.image }}
               />
             </View>
+            <Text style={styles.regText}>
+              {!!user.smokingInfo && user.smokingInfo.dateOfQuiting}
+            </Text>
           </View>
           <View style={styles.inputsContent}>
             <Text>Full Name</Text>
@@ -201,7 +204,7 @@ export const ProfileScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        <View style={{ flex: 1 }}>
+        {/* <View style={{ flex: 1 }}>
           <Text style={styles.countryBoxText}>Your Country?</Text>
           <View style={styles.countryBox}>
             {countriesAr.map((country) => {
@@ -226,7 +229,7 @@ export const ProfileScreen = ({ navigation }) => {
               );
             })}
           </View>
-        </View>
+        </View> */}
         <SubmitButton onPress={submittionHandler}>Save Changes</SubmitButton>
       </View>
     </ScrollView>
@@ -305,5 +308,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#c39351",
     padding: 5,
     fontSize: 15,
+  },
+  regText: {
+    fontSize: 11,
+    fontFamily: "HammersmithOne-Bold",
+    textAlign: "center",
+    fontStyle: "italic",
+    marginTop: 5,
   },
 });

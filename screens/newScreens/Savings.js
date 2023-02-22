@@ -1,5 +1,6 @@
 import {
   Animated,
+  Easing,
   Image,
   Pressable,
   ScrollView,
@@ -26,9 +27,23 @@ export const Savings = ({ navigation }) => {
   const [packCigarettesPrice, setAmount] = useState(0);
   const [cigarettesInPack, setCigarettesInPack] = useState(0);
 
+  const [savingBox1Enable, setSavedBox1Enable] = useState(false);
+  const [savingBox2Enable, setSavedBox2Enable] = useState(false);
+  const [savingBox3Enable, setSavedBox3Enable] = useState(false);
+  const [savingBox4Enable, setSavedBox4Enable] = useState(false);
+  const [savingBox5Enable, setSavedBox5Enable] = useState(false);
+  const [savingBox6Enable, setSavedBox6Enable] = useState(false);
+
   const moveAnime = useRef(new Animated.Value(0)).current;
   const moveAnime1 = useRef(new Animated.Value(0)).current;
   const moveAnime2 = useRef(new Animated.Value(0)).current;
+
+  const savingBox1Anim = useRef(new Animated.Value(120)).current;
+  const savingBox2Anim = useRef(new Animated.Value(120)).current;
+  const savingBox3Anim = useRef(new Animated.Value(120)).current;
+  const savingBox4Anim = useRef(new Animated.Value(120)).current;
+  const savingBox5Anim = useRef(new Animated.Value(120)).current;
+  const savingBox6Anim = useRef(new Animated.Value(120)).current;
 
   useEffect(() => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
@@ -114,7 +129,29 @@ export const Savings = ({ navigation }) => {
     setIsUpdate(false);
   };
 
-  console.log(user);
+  const onSavingBoxChangeHandler = (
+    savedBoxBool,
+    savedBoxBoolState,
+    savedBoxAnim
+  ) => {
+    if (!savedBoxBool) {
+      savedBoxBoolState(true);
+      Animated.timing(savedBoxAnim, {
+        toValue: 160,
+        duration: 700,
+        useNativeDriver: false,
+        easing: Easing.bounce,
+      }).start();
+    } else {
+      savedBoxBoolState(false);
+      Animated.timing(savedBoxAnim, {
+        toValue: 120,
+        duration: 1000,
+        useNativeDriver: false,
+        easing: Easing.bounce,
+      }).start();
+    }
+  };
 
   if (isLoading) {
     return <Loading />;
@@ -124,11 +161,20 @@ export const Savings = ({ navigation }) => {
     <ScrollView contentContainerStyle={styles.container}>
       <BackButton navigation={navigation} where={"UserScreen"} />
       <View style={styles.saving}>
-        <View style={styles.savingBox}>
+        <Animated.View
+          style={[styles.savingBox, { height: savingBox1Anim }]}
+          onTouchStart={() =>
+            onSavingBoxChangeHandler(
+              savingBox1Enable,
+              setSavedBox1Enable,
+              savingBox1Anim
+            )
+          }
+        >
           <Image
             source={require("../../assets/images/games/nosmoking.png")}
             resizeMode="contain"
-            style={{ width: 50, height: 50 }}
+            style={styles.costImage}
           />
           <Text style={[styles.savingText]}>Avoided</Text>
           <Text style={[styles.savingText, { color: "green" }]}>
@@ -139,12 +185,68 @@ export const Savings = ({ navigation }) => {
               : user.consumptionInfo.cigarettesAvoidedCost}
             $
           </Text>
-        </View>
-        <View style={styles.savingBox}>
+          {savingBox1Enable && (
+            <View style={{ marginTop: 15 }}>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette/Price
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  $
+                  {!!user.savedInfo
+                    ? user.savedInfo.packCigarettesPrice
+                    : user.consumptionInfo.packCigarettesPrice}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette/Pack
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  {!!user.savedInfo
+                    ? user.savedInfo.cigarettesInPack
+                    : user.consumptionInfo.cigarettesInPack}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette Avoided
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  {!!user.savedInfo
+                    ? user.savedInfo.cigarettesAvoided
+                    : user.consumptionInfo.cigarettesAvoided}
+                </Text>
+              </View>
+            </View>
+          )}
+        </Animated.View>
+        <Animated.View
+          style={[styles.savingBox, { height: savingBox2Anim }]}
+          onTouchStart={() =>
+            onSavingBoxChangeHandler(
+              savingBox2Enable,
+              setSavedBox2Enable,
+              savingBox2Anim
+            )
+          }
+        >
           <Image
             source={require("../../assets/images/games/daymoney.png")}
             resizeMode="contain"
-            style={{ width: 50, height: 50 }}
+            style={styles.costImage}
           />
           <Text style={[styles.savingText]}>Cigarette daily</Text>
           <Text
@@ -164,12 +266,68 @@ export const Savings = ({ navigation }) => {
               : user.consumptionInfo.cigarettesDailyCost}
             $
           </Text>
-        </View>
-        <View style={styles.savingBox}>
+          {savingBox2Enable && (
+            <View style={{ marginTop: 15 }}>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette/Price
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  $
+                  {!!user.savedInfo
+                    ? user.savedInfo.packCigarettesPrice
+                    : user.consumptionInfo.packCigarettesPrice}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette/Pack
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  {!!user.savedInfo
+                    ? user.savedInfo.cigarettesInPack
+                    : user.consumptionInfo.cigarettesInPack}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette daily
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  {!!user.savedInfo
+                    ? user.savedInfo.cigarettesDay
+                    : user.consumptionInfo.cigarettesDay}
+                </Text>
+              </View>
+            </View>
+          )}
+        </Animated.View>
+        <Animated.View
+          style={[styles.savingBox, { height: savingBox3Anim }]}
+          onTouchStart={() =>
+            onSavingBoxChangeHandler(
+              savingBox3Enable,
+              setSavedBox3Enable,
+              savingBox3Anim
+            )
+          }
+        >
           <Image
             source={require("../../assets/images/games/montly.png")}
             resizeMode="contain"
-            style={{ width: 50, height: 50 }}
+            style={styles.costImage}
           />
           <Text style={[styles.savingText]}>Cigarette monthly</Text>
           <Text
@@ -189,12 +347,80 @@ export const Savings = ({ navigation }) => {
               : user.consumptionInfo.cigarettesMontlyCost}
             $
           </Text>
-        </View>
-        <View style={styles.savingBox}>
+          {savingBox3Enable && (
+            <View style={{ marginTop: 15, marginBottom: 5 }}>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette/Price
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  $
+                  {!!user.savedInfo
+                    ? user.savedInfo.packCigarettesPrice
+                    : user.consumptionInfo.packCigarettesPrice}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette/Pack
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  {!!user.savedInfo
+                    ? user.savedInfo.cigarettesInPack
+                    : user.consumptionInfo.cigarettesInPack}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette daily
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  {!!user.savedInfo
+                    ? user.savedInfo.cigarettesDay
+                    : user.consumptionInfo.cigarettesInPack}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Avg. Month days
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  30
+                </Text>
+              </View>
+            </View>
+          )}
+        </Animated.View>
+        <Animated.View
+          style={[styles.savingBox, { height: savingBox4Anim }]}
+          onTouchStart={() =>
+            onSavingBoxChangeHandler(
+              savingBox4Enable,
+              setSavedBox4Enable,
+              savingBox4Anim
+            )
+          }
+        >
           <Image
             source={require("../../assets/images/games/yearly.png")}
             resizeMode="contain"
-            style={{ width: 50, height: 50 }}
+            style={styles.costImage}
           />
           <Text style={[styles.savingText]}>Cigarette yearly</Text>
           <Text
@@ -214,12 +440,80 @@ export const Savings = ({ navigation }) => {
               : user.consumptionInfo.cigarettesYearlyCost}
             $
           </Text>
-        </View>
-        <View style={styles.savingBox}>
+          {savingBox4Enable && (
+            <View style={{ marginTop: 15, marginBottom: 5 }}>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette/Price
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  $
+                  {!!user.savedInfo
+                    ? user.savedInfo.packCigarettesPrice
+                    : user.consumptionInfo.packCigarettesPrice}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette/Pack
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  {!!user.savedInfo
+                    ? user.savedInfo.cigarettesInPack
+                    : user.consumptionInfo.cigarettesInPack}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette daily
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  {!!user.savedInfo
+                    ? user.savedInfo.cigarettesDay
+                    : user.consumptionInfo.cigarettesDay}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Year days
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  365
+                </Text>
+              </View>
+            </View>
+          )}
+        </Animated.View>
+        <Animated.View
+          style={[styles.savingBox, { height: savingBox5Anim }]}
+          onTouchStart={() =>
+            onSavingBoxChangeHandler(
+              savingBox5Enable,
+              setSavedBox5Enable,
+              savingBox5Anim
+            )
+          }
+        >
           <Image
             source={require("../../assets/images/games/5year.png")}
             resizeMode="contain"
-            style={{ width: 100, height: 50 }}
+            style={styles.costImage2}
           />
           <Text style={[styles.savingText]}>Cigarette 5 Years</Text>
           <Text
@@ -239,12 +533,80 @@ export const Savings = ({ navigation }) => {
               : user.consumptionInfo.cigarettes5YearCost}
             $
           </Text>
-        </View>
-        <View style={styles.savingBox}>
+          {savingBox5Enable && (
+            <View style={{ marginTop: 15, marginBottom: 5 }}>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette/Price
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  $
+                  {!!user.savedInfo
+                    ? user.savedInfo.packCigarettesPrice
+                    : user.consumptionInfo.packCigarettesPrice}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette/Pack
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  {!!user.savedInfo
+                    ? user.savedInfo.cigarettesInPack
+                    : user.consumptionInfo.cigarettesInPack}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette daily
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  {!!user.savedInfo
+                    ? user.savedInfo.cigarettesDay
+                    : user.consumptionInfo.cigarettesDay}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Year
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  5
+                </Text>
+              </View>
+            </View>
+          )}
+        </Animated.View>
+        <Animated.View
+          style={[styles.savingBox, { height: savingBox6Anim }]}
+          onTouchStart={() =>
+            onSavingBoxChangeHandler(
+              savingBox6Enable,
+              setSavedBox6Enable,
+              savingBox6Anim
+            )
+          }
+        >
           <Image
             source={require("../../assets/images/games/10year.png")}
             resizeMode="contain"
-            style={{ width: 100, height: 50 }}
+            style={styles.costImage2}
           />
           <Text style={[styles.savingText]}>Cigarette 10 Years</Text>
           <Text
@@ -264,7 +626,66 @@ export const Savings = ({ navigation }) => {
               : user.consumptionInfo.cigarettes10YearCost}
             $
           </Text>
-        </View>
+          {savingBox6Enable && (
+            <View style={{ marginTop: 15, marginBottom: 5 }}>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette/Price
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  $
+                  {!!user.savedInfo
+                    ? user.savedInfo.packCigarettesPrice
+                    : user.consumptionInfo.packCigarettesPrice}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette/Pack
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  {!!user.savedInfo
+                    ? user.savedInfo.cigarettesInPack
+                    : user.consumptionInfo.cigarettesInPack}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Cigarette daily
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  {!!user.savedInfo
+                    ? user.savedInfo.cigarettesDay
+                    : user.consumptionInfo.cigarettesDay}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  Year
+                </Text>
+                <Text
+                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
+                >
+                  10
+                </Text>
+              </View>
+            </View>
+          )}
+        </Animated.View>
       </View>
       {!!user.smokingInfo && !user.smokingInfo.isQuiting && (
         <Pressable
@@ -317,7 +738,7 @@ export const Savings = ({ navigation }) => {
                         setCounter(user.consumptionInfo.cigarettesDay)
                       }
                     >
-                      <Ionicons name="refresh" size={24} color="black" />
+                      <Ionicons name="refresh" size={24} color="#222325" />
                     </Pressable>
                   </View>
                 )}
@@ -351,7 +772,7 @@ export const Savings = ({ navigation }) => {
                         setAmount(user.consumptionInfo.packCigarettesPrice)
                       }
                     >
-                      <Ionicons name="refresh" size={24} color="black" />
+                      <Ionicons name="refresh" size={24} color="#222325" />
                     </Pressable>
                   </View>
                 )}
@@ -388,7 +809,7 @@ export const Savings = ({ navigation }) => {
                         )
                       }
                     >
-                      <Ionicons name="refresh" size={24} color="black" />
+                      <Ionicons name="refresh" size={24} color="#222325" />
                     </Pressable>
                   </View>
                 )}
@@ -400,7 +821,13 @@ export const Savings = ({ navigation }) => {
           </>
         )}
       {user.smokingInfo.isQuiting && (
-        <View style={{ marginTop: 10 }}>
+        <View
+          style={{
+            marginTop: 10,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Text
             style={{
               textAlign: "center",
@@ -409,23 +836,64 @@ export const Savings = ({ navigation }) => {
               marginBottom: 5,
             }}
           >
-            Grand Savings per day
+            You saved
           </Text>
-          <Text
+          <View
             style={{
-              color: "green",
-              fontSize: 25,
-              fontFamily: "HammersmithOne-Bold",
-              textAlign: "center",
+              flexDirection: "row",
+              justifyContent: "center",
+              width: 200,
             }}
           >
-            +
-            {!!user &&
-              !!user.consumptionInfo &&
-              user.consumptionInfo.cigarettesDailyCost *
-                user.smokingInfo.noSmokingDays}
-            $
+            <Text
+              style={{
+                color: "green",
+                fontSize: 20,
+                fontFamily: "HammersmithOne-Bold",
+                textAlign: "center",
+              }}
+            >
+              {!!user &&
+                !!user.consumptionInfo &&
+                user.consumptionInfo.cigarettesDailyCost *
+                  user.smokingInfo.noSmokingDays}
+              $
+            </Text>
+          </View>
+          <Text
+            style={{
+              fontSize: 17,
+              fontFamily: "HammersmithOne-Bold",
+              textAlign: "center",
+              marginTop: 20,
+            }}
+          >
+            You didn't smoke
           </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                color: "#c39351",
+                fontSize: 25,
+                fontFamily: "HammersmithOne-Bold",
+                textAlign: "center",
+              }}
+            >
+              {!!user &&
+                !!user.consumptionInfo &&
+                user.consumptionInfo.cigarettesDay *
+                  user.smokingInfo.noSmokingDays}
+            </Text>
+            <Image
+              source={require("../../assets/images/games/cigAnim/cigDidnt.png")}
+              style={{ width: 30, height: 30, resizeMode: "contain" }}
+            />
+          </View>
         </View>
       )}
     </ScrollView>
@@ -454,7 +922,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderLeftWidth: 0.1,
     borderRightWidth: 0.1,
-    justifyContent: "space-evenly",
+    justifyContent: "center",
     backgroundColor: "#c393513d",
     alignItems: "center",
     margin: 10,
@@ -514,5 +982,16 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 5,
     bottom: 5,
+  },
+  costImage: {
+    width: 50,
+    height: 50,
+  },
+  costImage2: { width: 100, height: 50 },
+  extraContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: 120,
   },
 });
