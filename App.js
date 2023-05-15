@@ -1,27 +1,20 @@
 import * as Font from "expo-font";
+import * as Notifications from "expo-notifications";
 import * as SplashScreen from "expo-splash-screen";
 
+import {Alert, Platform, Text, TextInput} from "react-native";
+
 import { Asset } from "expo-asset";
-import { BottomNav } from "./components/BottomNav";
 import CategorieScreen from "./screens/CategorieScreen";
-import { Chats } from "./screens/newScreens/Chats";
-import { CigAnimation } from "./gameUtils/CigAnimation";
 import CigaretteCostScreen from "./screens/CigaretteCostScreen";
-import { Games } from "./screens/newScreens/Games";
-import { Goals } from "./screens/newScreens/Goals";
-import { Health } from "./screens/newScreens/Health";
 import HomeScreen from "./screens/HomeScreen";
 import LoadingScreen from "./screens/LoadingScreen";
 import LoginScreen from "./screens/LoginScreen";
+import { MentorViewScreen } from "./screens/MentorViewScreen";
 import { NavigationContainer } from "@react-navigation/native";
-import { ProfileScreen } from "./screens/ProfileScreen";
 import { Provider } from "react-redux";
-import { Savings } from "./screens/newScreens/Savings";
-import { SliceFall } from "./screens/newScreens/Games/SliceFall/SliceFall";
 import { SmokingScreen } from "./screens/SmokingScreen";
-import { Snake } from "./screens/newScreens/Games/Snake/Snake";
 import { StatusBar } from "expo-status-bar";
-import { Tips } from "./screens/newScreens/Tips";
 import VerifyScreen from "./screens/VerifyScreen";
 import { View } from "react-native-animatable";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -30,8 +23,23 @@ import { useCallback } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 
+Text.defaultProps = Text.defaultProps || {};
+Text.defaultProps.maxFontSizeMultiplier = 1; // the maximum amount the font size will scale.
+TextInput.defaultProps = Text.defaultProps || {};
+TextInput.defaultProps.maxFontSizeMultiplier = 1;
+
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+      shouldShowAlert: true,
+    };
+  },
+});
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -78,13 +86,40 @@ export default function App() {
       } catch (e) {
         console.log(e);
       } finally {
-        // Tell the application to render
         setIsLoaded(true);
       }
     };
 
     loadResurses();
+
+    () => {};
   }, []);
+
+  // useEffect(() => {
+  //   const confPushNotification = async() => {
+  //     const {status} = await Notifications.getPermissionsAsync()
+  //     let finalStatus = status;
+  //     if(finalStatus !== 'granted') {
+  //      const {status} = await Notifications.requestPermissionsAsync()
+  //      finalStatus = status
+  //     }
+  //     if(finalStatus !== 'granted'){
+  //       Alert.alert("Premission required", "Notification need the appropriate promissions")
+  //       return;
+  //     }
+  //     const pushTokenData = Notifications.getExpoPushTokenAsync();
+  //     console.log(pushTokenData);
+
+  //     if(Platform.OS === 'android'){
+  //       Notifications.setNotificationChannelAsync('default', {
+  //         name: 'default',
+  //         importance: Notifications.AndroidImportance.DEFAULT
+  //       })
+  //     }
+  //   }
+
+  //   confPushNotification();
+  // },[])
 
   const loadFonts = async () => {
     await Font.loadAsync({
@@ -94,15 +129,11 @@ export default function App() {
   };
   useEffect(() => {
     loadFonts();
+    () => {};
   }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (isLoaded) {
-      // This tells the splash screen to hide immediately! If we call this after
-      // `setAppIsReady`, then we may see a blank screen while the app is
-      // loading its initial state and rendering its first pixels. So instead,
-      // we hide the splash screen once we know the root view has already
-      // performed layout.
       await SplashScreen.hideAsync();
     }
   }, [isLoaded]);
@@ -123,13 +154,7 @@ export default function App() {
       <StatusBar style="light" backgroundColor="transparent" />
       <Provider store={store}>
         <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="Login"
-            screenOptions={{
-              headerStyle: { backgroundColor: "#e1d5c9" },
-              headerTintColor: "#222325",
-            }}
-          >
+          <Stack.Navigator initialRouteName="Login">
             <Stack.Screen
               name="Login"
               component={LoginScreen}
@@ -147,6 +172,11 @@ export default function App() {
             <Stack.Screen
               name="Smoke Calculator"
               component={CigaretteCostScreen}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#e1d5c9",
+                },
+              }}
             />
             <Stack.Screen
               name="SmokingScreen"
@@ -170,6 +200,13 @@ export default function App() {
               }}
             />
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
+            <Stack.Screen
+              name="MentorViewScreen"
+              options={{
+                headerShown: false,
+              }}
+              component={MentorViewScreen}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

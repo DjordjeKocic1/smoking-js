@@ -1,36 +1,65 @@
+import * as Notifications from "expo-notifications";
+
 import {
   Animated,
+  Dimensions,
   Easing,
   Image,
   Pressable,
+  RefreshControl,
   ScrollView,
+  Share,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { selectUser, updateUser, userHealth } from "../store/userReducer";
+import { selectUser, userHealth } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
+import { Entypo } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
 import { MaterialIcons } from "@expo/vector-icons";
 import { backButtonHandlerAlert } from "../helper/helpers";
+import { getNotification } from "../store/notificationReducer";
 
 const UserScreen = ({ navigation }) => {
   const { user } = useSelector(selectUser);
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.user.isLoading);
   const heartBeat = useRef(new Animated.Value(1)).current;
+  const [refreshing, setRefreshing] = useState(false);
+
+  // const scheduleNotificationHandler = (message,time) => {
+  //   console.log('trigger notification');
+  //   Notifications.scheduleNotificationAsync({
+  //     content: {
+  //       title: "App",
+  //       body: message,
+  //       data: {
+  //         userName: "Djole",
+  //       },
+  //       color:"#c39351",
+  //     },
+  //     trigger: {
+  //       seconds: time,
+  //     },
+  //   });
+  // }; 
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+      dispatch(userHealth(user._id));
+      dispatch(getNotification(user._id));
+    }, 2000);
+  };
 
   useEffect(() => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
+    return () => {};
   }, []);
-
-  useEffect(() => {
-    if (!!user && !!user.smokingInfo && user.smokingInfo.isQuiting) {
-      dispatch(userHealth(user._id));
-    }
-  }, [dispatch]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -46,6 +75,11 @@ const UserScreen = ({ navigation }) => {
   }, [navigation]);
 
   useEffect(() => {
+    dispatch(userHealth(user._id));
+    dispatch(getNotification(user._id));
+  },[user._id])
+
+  useEffect(() => {
     Animated.loop(
       Animated.timing(heartBeat, {
         toValue: 1.08,
@@ -54,7 +88,22 @@ const UserScreen = ({ navigation }) => {
         useNativeDriver: true,
       })
     ).start();
+    return () => {};
   }, [heartBeat]);
+
+  const onShareHandler = async () => {
+    let url =
+      "https://play.google.com/store/apps/details?id=com.instagram.android&hl=en_IN&gl=US&pli=1";
+    try {
+      const result = await Share.share({
+        title: "The most detailed application to stop smoking",
+        message: url,
+      });
+      setActiveStyle(true);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   if (isLoading) {
     return <Loading />;
@@ -62,11 +111,22 @@ const UserScreen = ({ navigation }) => {
 
   return (
     <View style={styles.mainContainer}>
-      <ScrollView>
+      <ScrollView
+        style={{flexGrow:1}}
+        showsHorizontalScrollIndicator={false}
+        endFillColor="#000"
+        overScrollMode="never"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View style={styles.stats}>
-          <View style={{ alignItems: "center" }}>
+          <View
+            onTouchEnd={() => navigation.navigate("Savings")}
+            style={{ alignItems: "center" }}
+          >
             <Image
-              style={{ width: 30, height: 30 }}
+              style={{ width:  Dimensions.get("screen").width > 700 ? 80 : 30, height: Dimensions.get("screen").width > 700 ? 80 : 30 }}
               resizeMode="contain"
               source={require("../assets/images/games/money.png")}
             />
@@ -80,8 +140,12 @@ const UserScreen = ({ navigation }) => {
                 ]}
               >
                 +
-                {user.consumptionInfo.cigarettesDailyCost *
-                  user.smokingInfo.noSmokingDays}
+                {!!user &&
+                  !!user.consumptionInfo &&
+                  (
+                    user.consumptionInfo.cigarettesDailyCost *
+                    user.smokingInfo.noSmokingDays
+                  ).toFixed(1)}
                 $
               </Text>
             ) : (
@@ -90,7 +154,9 @@ const UserScreen = ({ navigation }) => {
                   styles.statsheader,
                   {
                     color:
-                      !!user && !!user.consumptionInfo.cigarettesAvoided
+                      !!user &&
+                      !!user.consumptionInfo &&
+                      !!user.consumptionInfo.cigarettesAvoided
                         ? "green"
                         : "#222325",
                   },
@@ -105,14 +171,30 @@ const UserScreen = ({ navigation }) => {
               </Text>
             )}
           </View>
-          <View style={{ alignItems: "center" }}>
-            <Animated.View style={{ transform: [{ scale: heartBeat }] }}>
+          <View
+            style={{
+              alignItems: "center",
+              position: "relative",
+              opacity:
+                !!user.smokingInfo && !user.smokingInfo.isQuiting ? 0.3 : 1,
+            }}
+          >
+            <Entypo
+              name="cross"
+              size={30}
+              color="black"
+              style={{ position: "absolute" }}
+            />
+            <Pressable
+              disabled={!!user.smokingInfo && !user.smokingInfo.isQuiting}
+              onPress={() => navigation.navigate("Health")}
+            >
               <Image
-                style={{ width: 30, height: 30 }}
+                style={{ width: Dimensions.get("screen").width > 700 ? 80 : 30, height: Dimensions.get("screen").width > 700 ? 80 : 30 }}
                 resizeMode="contain"
                 source={require("../assets/images/games/heart.png")}
               />
-            </Animated.View>
+            </Pressable>
             <Text
               style={[
                 styles.statsheader,
@@ -128,18 +210,24 @@ const UserScreen = ({ navigation }) => {
             </Text>
           </View>
           {!!user.smokingInfo && !user.smokingInfo.isQuiting ? (
-            <View style={{ alignItems: "center" }}>
-              <MaterialIcons name="smoke-free" size={27} color="#222325" />
+            <View
+              onTouchEnd={() => navigation.navigate("Savings")}
+              style={{ alignItems: "center" }}
+            >
+              <MaterialIcons name="smoke-free" size={Dimensions.get("screen").width > 700 ? 80 : 27} color="#222325" />
               <Text style={styles.statsheader}>
                 {!!user.savedInfo && !!user.savedInfo.cigarettesAvoided
-                  ? user.savedInfo.cigarettesAvoided +
+                  ? user.savedInfo.cigarettesAvoided + !!user.consumptionInfo &&
                     !!user.consumptionInfo.cigarettesAvoided
                   : user.consumptionInfo.cigarettesAvoided}
               </Text>
             </View>
           ) : (
-            <View style={{ alignItems: "center" }}>
-              <MaterialIcons name="smoke-free" size={27} color="#222325" />
+            <View
+              onTouchEnd={() => navigation.navigate("Savings")}
+              style={{ alignItems: "center" }}
+            >
+              <MaterialIcons name="smoke-free" size={Dimensions.get("screen").width > 700 ? 80 : 27} color="#222325" />
               <Text style={styles.statsheader}>
                 <Text style={{ fontSize: 17 }}>
                   {!!user.smokingInfo && !!user.smokingInfo.noSmokingDays
@@ -154,7 +242,10 @@ const UserScreen = ({ navigation }) => {
         <View style={styles.container}>
           <View style={styles.innerContainer}>
             <Pressable
-              onPress={() => navigation.navigate("Savings")}
+              onPress={() => {
+                navigation.navigate("Savings")
+                // scheduleNotificationHandler("Dont forget to check your status 📜!",5)
+              }}
               style={styles.innerContainerBox}
               android_ripple={{ color: "#c39351" }}
             >
@@ -165,7 +256,7 @@ const UserScreen = ({ navigation }) => {
               </Text>
               <Image
                 source={require("../assets/images/economy.png")}
-                style={{ width: 100, height: 100 }}
+                style={styles.innerContainerImg}
               />
             </Pressable>
           </View>
@@ -225,6 +316,19 @@ const UserScreen = ({ navigation }) => {
               <Text style={styles.innerText}>Health Tracker</Text>
               <Image
                 source={require("../assets/images/traning.png")}
+                style={styles.innerContainerImg}
+              />
+            </Pressable>
+          </View>
+          <View style={styles.innerContainer}>
+            <Pressable
+              onPress={() => navigation.navigate("Task")}
+              android_ripple={{ color: "#c39351" }}
+              style={[styles.innerContainerBox, { position: "relative" }]}
+            >
+              <Text style={styles.innerText}>Tasks</Text>
+              <Image
+                source={require("../assets/images/tasksImg.png")}
                 style={styles.innerContainerImg}
               />
             </Pressable>
@@ -308,6 +412,19 @@ const UserScreen = ({ navigation }) => {
               />
             </Pressable>
           </View>
+          <View style={styles.innerContainer}>
+            <Pressable
+              onPress={onShareHandler}
+              android_ripple={{ color: "#c39351" }}
+              style={styles.innerContainerBox}
+            >
+              <Text style={styles.innerText}>Share</Text>
+              <Image
+                source={require("../assets/images/shareImg.png")}
+                style={styles.innerContainerImg}
+              />
+            </Pressable>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -315,7 +432,7 @@ const UserScreen = ({ navigation }) => {
 };
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
+    flex:1,
     flexDirection: "column",
     backgroundColor: "#e1d5c9",
     justifyContent: "center",
@@ -339,10 +456,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "HammersmithOne-Bold",
   },
+
   innerText: {
     fontFamily: "HammersmithOne-Bold",
     marginTop: 10,
-    fontSize: 12,
+    fontSize:  Dimensions.get("screen").width > 700 ? 25 : 12,
   },
   container: {
     flex: 1,
@@ -360,11 +478,11 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderColor: "#22232533",
     borderRadius: 30,
-    width: 130,
-    height: 120,
+    width: Dimensions.get("screen").width > 700 ? 250 : 130,
+    height: Dimensions.get("screen").width > 700 ? 250 : 130,
     overflow: "hidden",
   },
-  innerContainerImg: { width: 100, height: 100, aspectRatio: 1 },
+  innerContainerImg: { width: Dimensions.get("screen").width > 700 ? 200 : 100, height: Dimensions.get("screen").width > 700 ? 200 : 100, aspectRatio: 1 },
   innerContainerBox: {
     paddingVertical: 30,
     paddingHorizontal: 15,

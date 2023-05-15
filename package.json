@@ -44,9 +44,11 @@
     "react-native-game-engine": "^1.2.0",
     "react-native-modal-dropdown": "^1.0.2",
     "react-native-progress": "^5.0.0",
+    "react-native-radial-gradient": "^1.1.2",
     "react-native-reanimated": "~2.9.1",
     "react-native-svg": "12.3.0",
-    "react-redux": "^8.0.4"
+    "react-redux": "^8.0.4",
+    "expo-notifications": "~0.16.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

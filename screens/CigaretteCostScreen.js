@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { selectUser, updateUser } from "../store/userReducer";
+import { selectUser, updateUser, updateUserCosts } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
@@ -34,6 +34,7 @@ const CigaretteCostScreen = ({ navigation }) => {
 
   useEffect(() => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
+    return () => {};
   }, []);
 
   const increaseHander = (state, innerState) => {
@@ -69,7 +70,7 @@ const CigaretteCostScreen = ({ navigation }) => {
           {
             text: "YES",
             onPress: () => {
-              dispatch(updateUser(dataToSend, user._id));
+              dispatch(updateUserCosts(dataToSend, user._id));
               navigation.replace("SmokingScreen");
             },
           },
@@ -77,7 +78,7 @@ const CigaretteCostScreen = ({ navigation }) => {
       );
     }
 
-    dispatch(updateUser(dataToSend, user._id));
+    dispatch(updateUserCosts(dataToSend, user._id));
     navigation.replace("SmokingScreen");
   };
 

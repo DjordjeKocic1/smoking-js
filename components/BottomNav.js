@@ -2,10 +2,7 @@ import * as Font from "expo-font";
 
 import {
   Animated,
-  Image,
-  ImageBackground,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -71,6 +68,7 @@ export const BottomNav = ({ navigation }) => {
 
   useEffect(() => {
     loadFonts();
+    () => {};
   }, []);
 
   const loadFonts = async () => {

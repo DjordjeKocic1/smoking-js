@@ -13,6 +13,7 @@ import { useEffect } from "react";
 export const Games = ({ navigation }) => {
   useEffect(() => {
     backButtonHandler(navigation, "HomeScreen");
+    return () => {};
   }, []);
 
   return (

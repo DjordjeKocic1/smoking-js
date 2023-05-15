@@ -34,6 +34,7 @@ export const Health = ({ navigation }) => {
 
   useEffect(() => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
+    return () => {};
   }, []);
 
   if (isLoading) return <Loading />;
@@ -114,7 +115,12 @@ export const Health = ({ navigation }) => {
   ];
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsHorizontalScrollIndicator={false}
+      endFillColor="#000"
+      overScrollMode="never"
+    >
       <BackButton navigation={navigation} where={"UserScreen"} />
       <View style={styles.avgHealth}>
         <View style={styles.avgHealthHead}>

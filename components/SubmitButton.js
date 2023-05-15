@@ -13,6 +13,7 @@ export const SubmitButton = (props) => {
   };
   useEffect(() => {
     loadFonts();
+    () => {};
   }, []);
   if (!fontsLoaded) {
     return;

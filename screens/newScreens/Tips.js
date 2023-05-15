@@ -1,12 +1,4 @@
-import {
-  FlatList,
-  Image,
-  ImageBackground,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { BackButton } from "../../components/BackButton";
 import { backButtonHandlerAlert } from "../../helper/helpers";
@@ -16,6 +8,7 @@ import { useLayoutEffect } from "react";
 export const Tips = ({ navigation }) => {
   useEffect(() => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
+    return () => {};
   }, []);
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -25,18 +18,13 @@ export const Tips = ({ navigation }) => {
   return (
     <View style={[styles.mainContainer, { position: "relative" }]}>
       <BackButton navigation={navigation} where={"UserScreen"} />
-      <ScrollView style={styles.innerContainer}>
-        <Text
-          style={{
-            fontFamily: "HammersmithOne-Bold",
-            fontSize: 25,
-            textAlign: "center",
-            paddingTop: 40,
-            paddingBottom: 20,
-          }}
-        >
-          Tips
-        </Text>
+      <ScrollView
+        style={styles.innerContainer}
+        showsHorizontalScrollIndicator={false}
+        endFillColor="#000"
+        overScrollMode="never"
+      >
+        <Text style={styles.tipsHeaderText2}>Tips</Text>
         <View style={{ alignItems: "center" }}>
           <Text style={styles.tipsHeaderText}>
             1. Prepare before you go 'Cold Turkey'.
@@ -154,5 +142,12 @@ const styles = StyleSheet.create({
   tipsHeaderText: {
     fontFamily: "HammersmithOne-Bold",
     fontSize: 18,
+  },
+  tipsHeaderText2: {
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: 25,
+    textAlign: "center",
+    paddingTop: 40,
+    paddingBottom: 20,
   },
 });

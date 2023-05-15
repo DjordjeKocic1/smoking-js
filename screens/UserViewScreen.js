@@ -4,12 +4,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLayoutEffect } from "react";
 
 function UserViewScreen({ navigation, route }) {
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     title: route.params.name,
-  //   });
-  // }, [route, navigation]);
-
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => {

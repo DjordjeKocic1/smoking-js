@@ -8,17 +8,10 @@ import { useSelector } from "react-redux";
 
 const LoadingScreen = ({ navigation }) => {
   const { user } = useSelector(selectUser);
-  const [fontsLoaded, setFontsLoaded] = useState(false);
   const opText = useRef(new Animated.Value(0)).current;
   const opTextDot1 = useRef(new Animated.Value(0)).current;
   const opTextDot2 = useRef(new Animated.Value(0)).current;
   const opTextDot3 = useRef(new Animated.Value(0)).current;
-  const loadFonts = async () => {
-    await Font.loadAsync({
-      "HammersmithOne-Bold": require("../assets/fonts/HammersmithOne-Regular.ttf"),
-    });
-    setFontsLoaded(true);
-  };
 
   useEffect(() => {
     Animated.loop(
@@ -61,15 +54,8 @@ const LoadingScreen = ({ navigation }) => {
           : navigation.replace("Smoke Calculator");
       }
     });
+    return () => {};
   }, [opText, user]);
-
-  useEffect(() => {
-    loadFonts();
-  }, []);
-
-  if (!fontsLoaded) {
-    return;
-  }
 
   return (
     <View style={styles.container}>

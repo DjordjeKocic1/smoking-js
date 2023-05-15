@@ -8,7 +8,11 @@ import {
   Text,
   View,
 } from "react-native";
-import { selectUser, updateUser } from "../../store/userReducer";
+import {
+  selectUser,
+  updateUser,
+  updateUserCosts,
+} from "../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
@@ -47,6 +51,7 @@ export const Savings = ({ navigation }) => {
 
   useEffect(() => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
+    return () => {};
   }, []);
 
   useEffect(() => {
@@ -125,7 +130,7 @@ export const Savings = ({ navigation }) => {
             : 0,
       },
     };
-    dispatch(updateUser(dataToSend, user._id));
+    dispatch(updateUserCosts(dataToSend, user._id));
     setIsUpdate(false);
   };
 
@@ -158,7 +163,12 @@ export const Savings = ({ navigation }) => {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsHorizontalScrollIndicator={false}
+      endFillColor="#000"
+      overScrollMode="never"
+    >
       <BackButton navigation={navigation} where={"UserScreen"} />
       <View style={styles.saving}>
         <Animated.View
@@ -855,8 +865,10 @@ export const Savings = ({ navigation }) => {
             >
               {!!user &&
                 !!user.consumptionInfo &&
-                user.consumptionInfo.cigarettesDailyCost *
-                  user.smokingInfo.noSmokingDays}
+                (
+                  user.consumptionInfo.cigarettesDailyCost *
+                  user.smokingInfo.noSmokingDays
+                ).toFixed(1)}
               $
             </Text>
           </View>

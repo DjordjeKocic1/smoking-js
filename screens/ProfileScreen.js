@@ -1,9 +1,5 @@
-import * as DocumentPicker from "expo-document-picker";
-
 import {
-  Animated,
   Image,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -18,14 +14,11 @@ import { BackButton } from "../components/BackButton";
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
 import { backButtonHandlerAlert } from "../helper/helpers";
-import { countries } from "../utils/countries";
 
 export const ProfileScreen = ({ navigation }) => {
   const { user } = useSelector(selectUser);
   const isLoading = useSelector((state) => state.user.isLoading);
   const dispatch = useDispatch();
-  const [countriesAr, setCountriesAr] = useState(countries);
-  const [screenLoaded, setScreenLoaded] = useState(false);
 
   const [userProfile, setUserProfile] = useState({
     name: "",
@@ -37,6 +30,7 @@ export const ProfileScreen = ({ navigation }) => {
 
   useEffect(() => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
+    return () => {};
   }, []);
 
   useLayoutEffect(() => {
@@ -49,7 +43,6 @@ export const ProfileScreen = ({ navigation }) => {
       headerBackVisible: false,
       headerTintColor: "white",
     });
-    setScreenLoaded(true);
   }, [navigation, user]);
 
   const onNameChangeHandler = (enteredValue) => {
@@ -85,39 +78,15 @@ export const ProfileScreen = ({ navigation }) => {
     });
   };
   const submittionHandler = () => {
-    const countrySelected = countriesAr.find((count) => count.checked);
     const dataTosend = {
       email: userProfile.email,
       name: userProfile.name,
       userBasicInfo: {
         address: userProfile.address,
         city: userProfile.city,
-        country: countrySelected.name,
-        flag: countrySelected.flag,
       },
     };
     dispatch(updateUser(dataTosend, user._id));
-  };
-
-  const testFile = () => {
-    DocumentPicker.getDocumentAsync({ type: "image/*" })
-      .then((res) => {
-        dispatch(updateUser({ image: res.uri }, user._id));
-      })
-      .catch((err) => console.log(err));
-  };
-
-  const onCountryChangeHanlder = (country) => {
-    Animated.spring();
-    setCountriesAr(
-      countriesAr.map((cont) => {
-        if (cont.id == country.id) {
-          return { ...cont, checked: true, opacity: 1 };
-        } else {
-          return { ...cont, checked: false, opacity: 0.3 };
-        }
-      })
-    );
   };
 
   useEffect(() => {
@@ -135,15 +104,6 @@ export const ProfileScreen = ({ navigation }) => {
             : "",
         image: !!user.image ? user.image : "",
       });
-      setCountriesAr(
-        countriesAr.map((count) =>
-          !!user.userBasicInfo &&
-          !!user.userBasicInfo.country &&
-          count.name == user.userBasicInfo.country
-            ? { ...count, checked: true, opacity: 1 }
-            : { ...count, checked: false, opacity: 0.3 }
-        )
-      );
     }
 
     return () => {};
@@ -154,7 +114,12 @@ export const ProfileScreen = ({ navigation }) => {
   }
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1, position: "relative" }}>
+    <ScrollView
+      contentContainerStyle={{ flexGrow: 1, position: "relative" }}
+      showsHorizontalScrollIndicator={false}
+      endFillColor="#000"
+      overScrollMode="never"
+    >
       <BackButton navigation={navigation} where={"UserScreen"} />
       <View style={styles.container}>
         <View style={styles.innerContainer}>
@@ -204,32 +169,6 @@ export const ProfileScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        {/* <View style={{ flex: 1 }}>
-          <Text style={styles.countryBoxText}>Your Country?</Text>
-          <View style={styles.countryBox}>
-            {countriesAr.map((country) => {
-              return (
-                <Pressable
-                  onPress={() => onCountryChangeHanlder(country)}
-                  android_ripple={{
-                    color: "#c39351",
-                    foreground: true,
-                    radius: 100,
-                  }}
-                  style={[
-                    styles.countryBoxFlags,
-                    {
-                      opacity: country.opacity && country.opacity,
-                    },
-                  ]}
-                  key={country.id}
-                >
-                  <Text>{country.name}</Text>
-                </Pressable>
-              );
-            })}
-          </View>
-        </View> */}
         <SubmitButton onPress={submittionHandler}>Save Changes</SubmitButton>
       </View>
     </ScrollView>

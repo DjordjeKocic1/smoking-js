@@ -29,7 +29,7 @@ const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const movingAnim = useRef(new Animated.Value(-10)).current;
-  const [submitClick,setSubmitClick] = useState(false);
+  const [submitClick, setSubmitClick] = useState(false);
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId:
       "161017013722-jjlndnhdi43o1i50qk32uluful7jhgan.apps.googleusercontent.com",
@@ -39,6 +39,7 @@ const LoginScreen = ({ navigation }) => {
 
   useEffect(() => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
+    return () => {};
   }, []);
 
   const goToNextPage = () => {
@@ -52,7 +53,12 @@ const LoginScreen = ({ navigation }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        return dispatch(createUser(data));
+        let dataTosend = {
+          email: data.email,
+          name: data.name,
+          image: data.picture,
+        };
+        return dispatch(createUser(dataTosend));
       })
       .then(() => {
         goToNextPage();
@@ -111,7 +117,7 @@ const LoginScreen = ({ navigation }) => {
         <SubmitButton
           disabled={submitClick}
           onPress={() => {
-            setSubmitClick(true)
+            setSubmitClick(true);
             promptAsync({ showInRecents: true });
           }}
         >

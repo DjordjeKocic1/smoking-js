@@ -16,7 +16,6 @@ const VerifyScreen = ({ navigation }) => {
   const opText = useRef(new Animated.Value(0)).current;
   const opText2 = useRef(new Animated.Value(0)).current;
   const opText3 = useRef(new Animated.Value(0)).current;
-  const spinner = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     Animated.timing(opText, {

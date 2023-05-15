@@ -13,12 +13,19 @@
         {
           "iCloudContainerEnvironment": "Production"
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/cigQuitIcon.png",
+          "color": "#c39351"
+        }
       ]
     ],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#c39351"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -29,11 +36,19 @@
     },
     "android": {
       "versionCode": 1,
+      "useNextNotificationsApi": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "host.exp.exponent"
+    },
+    "notification": {
+      "icon": "./assets/images/cigQuitIcon.png",
+      "color": "#311b92",
+      "iosDisplayInForeground": true,
+      "androidMode": "default",
+      "androidCollapsedTitle": "Updates from Colab.notes"
     },
     "web": {
       "favicon": "./assets/favicon.png"

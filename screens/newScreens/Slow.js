@@ -47,7 +47,11 @@ export const Slow = ({ navigation }) => {
   return (
     <View style={styles.mainContainer}>
       <BackButton navigation={navigation} where={"UserScreen"} />
-      <ScrollView>
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        endFillColor="#000"
+        overScrollMode="never"
+      >
         <Text
           style={[
             styles.tipsContainerText,

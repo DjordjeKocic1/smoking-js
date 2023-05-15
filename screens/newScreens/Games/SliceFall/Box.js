@@ -1,7 +1,5 @@
 import { Animated } from "react-native";
 import Images from "../../../../assets/Images";
-import { useEffect } from "react";
-import { useState } from "react";
 
 export const Box = ({ size, body, color, engine, pose }) => {
   let animatedValue = new Animated.Value(body.velocity.y);

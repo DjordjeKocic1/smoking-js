@@ -24,6 +24,8 @@ export const Info = ({ text, user }) => {
       easing: Easing.cubic,
       useNativeDriver: false,
     }).start();
+
+    () => {};
   }, [animatedMove]);
 
   let calcAvoidedSavings = costOfCigarette(

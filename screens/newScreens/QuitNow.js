@@ -37,7 +37,7 @@ export const QuitNow = ({ navigation }) => {
             };
 
             dispatch(updateUser(dataToSend, user._id));
-            navigation.replace("UserScreen");
+            navigation.navigate("UserScreen");
           },
         },
       ]
@@ -47,7 +47,11 @@ export const QuitNow = ({ navigation }) => {
   return (
     <View style={styles.mainContainer}>
       <BackButton navigation={navigation} where={"UserScreen"} />
-      <ScrollView>
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        endFillColor="#000"
+        overScrollMode="never"
+      >
         <Text
           style={[
             styles.tipsContainerText,

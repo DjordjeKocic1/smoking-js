@@ -1,4 +1,4 @@
-import { Animated, Easing } from "react-native";
+import { Animated, Easing, View } from "react-native";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { Chats } from "./newScreens/Chats";
@@ -8,14 +8,15 @@ import { Goals } from "./newScreens/Goals";
 import { Health } from "./newScreens/Health";
 import { Info } from "../components/Info";
 import { Mentor } from "./newScreens/Mentor";
+import { Notification } from "./newScreens/Notification";
 import { ProfileScreen } from "./ProfileScreen";
 import { QuitNow } from "./newScreens/QuitNow";
 import { Savings } from "./newScreens/Savings";
 import { SliceFall } from "./newScreens/Games/SliceFall/SliceFall";
 import { Slow } from "./newScreens/Slow";
+import { Task } from "./newScreens/Task";
 import { Tips } from "./newScreens/Tips";
 import UserScreen from "./UserScreen";
-import { View } from "react-native-animatable";
 import { backButtonHandlerAlert } from "../helper/helpers";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { selectUser } from "../store/userReducer";
@@ -25,12 +26,12 @@ const Stack = createNativeStackNavigator();
 
 const HomeScreen = ({ navigation }) => {
   const { user } = useSelector(selectUser);
-  // const isLoading = useSelector((state) => state.user.isLoading);
   const [cigIsFin, setCigFin] = useState(false);
   const heartBeat = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
+    return () => {};
   }, []);
 
   useEffect(() => {
@@ -51,6 +52,7 @@ const HomeScreen = ({ navigation }) => {
         useNativeDriver: true,
       })
     ).start();
+    return () => {};
   }, [heartBeat]);
 
   useLayoutEffect(() => {
@@ -67,7 +69,7 @@ const HomeScreen = ({ navigation }) => {
   }, [navigation]);
 
   return (
-    <View style={{ position: "relative", flex: 1, backgroundColor: "#e1d5c9" }}>
+    <View style={{flex:1,backgroundColor:"#e1d5c9"}}>
       <CigAnimation
         user={user}
         onCigFinishHandler={(cigBool) => setCigFin(cigBool)}
@@ -117,8 +119,22 @@ const HomeScreen = ({ navigation }) => {
             }}
           />
           <Stack.Screen
+            name="Notification"
+            component={Notification}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
             name="QuitNow"
             component={QuitNow}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Task"
+            component={Task}
             options={{
               headerShown: false,
             }}

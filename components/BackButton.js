@@ -3,7 +3,7 @@ import * as Font from "expo-font";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useEffect, useState } from "react";
 
-import { Entypo } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 export const BackButton = ({ navigation, where }) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -15,6 +15,7 @@ export const BackButton = ({ navigation, where }) => {
   };
   useEffect(() => {
     loadFonts();
+    () => {};
   }, []);
 
   if (!fontsLoaded) {
@@ -22,12 +23,12 @@ export const BackButton = ({ navigation, where }) => {
   }
 
   return (
-    <View style={{ position: "absolute", right: 10, top: 0, zIndex: 999 }}>
+    <View style={{ position: "absolute", left: 10, top: 5, zIndex: 999 }}>
       <Pressable
         onPress={() => navigation.navigate(where)}
         style={styles.submitButton}
       >
-        <Entypo name="arrow-bold-left" size={30} color="#222325" />
+        <Ionicons name="arrow-back-circle-sharp" size={40} color="#c39351" />
       </Pressable>
     </View>
   );

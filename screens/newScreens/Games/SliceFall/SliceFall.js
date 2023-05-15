@@ -44,6 +44,7 @@ export const SliceFall = ({ navigation }) => {
 
   useEffect(() => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit game?");
+    return () => {};
   }, []);
 
   function setupWorld() {
@@ -142,6 +143,7 @@ export const SliceFall = ({ navigation }) => {
         easing: Easing.circle,
       }).start();
     }
+    return () => {};
   }, [gameOverAnim, running]);
 
   return (

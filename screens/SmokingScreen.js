@@ -16,6 +16,7 @@ export const SmokingScreen = ({ navigation }) => {
       smokingInfo: {
         isQuiting: isEnabled,
         dateOfQuiting: new Date().toDateString(),
+        noSmokingDays: 0,
       },
     };
 
@@ -29,10 +30,7 @@ export const SmokingScreen = ({ navigation }) => {
           Do you want to quit now or take it slow?
         </Text>
         <Text style={styles.innerContainerText2}>
-          I want to{" "}
-          <Text style={{ color: "#c39351" }}>
-            {isEnabled ? "Quit now" : "take it slow"}
-          </Text>
+          I want to <Text style={{ color: "#c39351" }}>Quit now</Text>
         </Text>
         <Switch
           style={{ transform: [{ scale: 2 }], marginBottom: 3 }}
@@ -43,7 +41,7 @@ export const SmokingScreen = ({ navigation }) => {
           value={isEnabled}
         />
         <Text style={styles.innerContainerText3}>
-          {isEnabled ? "On" : "Off"}
+          {isEnabled ? "Yes" : "No"}
         </Text>
         <SubmitButton onPress={onSaveChangeHandler}>Save Changes</SubmitButton>
       </View>
@@ -80,7 +78,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "HammersmithOne-Bold",
     color: "#c39351",
-    fontSize: 10,
+    fontSize: 12,
     marginBottom: 30,
   },
 });

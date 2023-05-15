@@ -38,10 +38,25 @@ export const createUser = (data) => {
 };
 
 export const updateUser = (data, id) => {
+  console.log(data);
   return (dispatch) => {
     dispatch(fetchStart());
     http
       .updateUser(data, id)
+      .then((response) => {
+        dispatch(fetchSuccess(response.data.user));
+      })
+      .catch(() => {
+        dispatch(fetchError());
+      });
+  };
+};
+
+export const updateUserCosts = (data, id) => {
+  return (dispatch) => {
+    dispatch(fetchStart());
+    http
+      .updateUserCosts(data, id)
       .then((response) => {
         dispatch(fetchSuccess(response.data.user));
       })
