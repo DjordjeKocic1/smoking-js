@@ -126,7 +126,7 @@ export const MentorViewScreen = ({ navigation }) => {
         }).start();
         dispatch(getMentor(mentor.mentorId));
         dispatch(getTasks(mentor.mentoringUser[0]._id));
-        dispatch(userHealth(mentor.mentoringUser[0]._id));
+        dispatch(userHealth(mentor.mentoringUser[0]._id, {}));
       }
     });
   };
