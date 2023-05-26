@@ -33,7 +33,7 @@ export const SmokingScreen = ({ navigation }) => {
           I want to <Text style={{ color: "#c39351" }}>Quit now</Text>
         </Text>
         <Switch
-          style={{ transform: [{ scale: 2 }], marginBottom: 3 }}
+          style={{ transform: [{ scale: 1 }], marginBottom: 3 }}
           trackColor={{ false: "#767577", true: "#81b0ff" }}
           thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
           ios_backgroundColor="#3e3e3e"
@@ -80,5 +80,6 @@ const styles = StyleSheet.create({
     color: "#c39351",
     fontSize: 12,
     marginBottom: 30,
+    marginTop:10
   },
 });

@@ -10,7 +10,6 @@ import { Easing } from "react-native-reanimated";
 import { Feather } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Loading } from "../../components/Loading";
-import { updateNotification } from "../../store/notificationReducer";
 import { useEffect } from "react";
 import { useRef } from "react";
 
@@ -38,8 +37,6 @@ export const Notification = ({ navigation }) => {
     ).start();
     return () => {};
   }, [pulsAnim]);
-
-  console.log(notification);
 
   return (
     <View style={styles.mainContainer}>

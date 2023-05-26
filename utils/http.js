@@ -14,8 +14,8 @@ const updateUserCosts = (data, id) => {
   return axios.put(url + `/send-user-info/update-user-costs/${id}`, data);
 };
 
-const userHealthGet = (id) => {
-  return axios.get(url + `/send-user-info/user-health/${id}`);
+const userHealthGet = (id,data) => {
+  return axios.get(url + `/send-user-info/user-health/${id}`,data);
 };
 
 const categoriesGet = () => {
@@ -70,6 +70,11 @@ const deleteTask = (id) => {
   return axios.delete(url + `/send-user-info/delete-task/${id}`);
 };
 
+
+const sendPushNotification = (data) => {
+  return axios.post('https://exp.host/--/api/v2/push/send', data)
+}
+
 export const http = {
   createUser,
   updateUser,
@@ -88,4 +93,5 @@ export const http = {
   createTask,
   updateTask,
   deleteTask,
+  sendPushNotification
 };

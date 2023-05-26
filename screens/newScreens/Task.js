@@ -1,9 +1,6 @@
 import {
   Alert,
-  Animated,
   Dimensions,
-  Easing,
-  Pressable,
   StyleSheet,
   Text,
   View,
@@ -21,7 +18,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { Loading } from "../../components/Loading";
 import { selectUser } from "../../store/userReducer";
 import { useEffect } from "react";
-import { useRef } from "react";
 
 export const Task = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -103,7 +99,7 @@ export const Task = ({ navigation }) => {
                         { marginBottom: 5, fontSize: 10 },
                       ]}
                     >
-                      Status: {t.status == "accept" ? "accepted" : "pending"}
+                      Status: {t.status == "accept" ? "accepted" : t.status == "done" ? 'done' : "pending"}
                     </Text>
                     <Text
                       style={[

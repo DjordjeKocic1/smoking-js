@@ -9,13 +9,13 @@ import {
   StyleSheet,
   View,
 } from "react-native";
+import { createUser, fetchSuccess, selectUser } from "../store/userReducer";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
 import { backButtonHandlerAlert } from "../helper/helpers";
-import { createUser } from "../store/userReducer";
-import { useDispatch } from "react-redux";
 import { useRef } from "react";
 
 const { UIManager } = NativeModules;
@@ -27,8 +27,8 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 
 const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false);
   const movingAnim = useRef(new Animated.Value(-10)).current;
+  const { isLoading, user } = useSelector(selectUser);
   const [submitClick, setSubmitClick] = useState(false);
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId:
@@ -42,33 +42,11 @@ const LoginScreen = ({ navigation }) => {
     return () => {};
   }, []);
 
-  const goToNextPage = () => {
-    navigation.replace("LoadingScreen");
-  };
-
-  const getUserData = (accessToken) => {
-    setIsLoading(true);
-    fetch("https://www.googleapis.com/userinfo/v2/me", {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        let dataTosend = {
-          email: data.email,
-          name: data.name,
-          image: data.picture,
-        };
-        return dispatch(createUser(dataTosend));
-      })
-      .then(() => {
-        goToNextPage();
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsLoading(false);
-      });
-  };
+  useEffect(() => {
+    if (!!user && !!user.email) {
+      navigation.replace("LoadingScreen");
+    }
+  }, [user, navigation]);
 
   useEffect(() => {
     Animated.timing(movingAnim, {
@@ -89,6 +67,24 @@ const LoginScreen = ({ navigation }) => {
     }
     return () => {};
   }, [response]);
+
+  const getUserData = (accessToken) => {
+    fetch("https://www.googleapis.com/userinfo/v2/me", {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        let dataTosend = {
+          email: data.email,
+          name: data.name,
+          image: data.picture,
+        };
+        dispatch(createUser(dataTosend));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   if (isLoading) {
     return <Loading />;

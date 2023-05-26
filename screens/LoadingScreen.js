@@ -49,7 +49,7 @@ const LoadingScreen = ({ navigation }) => {
       }
     ).start(({ finished }) => {
       if (!!finished) {
-        !!user && user.userVerified
+        !!user && !!user.userVerified
           ? navigation.replace("HomeScreen")
           : navigation.replace("Smoke Calculator");
       }

@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { selectUser, updateUser, updateUserCosts } from "../store/userReducer";
+import { selectUser, updateUserCosts } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 

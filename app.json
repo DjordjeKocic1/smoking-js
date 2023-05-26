@@ -3,17 +3,11 @@
     "name": "istop",
     "slug": "quitsmoking",
     "version": "1.0.0",
-    "scheme": "myApp",
+    "scheme": "mypp",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "plugins": [
-      [
-        "expo-document-picker",
-        {
-          "iCloudContainerEnvironment": "Production"
-        }
-      ],
       [
         "expo-notifications",
         {
@@ -42,13 +36,6 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "host.exp.exponent"
-    },
-    "notification": {
-      "icon": "./assets/images/cigQuitIcon.png",
-      "color": "#311b92",
-      "iosDisplayInForeground": true,
-      "androidMode": "default",
-      "androidCollapsedTitle": "Updates from Colab.notes"
     },
     "web": {
       "favicon": "./assets/favicon.png"

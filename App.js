@@ -1,8 +1,7 @@
 import * as Font from "expo-font";
-import * as Notifications from "expo-notifications";
 import * as SplashScreen from "expo-splash-screen";
 
-import {Alert, Platform, Text, TextInput} from "react-native";
+import { Text, TextInput } from "react-native";
 
 import { Asset } from "expo-asset";
 import CategorieScreen from "./screens/CategorieScreen";
@@ -28,18 +27,7 @@ Text.defaultProps.maxFontSizeMultiplier = 1; // the maximum amount the font size
 TextInput.defaultProps = Text.defaultProps || {};
 TextInput.defaultProps.maxFontSizeMultiplier = 1;
 
-SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => {
-    return {
-      shouldPlaySound: false,
-      shouldSetBadge: false,
-      shouldShowAlert: true,
-    };
-  },
-});
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -78,6 +66,13 @@ export default function App() {
     return Promise.all(catchImages);
   };
 
+  const loadFonts = async () => {
+    await Font.loadAsync({
+      "HammersmithOne-Bold": require("./assets/fonts/HammersmithOne-Regular.ttf"),
+    });
+    setFontsLoaded(true);
+  };
+
   useEffect(() => {
     const loadResurses = async () => {
       try {
@@ -95,38 +90,6 @@ export default function App() {
     () => {};
   }, []);
 
-  // useEffect(() => {
-  //   const confPushNotification = async() => {
-  //     const {status} = await Notifications.getPermissionsAsync()
-  //     let finalStatus = status;
-  //     if(finalStatus !== 'granted') {
-  //      const {status} = await Notifications.requestPermissionsAsync()
-  //      finalStatus = status
-  //     }
-  //     if(finalStatus !== 'granted'){
-  //       Alert.alert("Premission required", "Notification need the appropriate promissions")
-  //       return;
-  //     }
-  //     const pushTokenData = Notifications.getExpoPushTokenAsync();
-  //     console.log(pushTokenData);
-
-  //     if(Platform.OS === 'android'){
-  //       Notifications.setNotificationChannelAsync('default', {
-  //         name: 'default',
-  //         importance: Notifications.AndroidImportance.DEFAULT
-  //       })
-  //     }
-  //   }
-
-  //   confPushNotification();
-  // },[])
-
-  const loadFonts = async () => {
-    await Font.loadAsync({
-      "HammersmithOne-Bold": require("./assets/fonts/HammersmithOne-Regular.ttf"),
-    });
-    setFontsLoaded(true);
-  };
   useEffect(() => {
     loadFonts();
     () => {};
@@ -138,11 +101,7 @@ export default function App() {
     }
   }, [isLoaded]);
 
-  if (!fontsLoaded) {
-    return;
-  }
-
-  if (!isLoaded) {
+  if (!fontsLoaded && !isLoaded) {
     return;
   }
 
@@ -199,7 +158,11 @@ export default function App() {
                 headerShown: false,
               }}
             />
-            <Stack.Screen name="HomeScreen" component={HomeScreen} />
+            <Stack.Screen
+              name="HomeScreen"
+              component={HomeScreen}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="MentorViewScreen"
               options={{

@@ -1,5 +1,9 @@
+import * as Notifications from "expo-notifications";
+
 import { Animated, Easing, View } from "react-native";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { selectUser, userHealth } from "../store/userReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useRef, useState } from "react";
 
 import { Chats } from "./newScreens/Chats";
 import { CigAnimation } from "../gameUtils/CigAnimation";
@@ -19,12 +23,22 @@ import { Tips } from "./newScreens/Tips";
 import UserScreen from "./UserScreen";
 import { backButtonHandlerAlert } from "../helper/helpers";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { selectUser } from "../store/userReducer";
-import { useSelector } from "react-redux";
+import { getNotification } from "../store/notificationReducer";
 
 const Stack = createNativeStackNavigator();
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+      shouldShowAlert: true,
+    };
+  },
+});
+
 const HomeScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const { user } = useSelector(selectUser);
   const [cigIsFin, setCigFin] = useState(false);
   const heartBeat = useRef(new Animated.Value(1)).current;
@@ -55,21 +69,52 @@ const HomeScreen = ({ navigation }) => {
     return () => {};
   }, [heartBeat]);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: "Home",
-      headerBackVisible: false,
-      headerShown: false,
-      headerStyle: {
-        backgroundColor: "#c39351e0",
-      },
-      headerShadowVisible: false,
-      headerTintColor: "white",
-    });
-  }, [navigation]);
+  useEffect(() => {
+    dispatch(getNotification(user._id));
+  }, [user._id]);
+
+  useEffect(() => {
+    const confPushNotification = async () => {
+      const { status } = await Notifications.getPermissionsAsync();
+      let finalStatus = status;
+      if (finalStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+
+      if (finalStatus !== "granted") {
+        Alert.alert(
+          "Premission required",
+          "Notification need the appropriate permissions."
+        );
+        dispatch(userHealth(user._id, {}));
+        return;
+      }
+
+      try {
+        const pushTokenData = await Notifications.getExpoPushTokenAsync();
+        const dataToSend = {
+          notificationToken: pushTokenData.data,
+        };
+        dispatch(userHealth(user._id, dataToSend));
+      } catch (error) {
+        console.log(error);
+        dispatch(userHealth(user._id, {}));
+      }
+
+      if (Platform.OS === "android") {
+        Notifications.setNotificationChannelAsync("default", {
+          name: "default",
+          importance: Notifications.AndroidImportance.DEFAULT,
+        });
+      }
+    };
+
+    confPushNotification();
+  }, [user._id]);
 
   return (
-    <View style={{flex:1,backgroundColor:"#e1d5c9"}}>
+    <View style={{ flex: 1, backgroundColor: "#e1d5c9" }}>
       <CigAnimation
         user={user}
         onCigFinishHandler={(cigBool) => setCigFin(cigBool)}
@@ -78,88 +123,23 @@ const HomeScreen = ({ navigation }) => {
         <Stack.Group
           screenOptions={{
             presentation: "card",
+            headerShown: false,
           }}
         >
           <Stack.Screen name="UserScreen" component={UserScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="Tips" component={Tips} />
-          <Stack.Screen
-            name="Savings"
-            component={Savings}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Health"
-            component={Health}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Goals"
-            component={Goals}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Chats"
-            component={Chats}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Slow"
-            component={Slow}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Notification"
-            component={Notification}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="QuitNow"
-            component={QuitNow}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Task"
-            component={Task}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Mentor"
-            component={Mentor}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Games"
-            component={Games}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="SliceFall"
-            component={SliceFall}
-            options={{
-              headerShown: false,
-            }}
-          />
+          <Stack.Screen name="Savings" component={Savings} />
+          <Stack.Screen name="Health" component={Health} />
+          <Stack.Screen name="Goals" component={Goals} />
+          <Stack.Screen name="Chats" component={Chats} />
+          <Stack.Screen name="Slow" component={Slow} />
+          <Stack.Screen name="Notification" component={Notification} />
+          <Stack.Screen name="QuitNow" component={QuitNow} />
+          <Stack.Screen name="Task" component={Task} />
+          <Stack.Screen name="Mentor" component={Mentor} />
+          <Stack.Screen name="Games" component={Games} />
+          <Stack.Screen name="SliceFall" component={SliceFall} />
         </Stack.Group>
       </Stack.Navigator>
       {cigIsFin && (

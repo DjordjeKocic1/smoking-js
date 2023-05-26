@@ -13,7 +13,11 @@ import {
   Text,
   View,
 } from "react-native";
-import { selectUser, userHealth } from "../store/userReducer";
+import {
+  selectUser,
+  updateUserNotificationToken,
+  userHealth,
+} from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
@@ -22,6 +26,7 @@ import { Loading } from "../components/Loading";
 import { MaterialIcons } from "@expo/vector-icons";
 import { backButtonHandlerAlert } from "../helper/helpers";
 import { getNotification } from "../store/notificationReducer";
+import { http } from "../utils/http";
 
 const UserScreen = ({ navigation }) => {
   const { user } = useSelector(selectUser);
@@ -30,28 +35,11 @@ const UserScreen = ({ navigation }) => {
   const heartBeat = useRef(new Animated.Value(1)).current;
   const [refreshing, setRefreshing] = useState(false);
 
-  // const scheduleNotificationHandler = (message,time) => {
-  //   console.log('trigger notification');
-  //   Notifications.scheduleNotificationAsync({
-  //     content: {
-  //       title: "App",
-  //       body: message,
-  //       data: {
-  //         userName: "Djole",
-  //       },
-  //       color:"#c39351",
-  //     },
-  //     trigger: {
-  //       seconds: time,
-  //     },
-  //   });
-  // }; 
-
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-      dispatch(userHealth(user._id));
+      dispatch(userHealth(user._id, {}));
       dispatch(getNotification(user._id));
     }, 2000);
   };
@@ -60,24 +48,6 @@ const UserScreen = ({ navigation }) => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
     return () => {};
   }, []);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: "Home",
-      headerBackVisible: false,
-      headerShown: false,
-      headerStyle: {
-        backgroundColor: "#c39351e0",
-      },
-      headerShadowVisible: false,
-      headerTintColor: "white",
-    });
-  }, [navigation]);
-
-  useEffect(() => {
-    dispatch(userHealth(user._id));
-    dispatch(getNotification(user._id));
-  },[user._id])
 
   useEffect(() => {
     Animated.loop(
@@ -112,7 +82,7 @@ const UserScreen = ({ navigation }) => {
   return (
     <View style={styles.mainContainer}>
       <ScrollView
-        style={{flexGrow:1}}
+        style={{ flexGrow: 1 }}
         showsHorizontalScrollIndicator={false}
         endFillColor="#000"
         overScrollMode="never"
@@ -126,7 +96,10 @@ const UserScreen = ({ navigation }) => {
             style={{ alignItems: "center" }}
           >
             <Image
-              style={{ width:  Dimensions.get("screen").width > 700 ? 80 : 30, height: Dimensions.get("screen").width > 700 ? 80 : 30 }}
+              style={{
+                width: Dimensions.get("screen").width > 700 ? 80 : 30,
+                height: Dimensions.get("screen").width > 700 ? 80 : 30,
+              }}
               resizeMode="contain"
               source={require("../assets/images/games/money.png")}
             />
@@ -187,10 +160,15 @@ const UserScreen = ({ navigation }) => {
             />
             <Pressable
               disabled={!!user.smokingInfo && !user.smokingInfo.isQuiting}
-              onPress={() => navigation.navigate("Health")}
+              onPress={() => {
+                navigation.navigate("Health");
+              }}
             >
               <Image
-                style={{ width: Dimensions.get("screen").width > 700 ? 80 : 30, height: Dimensions.get("screen").width > 700 ? 80 : 30 }}
+                style={{
+                  width: Dimensions.get("screen").width > 700 ? 80 : 30,
+                  height: Dimensions.get("screen").width > 700 ? 80 : 30,
+                }}
                 resizeMode="contain"
                 source={require("../assets/images/games/heart.png")}
               />
@@ -214,7 +192,11 @@ const UserScreen = ({ navigation }) => {
               onTouchEnd={() => navigation.navigate("Savings")}
               style={{ alignItems: "center" }}
             >
-              <MaterialIcons name="smoke-free" size={Dimensions.get("screen").width > 700 ? 80 : 27} color="#222325" />
+              <MaterialIcons
+                name="smoke-free"
+                size={Dimensions.get("screen").width > 700 ? 80 : 27}
+                color="#222325"
+              />
               <Text style={styles.statsheader}>
                 {!!user.savedInfo && !!user.savedInfo.cigarettesAvoided
                   ? user.savedInfo.cigarettesAvoided + !!user.consumptionInfo &&
@@ -227,7 +209,11 @@ const UserScreen = ({ navigation }) => {
               onTouchEnd={() => navigation.navigate("Savings")}
               style={{ alignItems: "center" }}
             >
-              <MaterialIcons name="smoke-free" size={Dimensions.get("screen").width > 700 ? 80 : 27} color="#222325" />
+              <MaterialIcons
+                name="smoke-free"
+                size={Dimensions.get("screen").width > 700 ? 80 : 27}
+                color="#222325"
+              />
               <Text style={styles.statsheader}>
                 <Text style={{ fontSize: 17 }}>
                   {!!user.smokingInfo && !!user.smokingInfo.noSmokingDays
@@ -243,8 +229,7 @@ const UserScreen = ({ navigation }) => {
           <View style={styles.innerContainer}>
             <Pressable
               onPress={() => {
-                navigation.navigate("Savings")
-                // scheduleNotificationHandler("Dont forget to check your status 📜!",5)
+                navigation.navigate("Savings");
               }}
               style={styles.innerContainerBox}
               android_ripple={{ color: "#c39351" }}
@@ -432,7 +417,7 @@ const UserScreen = ({ navigation }) => {
 };
 const styles = StyleSheet.create({
   mainContainer: {
-    flex:1,
+    flex: 1,
     flexDirection: "column",
     backgroundColor: "#e1d5c9",
     justifyContent: "center",
@@ -460,7 +445,7 @@ const styles = StyleSheet.create({
   innerText: {
     fontFamily: "HammersmithOne-Bold",
     marginTop: 10,
-    fontSize:  Dimensions.get("screen").width > 700 ? 25 : 12,
+    fontSize: Dimensions.get("screen").width > 700 ? 25 : 12,
   },
   container: {
     flex: 1,
@@ -482,7 +467,11 @@ const styles = StyleSheet.create({
     height: Dimensions.get("screen").width > 700 ? 250 : 130,
     overflow: "hidden",
   },
-  innerContainerImg: { width: Dimensions.get("screen").width > 700 ? 200 : 100, height: Dimensions.get("screen").width > 700 ? 200 : 100, aspectRatio: 1 },
+  innerContainerImg: {
+    width: Dimensions.get("screen").width > 700 ? 200 : 100,
+    height: Dimensions.get("screen").width > 700 ? 200 : 100,
+    aspectRatio: 1,
+  },
   innerContainerBox: {
     paddingVertical: 30,
     paddingHorizontal: 15,

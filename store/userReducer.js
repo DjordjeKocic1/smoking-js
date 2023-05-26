@@ -38,7 +38,6 @@ export const createUser = (data) => {
 };
 
 export const updateUser = (data, id) => {
-  console.log(data);
   return (dispatch) => {
     dispatch(fetchStart());
     http
@@ -46,6 +45,18 @@ export const updateUser = (data, id) => {
       .then((response) => {
         dispatch(fetchSuccess(response.data.user));
       })
+      .catch((err) => {
+        console.log(err);
+        dispatch(fetchError());
+      });
+  };
+};
+
+export const updateUserNotificationToken = (data, id) => {
+  return (dispatch, getState) => {
+    http
+      .updateUser(data, id)
+      .then((response) => {})
       .catch(() => {
         dispatch(fetchError());
       });
@@ -66,11 +77,11 @@ export const updateUserCosts = (data, id) => {
   };
 };
 
-export const userHealth = (id) => {
+export const userHealth = (id, data) => {
   return (dispatch) => {
     dispatch(fetchStart());
     http
-      .userHealthGet(id)
+      .userHealthGet(id, data)
       .then((response) => {
         dispatch(fetchSuccess(response.data.user));
       })
