@@ -34,8 +34,6 @@ const CategorieScreen = ({ navigation }) => {
 
   useEffect(() => {
     backButtonHandler(navigation, "Smoke Calculator");
-
-    return () => {};
   }, []);
 
   useEffect(() => {

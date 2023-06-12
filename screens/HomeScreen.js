@@ -5,6 +5,7 @@ import { selectUser, userHealth } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
+import { Achievements } from "./newScreens/Achievements";
 import { Chats } from "./newScreens/Chats";
 import { CigAnimation } from "../gameUtils/CigAnimation";
 import { Games } from "./newScreens/Games";
@@ -92,13 +93,14 @@ const HomeScreen = ({ navigation }) => {
       }
 
       try {
-        const pushTokenData = await Notifications.getExpoPushTokenAsync();
+        const pushTokenData = await Notifications.getExpoPushTokenAsync({
+          projectId: "f0b5f13d-478b-499a-b9a8-bff4e09320ce",
+        });
         const dataToSend = {
           notificationToken: pushTokenData.data,
         };
         dispatch(userHealth(user._id, dataToSend));
       } catch (error) {
-        console.log(error);
         dispatch(userHealth(user._id, {}));
       }
 
@@ -137,6 +139,7 @@ const HomeScreen = ({ navigation }) => {
           <Stack.Screen name="Notification" component={Notification} />
           <Stack.Screen name="QuitNow" component={QuitNow} />
           <Stack.Screen name="Task" component={Task} />
+          <Stack.Screen name="Achievements" component={Achievements} />
           <Stack.Screen name="Mentor" component={Mentor} />
           <Stack.Screen name="Games" component={Games} />
           <Stack.Screen name="SliceFall" component={SliceFall} />

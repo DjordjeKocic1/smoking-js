@@ -21,7 +21,6 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Loading } from "../components/Loading";
 import { MaterialIcons } from "@expo/vector-icons";
-import { userHealth } from "../store/userReducer";
 
 export const MentorViewScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -44,7 +43,6 @@ export const MentorViewScreen = ({ navigation }) => {
       setRefreshing(false);
       dispatch(getMentor(mentor.mentorId));
       dispatch(getTasks(mentor.mentoringUser[0]._id));
-      dispatch(userHealth(mentor.mentoringUser[0]._id));
     }, 2000);
   };
 
@@ -126,7 +124,6 @@ export const MentorViewScreen = ({ navigation }) => {
         }).start();
         dispatch(getMentor(mentor.mentorId));
         dispatch(getTasks(mentor.mentoringUser[0]._id));
-        dispatch(userHealth(mentor.mentoringUser[0]._id, {}));
       }
     });
   };
@@ -513,7 +510,7 @@ export const MentorViewScreen = ({ navigation }) => {
               <Text
                 style={{ fontFamily: "HammersmithOne-Bold", color: "white" }}
               >
-                Assign Task
+                Send
               </Text>
             </Pressable>
           </Animated.View>

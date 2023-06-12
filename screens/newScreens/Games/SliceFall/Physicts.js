@@ -120,7 +120,7 @@ const Physics = (entities, { touches, time, dispatch }) => {
     .forEach((t) => {
       if (!hadTouches) {
         if (world.gravity.y === 0.0) {
-          world.gravity.y = 0.5;
+          world.gravity.y = 1;
 
           dispatch({ type: "tapped" });
 
@@ -139,7 +139,7 @@ const Physics = (entities, { touches, time, dispatch }) => {
         hadTouches = true;
         Matter.Body.setVelocity(initialBox, {
           x: initialBox.velocity.x,
-          y: -10,
+          y: -5,
         });
       }
     });

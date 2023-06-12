@@ -6,6 +6,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { backButtonHandler, backButtonHandlerAlert } from "../helper/helpers";
 import { selectUser, updateUser } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useLayoutEffect, useState } from "react";
@@ -13,7 +14,6 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { BackButton } from "../components/BackButton";
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
-import { backButtonHandlerAlert } from "../helper/helpers";
 
 export const ProfileScreen = ({ navigation }) => {
   const { user } = useSelector(selectUser);
@@ -29,8 +29,7 @@ export const ProfileScreen = ({ navigation }) => {
   });
 
   useEffect(() => {
-    backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
-    return () => {};
+    backButtonHandler(navigation, "UserScreen");
   }, []);
 
   useLayoutEffect(() => {

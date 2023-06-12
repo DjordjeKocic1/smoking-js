@@ -48,13 +48,11 @@ export const createTask = (data) => {
     http
       .createTask(data)
       .then((response) => {
-        console.log("Create Task response:", response.data.task);
         let tasks = getState().task.task;
         dispatch(fetchSuccess([...tasks, response.data.task]));
       })
       .catch((e) => {
-        console.log(e);
-        //dispatch(fetchError(e.response.data.error));
+        dispatch(fetchError(e.response.data.error));
       });
   };
 };
@@ -70,7 +68,10 @@ export const updateTask = (data, id) => {
           (task) => task._id == response.data.task._id
         );
         let newTaskArray = [...task];
-        newTaskArray[findTaskIndex] = { ...newTaskArray[findTaskIndex], ...data };
+        newTaskArray[findTaskIndex] = {
+          ...newTaskArray[findTaskIndex],
+          ...data,
+        };
         dispatch(fetchSuccess(newTaskArray));
       })
       .catch((e) => {

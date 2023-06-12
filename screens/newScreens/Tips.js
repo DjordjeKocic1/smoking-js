@@ -10,11 +10,7 @@ export const Tips = ({ navigation }) => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
     return () => {};
   }, []);
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
+
   return (
     <View style={[styles.mainContainer, { position: "relative" }]}>
       <BackButton navigation={navigation} where={"UserScreen"} />

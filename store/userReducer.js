@@ -46,7 +46,6 @@ export const updateUser = (data, id) => {
         dispatch(fetchSuccess(response.data.user));
       })
       .catch((err) => {
-        console.log(err);
         dispatch(fetchError());
       });
   };

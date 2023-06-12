@@ -28,7 +28,7 @@ export const Box = ({ size, body, color, engine, pose }) => {
         !!engine.detector.pairs &&
         engine.detector.pairs.collisionStart.length > 0
           ? Images["rocketGameOver"]
-          : Images["rocket" + pose]
+          : Images["rocket1"]
       }
     />
   );

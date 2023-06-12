@@ -1,10 +1,4 @@
-import {
-  Alert,
-  Dimensions,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Alert, Dimensions, StyleSheet, Text, View } from "react-native";
 import {
   deleteTask,
   getTasks,
@@ -27,10 +21,9 @@ export const Task = ({ navigation }) => {
 
   useEffect(() => {
     dispatch(getTasks(user._id));
-    return () => {};
   }, [dispatch]);
 
-  const onTaskStatusHandler = (status, id) => {
+  const onTaskStatusHandler = (status, id, userId) => {
     Alert.alert(
       "Task",
       `Are you sure ${
@@ -55,7 +48,7 @@ export const Task = ({ navigation }) => {
   };
 
   const onTaskDeleteStatusHandler = (id) => {
-    Alert.alert("Task", `Are you sure abandon task?`, [
+    Alert.alert("Task", `Are you sure you want to cancel the task?`, [
       {
         text: "No",
         onPress: () => null,
@@ -99,7 +92,12 @@ export const Task = ({ navigation }) => {
                         { marginBottom: 5, fontSize: 10 },
                       ]}
                     >
-                      Status: {t.status == "accept" ? "accepted" : t.status == "done" ? 'done' : "pending"}
+                      Status:{" "}
+                      {t.status == "accept"
+                        ? "accepted"
+                        : t.status == "done"
+                        ? "done"
+                        : "pending"}
                     </Text>
                     <Text
                       style={[
@@ -125,7 +123,8 @@ export const Task = ({ navigation }) => {
                           t.status == "accept"
                             ? "done"
                             : t.status == "" && "accept",
-                          t._id
+                          t._id,
+                          t.userId
                         )
                       }
                       style={[

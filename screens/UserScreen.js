@@ -360,7 +360,7 @@ const UserScreen = ({ navigation }) => {
           </View>
           <View style={styles.innerContainer}>
             <Pressable
-              onPress={() => navigation.navigate("Health")}
+              onPress={() => navigation.navigate("Achievements")}
               android_ripple={{ color: "#c39351" }}
               style={styles.innerContainerBox}
             >

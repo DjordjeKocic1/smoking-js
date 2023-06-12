@@ -1,9 +1,6 @@
 import { Text, View } from "react-native";
-import {
-  backButtonHandler,
-  backButtonHandlerAlert,
-} from "../../helper/helpers";
 
+import { backButtonHandlerAlert } from "../../helper/helpers";
 import { useEffect } from "react";
 
 export const Goals = ({ navigation }) => {

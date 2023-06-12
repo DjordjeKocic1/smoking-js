@@ -55,7 +55,6 @@ export const Notification = ({ navigation }) => {
           return (
             <Animated.View
               onTouchStart={() => {
-                console.log(notif._id);
                 dispatch(deleteNotification(notif._id));
                 notif.isMentoring
                   ? navigation.replace("Mentor")

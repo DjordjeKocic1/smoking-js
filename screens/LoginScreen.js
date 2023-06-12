@@ -9,7 +9,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { createUser, fetchSuccess, selectUser } from "../store/userReducer";
+import { createUser, selectUser } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
@@ -89,8 +89,9 @@ const LoginScreen = ({ navigation }) => {
   if (isLoading) {
     return <Loading />;
   }
+
   return (
-    <View style={[styles.container]}>
+    <View style={[styles.container, { opacity: submitClick ? 0.3 : 1 }]}>
       <View style={styles.buttonContent}>
         <View style={styles.imageContent}>
           <Animated.View

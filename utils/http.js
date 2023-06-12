@@ -14,12 +14,16 @@ const updateUserCosts = (data, id) => {
   return axios.put(url + `/send-user-info/update-user-costs/${id}`, data);
 };
 
-const userHealthGet = (id,data) => {
-  return axios.get(url + `/send-user-info/user-health/${id}`,data);
+const userHealthGet = (id, data) => {
+  return axios.get(url + `/send-user-info/user-health/${id}`, data);
 };
 
 const categoriesGet = () => {
   return axios.get(url + "/send-user-info/categories");
+};
+
+const achievementGet = (id) => {
+  return axios.get(url + `/send-user-info/get-achievements/${id}`);
 };
 
 const getMentor = (id) => {
@@ -70,10 +74,9 @@ const deleteTask = (id) => {
   return axios.delete(url + `/send-user-info/delete-task/${id}`);
 };
 
-
 const sendPushNotification = (data) => {
-  return axios.post('https://exp.host/--/api/v2/push/send', data)
-}
+  return axios.post("https://exp.host/--/api/v2/push/send", data);
+};
 
 export const http = {
   createUser,
@@ -81,6 +84,7 @@ export const http = {
   updateUserCosts,
   userHealthGet,
   categoriesGet,
+  achievementGet,
   createMentor,
   updateMentor,
   getMentor,
@@ -93,5 +97,5 @@ export const http = {
   createTask,
   updateTask,
   deleteTask,
-  sendPushNotification
+  sendPushNotification,
 };

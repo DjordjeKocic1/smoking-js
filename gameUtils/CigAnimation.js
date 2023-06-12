@@ -22,7 +22,6 @@ export const CigAnimation = ({ onCigFinishHandler }) => {
     if (onFinAnimation) {
       onCigFinishHandler(onFinAnimation);
     }
-
     return () => {};
   }, [onFinAnimation]);
 

@@ -50,9 +50,7 @@ export const SliceFall = ({ navigation }) => {
   function setupWorld() {
     let engine = Matter.Engine.create({ enableSleeping: false });
     let world = engine.world;
-
     world.gravity.y = 0.0;
-
     let initialBox = Matter.Bodies.rectangle(
       Constants.MAX_WIDTH / 2,
       Constants.MAX_HEIGHT / 2,

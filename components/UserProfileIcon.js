@@ -1,7 +1,5 @@
 import { Dimensions, Image, Pressable, StyleSheet, View } from "react-native";
 
-import { useEffect } from "react";
-
 export const UserProfileIcon = ({ onPress, user }) => {
   return (
     <View style={styles.pressableContent}>

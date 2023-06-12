@@ -76,7 +76,6 @@ export const deleteMentor = (id) => {
     http
       .deleteMentor(id)
       .then((response) => {
-        console.log(response.data);
         dispatch(fetchSuccess(null));
       })
       .catch((e) => {
