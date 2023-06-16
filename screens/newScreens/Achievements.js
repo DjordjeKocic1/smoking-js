@@ -1,4 +1,11 @@
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import {
   getAchievements,
   selectAchievements,
@@ -148,11 +155,14 @@ const styles = StyleSheet.create({
   textCenter: {
     textAlign: "center",
     fontFamily: "HammersmithOne-Bold",
+    fontSize: Dimensions.get("screen").width > 600 ? 17 : 13,
   },
   achievementsEarnContainer: {
     borderWidth: 0.2,
     borderColor: "4e3f28",
     width: "100%",
+    height: Dimensions.get("screen").width > 600 ? 100 : 50,
+    justifyContent: "center",
     padding: 5,
     borderRadius: 2,
     marginVertical: 10,
@@ -162,6 +172,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#4e3f28",
     position: "relative",
+    height: 100,
   },
   innerAchText: {
     textAlign: "center",
@@ -171,7 +182,7 @@ const styles = StyleSheet.create({
   },
   innerAchText2: {
     textAlign: "center",
-    fontSize: 10,
+    fontSize: 15,
     paddingTop: 10,
     paddingBottom: 2,
     color: "#433113",
@@ -179,16 +190,20 @@ const styles = StyleSheet.create({
   },
   innerAchText3: {
     textAlign: "center",
-    fontSize: 13,
+    fontSize: Dimensions.get("screen").width > 600 ? 20 : 13,
     color: "white",
     position: "absolute",
-    right: 9,
+    right: Dimensions.get("screen").width > 600 ? 11 : 9,
     top: 13,
     fontFamily: "HammersmithOne-Bold",
   },
-  imageContainer: { position: "absolute", right: 0, top: 3 },
+  imageContainer: {
+    position: "absolute",
+    right: 0,
+    top: 3,
+  },
   image: {
-    width: 35,
-    height: 35,
+    width: Dimensions.get("screen").width > 600 ? 50 : 35,
+    height: Dimensions.get("screen").width > 600 ? 50 : 35,
   },
 });

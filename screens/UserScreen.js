@@ -13,11 +13,7 @@ import {
   Text,
   View,
 } from "react-native";
-import {
-  selectUser,
-  updateUserNotificationToken,
-  userHealth,
-} from "../store/userReducer";
+import { selectUser, userHealth } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
@@ -247,7 +243,7 @@ const UserScreen = ({ navigation }) => {
           </View>
           <View style={styles.innerContainer}>
             <Pressable
-              onPress={() => navigation.navigate("SliceFall")}
+              onPress={() => navigation.navigate("TwoSame")}
               style={styles.innerContainerBox}
             >
               <Text style={styles.innerText}>Stop It</Text>

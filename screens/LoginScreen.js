@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { createUser, selectUser } from "../store/userReducer";
+import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
@@ -30,11 +31,11 @@ const LoginScreen = ({ navigation }) => {
   const movingAnim = useRef(new Animated.Value(-10)).current;
   const { isLoading, user } = useSelector(selectUser);
   const [submitClick, setSubmitClick] = useState(false);
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    expoClientId:
-      "161017013722-jjlndnhdi43o1i50qk32uluful7jhgan.apps.googleusercontent.com",
-    androidClientId:
-      "161017013722-jjkuhc3onnma7f38mpp1uds1t4u21cno.apps.googleusercontent.com",
+  const [request, response, promptAsync] = useAuthRequest({
+    clientId: "2da74976-bf21-485c-bcea-cf2b97fada34",
+    redirectUri: makeRedirectUri({
+      scheme: "https://auth.expo.io/@djole232/istop/start",
+    }),
   });
 
   useEffect(() => {

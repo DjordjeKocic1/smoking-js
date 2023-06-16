@@ -57,6 +57,9 @@ export default function App() {
       require("./assets/images/traning.png"),
       require("./assets/images/game.png"),
       require("./assets/images/profile.png"),
+      require("./assets/images/twoSameImgs/apple.jpg"),
+      require("./assets/images/twoSameImgs/banana.jpg"),
+      require("./assets/images/twoSameImgs/painapple.jpg"),
     ];
 
     let catchImages = images.map((image) => {

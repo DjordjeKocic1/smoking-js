@@ -1,9 +1,9 @@
 {
   "expo": {
     "name": "istop",
-    "slug": "quitsmoking",
+    "slug": "istop",
     "version": "1.0.0",
-    "scheme": "mypp",
+    "scheme": "istop",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -24,7 +24,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -39,6 +41,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2da74976-bf21-485c-bcea-cf2b97fada34"
+      }
     }
   }
 }

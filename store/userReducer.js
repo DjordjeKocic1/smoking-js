@@ -5,11 +5,16 @@ const userSlice = createSlice({
   name: "users",
   initialState: {
     user: {},
+    users: [],
     isLoading: false,
   },
   reducers: {
     fetchStart: (state, action) => {
       state.isLoading = true;
+    },
+    fetchSuccessUsers: (state, action) => {
+      state.users = action.payload.sort((a, b) => b.gameScore - a.gameScore);
+      state.isLoading = false;
     },
     fetchSuccess: (state, action) => {
       state.user = action.payload;
@@ -21,7 +26,22 @@ const userSlice = createSlice({
   },
 });
 
-export const { fetchStart, fetchSuccess, fetchError } = userSlice.actions;
+export const { fetchStart, fetchSuccess, fetchError, fetchSuccessUsers } =
+  userSlice.actions;
+
+export const getUsers = () => {
+  return (dispatch) => {
+    dispatch(fetchStart());
+    http
+      .getUsers()
+      .then((response) => {
+        dispatch(fetchSuccessUsers(response.data.users));
+      })
+      .catch(() => {
+        dispatch(fetchError());
+      });
+  };
+};
 
 export const createUser = (data) => {
   return (dispatch) => {

@@ -1,4 +1,4 @@
-export default Images = {
+export const myimages = {
   pipeCore: require("./images/games/wall.png"),
   pipeTop: require("./images/games/wall.png"),
   floor: require("./images/games/floor.png"),

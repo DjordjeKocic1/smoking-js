@@ -5,10 +5,24 @@ import { useEffect, useRef, useState } from "react";
 
 import { BackButton } from "../components/BackButton";
 import { FontAwesome } from "@expo/vector-icons";
-import Images from "../assets/Images";
 import { selectNotification } from "../store/notificationReducer";
 import { useNavigation } from "@react-navigation/native";
 
+const Images = {
+  cigImg: require("../assets/images/games/cigAnim/cigImg.png"),
+  cig1: require("../assets/images/games/cigAnim/cig1.jpg"),
+  cig2: require("../assets/images/games/cigAnim/cig2.jpg"),
+  cig3: require("../assets/images/games/cigAnim/cig3.png"),
+  cig4: require("../assets/images/games/cigAnim/cig4.jpg"),
+  cig5: require("../assets/images/games/cigAnim/cig5.jpg"),
+  cig6: require("../assets/images/games/cigAnim/cig6.jpg"),
+  cig7: require("../assets/images/games/cigAnim/cig7.jpg"),
+  cig8: require("../assets/images/games/cigAnim/cig8.jpg"),
+  cig9: require("../assets/images/games/cigAnim/cig9.jpg"),
+  cig10: require("../assets/images/games/cigAnim/cig10.jpg"),
+  cig11: require("../assets/images/games/cigAnim/cig11.jpg"),
+  cigSmoke: require("../assets/images/games/cigAnim/cigSmoke.png"),
+};
 export const CigAnimation = ({ onCigFinishHandler }) => {
   const router = useNavigation();
   const { user } = useSelector(selectUser);

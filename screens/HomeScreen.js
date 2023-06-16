@@ -17,10 +17,13 @@ import { Notification } from "./newScreens/Notification";
 import { ProfileScreen } from "./ProfileScreen";
 import { QuitNow } from "./newScreens/QuitNow";
 import { Savings } from "./newScreens/Savings";
-import { SliceFall } from "./newScreens/Games/SliceFall/SliceFall";
+import { ScoreScreen } from "./newScreens/Games/ScoreScreen";
 import { Slow } from "./newScreens/Slow";
 import { Task } from "./newScreens/Task";
 import { Tips } from "./newScreens/Tips";
+import { TwoSame } from "./newScreens/Games/TwoSame/TwoSame";
+import { TwoSameLevel2 } from "./newScreens/Games/TwoSame/TwoSameLevel2";
+import { TwoSameLevel3 } from "./newScreens/Games/TwoSame/TwoSameLevel3";
 import UserScreen from "./UserScreen";
 import { backButtonHandlerAlert } from "../helper/helpers";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -142,7 +145,10 @@ const HomeScreen = ({ navigation }) => {
           <Stack.Screen name="Achievements" component={Achievements} />
           <Stack.Screen name="Mentor" component={Mentor} />
           <Stack.Screen name="Games" component={Games} />
-          <Stack.Screen name="SliceFall" component={SliceFall} />
+          <Stack.Screen name="TwoSame" component={TwoSame} />
+          <Stack.Screen name="TwoSameLevel2" component={TwoSameLevel2} />
+          <Stack.Screen name="TwoSameLevel3" component={TwoSameLevel3} />
+          <Stack.Screen name="ScoreScreen" component={ScoreScreen} />
         </Stack.Group>
       </Stack.Navigator>
       {cigIsFin && (

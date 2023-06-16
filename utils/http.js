@@ -2,6 +2,10 @@ import axios from "axios";
 
 const url = "https://whale-app-hkbku.ondigitalocean.app";
 
+const getUsers = () => {
+  return axios.get(url + "/send-user-info/users");
+};
+
 const createUser = (data) => {
   return axios.post(url + "/send-user-info/create-user", data);
 };
@@ -79,6 +83,7 @@ const sendPushNotification = (data) => {
 };
 
 export const http = {
+  getUsers,
   createUser,
   updateUser,
   updateUserCosts,

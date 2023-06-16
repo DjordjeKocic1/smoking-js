@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 
+import { Shadow } from "react-native-shadow-2";
 import { backButtonHandler } from "../../helper/helpers";
 import { useEffect } from "react";
 
@@ -21,17 +22,23 @@ export const Games = ({ navigation }) => {
         flex: 1,
         flexDirection: "row",
         justifyContent: "center",
-        alignItems: "center",
+        backgroundColor: "#e1d5c9",
       }}
     >
       <View style={styles.innerContainer}>
-        <Pressable onPress={() => navigation.navigate("SliceFall")}>
-          <ImageBackground
-            source={require("../../assets/images/games/mole_0003.png")}
-            resizeMode="contain"
-            style={styles.innerContainerBox}
-          ></ImageBackground>
-        </Pressable>
+        <Shadow>
+          <Pressable
+            style={[styles.innerContainerBox]}
+            onPress={() => navigation.navigate("TwoSame")}
+          >
+            <Image
+              source={require("../../assets/images/twoSameImgs/twoSame.png")}
+              resizeMode="contain"
+              style={{ width: 90, height: 90 }}
+            />
+          </Pressable>
+        </Shadow>
+        <Text style={styles.gameText}>Two of Same</Text>
       </View>
     </View>
   );
@@ -41,17 +48,24 @@ const styles = StyleSheet.create({
   innerContainer: {
     textAlign: "center",
     alignItems: "center",
-    overflow: "hidden",
   },
   innerContainerBox: {
-    width: 150,
-    height: 150,
-    margin: 10,
-    borderWidth: 0.2,
+    width: 100,
+    height: 100,
+    padding: 5,
+    borderWidth: 1,
     borderColor: "#222325",
     borderRadius: 10,
     overflow: "hidden",
-    alignItems: "center",
-    justifyContent: "center",
+  },
+  shadowProp: {
+    shadowColor: "#171717",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.4,
+    shadowRadius: 2,
+  },
+  gameText: {
+    fontFamily: "HammersmithOne-Bold",
+    marginTop: 10,
   },
 });
