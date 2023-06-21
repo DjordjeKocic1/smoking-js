@@ -102,8 +102,6 @@ export const TwoSame = ({ navigation }) => {
     shuffle();
   }, []);
 
-  console.log(images);
-
   return (
     <View style={styles.container}>
       <View style={styles.animatedCont}>

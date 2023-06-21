@@ -1,27 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { http } from "../utils/http";
+import { setError } from "./errorReducer";
 
 const taskSlice = createSlice({
   name: "task",
   initialState: {
     task: [],
-    errors: null,
     isLoading: false,
   },
   reducers: {
-    fetchStart: (state, action) => {
+    fetchStart: (state) => {
       state.isLoading = true;
-      state.errors = null;
     },
     fetchSuccess: (state, action) => {
       state.task = action.payload;
-      state.errors = null;
       state.isLoading = false;
     },
-    fetchError: (state, action) => {
-      state.errors = action.payload;
+    fetchError: (state) => {
       state.isLoading = false;
-      state.errors = action.payload;
     },
   },
 });
@@ -37,7 +33,8 @@ export const getTasks = (id) => {
         dispatch(fetchSuccess(response.data.task));
       })
       .catch((e) => {
-        console.log(e);
+        dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };
@@ -52,7 +49,8 @@ export const createTask = (data) => {
         dispatch(fetchSuccess([...tasks, response.data.task]));
       })
       .catch((e) => {
-        dispatch(fetchError(e.response.data.error));
+        dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };
@@ -75,7 +73,8 @@ export const updateTask = (data, id) => {
         dispatch(fetchSuccess(newTaskArray));
       })
       .catch((e) => {
-        console.log(e.response);
+        dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };
@@ -91,7 +90,8 @@ export const deleteTask = (id) => {
         dispatch(fetchSuccess(updatedTask));
       })
       .catch((e) => {
-        console.log(e.response);
+        dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };

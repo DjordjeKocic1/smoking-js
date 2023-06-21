@@ -1,27 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { http } from "../utils/http";
+import { setError } from "./errorReducer";
 
 const notificationSlice = createSlice({
   name: "notification",
   initialState: {
     notification: null,
-    errors: null,
     isLoading: false,
   },
   reducers: {
-    fetchStart: (state, action) => {
+    fetchStart: (state) => {
       state.isLoading = true;
-      state.errors = null;
     },
     fetchSuccess: (state, action) => {
       state.notification = action.payload;
-      state.errors = null;
       state.isLoading = false;
     },
-    fetchError: (state, action) => {
-      state.errors = action.payload;
+    fetchError: (state) => {
       state.isLoading = false;
-      state.errors = action.payload;
     },
   },
 });
@@ -37,7 +33,10 @@ export const getNotification = (id) => {
       .then((response) => {
         dispatch(fetchSuccess(response.data.notification));
       })
-      .catch((e) => {});
+      .catch((e) => {
+        dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
+      });
   };
 };
 
@@ -50,7 +49,8 @@ export const createNotification = (data) => {
         dispatch(fetchSuccess(response.data.notification));
       })
       .catch((e) => {
-        dispatch(fetchError(e.response.data.error));
+        dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };
@@ -68,7 +68,8 @@ export const updateNotification = (data, id) => {
         dispatch(fetchSuccess(updatedNotifcation));
       })
       .catch((e) => {
-        console.log(e.response);
+        dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };
@@ -84,7 +85,8 @@ export const deleteNotification = (id) => {
         dispatch(fetchSuccess(updatedNotifcation));
       })
       .catch((e) => {
-        console.log("Error delete Notification", e.response);
+        dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };

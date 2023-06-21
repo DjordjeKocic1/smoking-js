@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { http } from "../utils/http";
+import { setError } from "./errorReducer";
 
 const categoriesSlice = createSlice({
   name: "categories",
@@ -32,6 +33,7 @@ export const getCategories = () => (dispatch) => {
     })
     .catch((err) => {
       dispatch(fetchError());
+      dispatch(setError(e.response.data.error));
     });
 };
 

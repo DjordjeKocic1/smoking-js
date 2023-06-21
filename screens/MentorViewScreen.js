@@ -581,7 +581,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   input: {
-    borderBottomWidth: 0.4,
     height: 30,
     width: "80%",
     marginTop: 20,

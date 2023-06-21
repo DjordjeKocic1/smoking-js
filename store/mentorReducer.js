@@ -1,27 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { http } from "../utils/http";
+import { setError } from "./errorReducer";
 
 const mentorSlice = createSlice({
   name: "mentor",
   initialState: {
     mentor: null,
-    errors: null,
     isLoading: false,
   },
   reducers: {
-    fetchStart: (state, action) => {
+    fetchStart: (state) => {
       state.isLoading = true;
-      state.errors = null;
     },
     fetchSuccess: (state, action) => {
       state.mentor = action.payload;
-      state.errors = null;
       state.isLoading = false;
     },
-    fetchError: (state, action) => {
-      state.errors = action.payload;
+    fetchError: (state) => {
       state.isLoading = false;
-      state.errors = action.payload;
     },
   },
 });
@@ -37,7 +33,7 @@ export const getMentor = (id) => {
         dispatch(fetchSuccess(response.data.mentor));
       })
       .catch((e) => {
-        console.log(e.response.data);
+        dispatch(fetchError());
       });
   };
 };
@@ -51,7 +47,7 @@ export const createMentor = (data) => {
         dispatch(fetchSuccess(response.data.mentor));
       })
       .catch((e) => {
-        dispatch(fetchError(e.response.data.error));
+        dispatch(fetchError());
       });
   };
 };
@@ -65,7 +61,7 @@ export const updateMentor = (data, id) => {
         dispatch(fetchSuccess(response.data.mentor));
       })
       .catch((e) => {
-        console.log(e.response);
+        dispatch(fetchError());
       });
   };
 };
@@ -79,7 +75,7 @@ export const deleteMentor = (id) => {
         dispatch(fetchSuccess(null));
       })
       .catch((e) => {
-        console.log(e.response);
+        dispatch(fetchError());
       });
   };
 };

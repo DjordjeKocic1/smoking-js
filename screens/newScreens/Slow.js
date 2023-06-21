@@ -45,81 +45,80 @@ export const Slow = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.mainContainer}>
+    <ScrollView
+      contentContainerStyle={styles.mainContainer}
+      showsHorizontalScrollIndicator={false}
+      endFillColor="#000"
+      overScrollMode="never"
+    >
       <BackButton navigation={navigation} where={"UserScreen"} />
-      <ScrollView
-        showsHorizontalScrollIndicator={false}
-        endFillColor="#000"
-        overScrollMode="never"
+      <Text
+        style={[
+          styles.tipsContainerText,
+          { fontSize: 20, textAlign: "center" },
+        ]}
       >
+        Take it Slow!
+      </Text>
+      <View style={styles.tipsContainer}>
+        <Text style={styles.tipsContainerText}>
+          1. Try as long as you are in the application{" "}
+          <Text style={{ color: "#c39351" }}>NOT</Text> to light a cigar.
+        </Text>
+      </View>
+      <View style={styles.tipsContainer}>
+        <Text style={styles.tipsContainerText}>
+          2. If you smoked every hour, now try on{" "}
+          <Text style={{ color: "#c39351" }}>two or three hours.</Text>
+        </Text>
+      </View>
+      <View style={styles.tipsContainer}>
+        <Text style={styles.tipsContainerText}>
+          3. One of the ways to forget about the cigarette is to{" "}
+          <Text style={{ color: "#c39351" }}>PLAY</Text> the game and be the
+          best on the app.
+        </Text>
+      </View>
+      <View style={styles.tipsContainer}>
+        <Text style={styles.tipsContainerText}>
+          4. After <Text style={{ color: "#c39351" }}>every meal</Text>, I know
+          you want to smoke a cigar, but try to resist and don't light it right
+          away.
+        </Text>
+      </View>
+      <View style={styles.tipsContainer}>
+        <Text style={styles.tipsContainerText}>
+          5. <Text style={{ color: "#c39351" }}>Set goals</Text> - think about
+          reducing your cigarettes each day, each week or fortnight.
+        </Text>
+      </View>
+      <View style={styles.tipsContainer}>
+        <Text style={styles.tipsContainerText}>
+          6. Continue to <Text style={{ color: "#c39351" }}>reduce</Text> the
+          number of cigarettes you smoke as you approach your ‘quit date’.
+        </Text>
+      </View>
+      <View style={styles.tipsContainer}>
+        <Text style={styles.tipsContainerText}>
+          7. Use{" "}
+          <Text style={{ color: "#c39351" }}>
+            nicotine replacement therapies
+          </Text>{" "}
+          in the cutting down phase - these help prevent you compensating for
+          fewer cigarettes by taking more and deeper puffs.
+        </Text>
+      </View>
+      <Pressable style={styles.pressableContainer} onPress={onSaveHandler}>
         <Text
           style={[
             styles.tipsContainerText,
-            { fontSize: 20, textAlign: "center" },
+            { fontSize: 15, textAlign: "center", color: "white" },
           ]}
         >
-          Take it Slow!
+          Ok, i will take it slow
         </Text>
-        <View style={styles.tipsContainer}>
-          <Text style={styles.tipsContainerText}>
-            1. Try as long as you are in the application{" "}
-            <Text style={{ color: "#c39351" }}>NOT</Text> to light a cigar.
-          </Text>
-        </View>
-        <View style={styles.tipsContainer}>
-          <Text style={styles.tipsContainerText}>
-            2. If you smoked every hour, now try on{" "}
-            <Text style={{ color: "#c39351" }}>two or three hours.</Text>
-          </Text>
-        </View>
-        <View style={styles.tipsContainer}>
-          <Text style={styles.tipsContainerText}>
-            3. One of the ways to forget about the cigarette is to{" "}
-            <Text style={{ color: "#c39351" }}>PLAY</Text> the game and be the
-            best on the app.
-          </Text>
-        </View>
-        <View style={styles.tipsContainer}>
-          <Text style={styles.tipsContainerText}>
-            4. After <Text style={{ color: "#c39351" }}>every meal</Text>, I
-            know you want to smoke a cigar, but try to resist and don't light it
-            right away.
-          </Text>
-        </View>
-        <View style={styles.tipsContainer}>
-          <Text style={styles.tipsContainerText}>
-            5. <Text style={{ color: "#c39351" }}>Set goals</Text> - think about
-            reducing your cigarettes each day, each week or fortnight.
-          </Text>
-        </View>
-        <View style={styles.tipsContainer}>
-          <Text style={styles.tipsContainerText}>
-            6. Continue to <Text style={{ color: "#c39351" }}>reduce</Text> the
-            number of cigarettes you smoke as you approach your ‘quit date’.
-          </Text>
-        </View>
-        <View style={styles.tipsContainer}>
-          <Text style={styles.tipsContainerText}>
-            7. Use{" "}
-            <Text style={{ color: "#c39351" }}>
-              nicotine replacement therapies
-            </Text>{" "}
-            in the cutting down phase - these help prevent you compensating for
-            fewer cigarettes by taking more and deeper puffs.
-          </Text>
-        </View>
-        <Pressable style={styles.pressableContainer} onPress={onSaveHandler}>
-          <Text
-            style={[
-              styles.tipsContainerText,
-              { fontSize: 15, textAlign: "center", color: "white" },
-            ]}
-          >
-            Ok, i will take it slow
-          </Text>
-        </Pressable>
-      </ScrollView>
-    </View>
+      </Pressable>
+    </ScrollView>
   );
 };
 

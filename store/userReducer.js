@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { http } from "../utils/http";
+import { setError } from "./errorReducer";
 
 const userSlice = createSlice({
   name: "users",
@@ -9,7 +10,7 @@ const userSlice = createSlice({
     isLoading: false,
   },
   reducers: {
-    fetchStart: (state, action) => {
+    fetchStart: (state) => {
       state.isLoading = true;
     },
     fetchSuccessUsers: (state, action) => {
@@ -20,7 +21,7 @@ const userSlice = createSlice({
       state.user = action.payload;
       state.isLoading = false;
     },
-    fetchError: (state, action) => {
+    fetchError: (state) => {
       state.isLoading = false;
     },
   },
@@ -39,6 +40,7 @@ export const getUsers = () => {
       })
       .catch(() => {
         dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };
@@ -51,8 +53,9 @@ export const createUser = (data) => {
       .then((response) => {
         dispatch(fetchSuccess(response.data.user));
       })
-      .catch(() => {
+      .catch((e) => {
         dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };
@@ -67,6 +70,7 @@ export const updateUser = (data, id) => {
       })
       .catch((err) => {
         dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };
@@ -92,20 +96,22 @@ export const updateUserCosts = (data, id) => {
       })
       .catch(() => {
         dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };
 
-export const userHealth = (id, data) => {
+export const userHealth = (data, id) => {
   return (dispatch) => {
     dispatch(fetchStart());
     http
-      .userHealthGet(id, data)
+      .userHealthGet(data, id)
       .then((response) => {
         dispatch(fetchSuccess(response.data.user));
       })
       .catch(() => {
         dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };

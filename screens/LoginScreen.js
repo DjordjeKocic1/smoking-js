@@ -1,19 +1,21 @@
-import * as Google from "expo-auth-session/providers/google";
+import * as Linking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
 
 import {
+  ActivityIndicator,
   Animated,
   Easing,
   Image,
   NativeModules,
   StyleSheet,
+  Text,
   View,
 } from "react-native";
 import { createUser, selectUser } from "../store/userReducer";
-import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
 import { backButtonHandlerAlert } from "../helper/helpers";
@@ -21,26 +23,31 @@ import { useRef } from "react";
 
 const { UIManager } = NativeModules;
 
-WebBrowser.maybeCompleteAuthSession();
-
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
+
+WebBrowser.maybeCompleteAuthSession();
 
 const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const movingAnim = useRef(new Animated.Value(-10)).current;
   const { isLoading, user } = useSelector(selectUser);
-  const [submitClick, setSubmitClick] = useState(false);
-  const [request, response, promptAsync] = useAuthRequest({
-    clientId: "2da74976-bf21-485c-bcea-cf2b97fada34",
-    redirectUri: makeRedirectUri({
-      scheme: "https://auth.expo.io/@djole232/istop/start",
-    }),
-  });
+  const [submitClick, setSubmitClick] = useState(true);
 
   useEffect(() => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
     return () => {};
+  }, []);
+
+  useEffect(() => {
+    AsyncStorage.getItem("@user").then((data) => {
+      if (!!data) {
+        setSubmitClick(true);
+        dispatch(createUser({ email: data }));
+      } else {
+        setSubmitClick(false);
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -60,31 +67,32 @@ const LoginScreen = ({ navigation }) => {
     return () => {};
   }, [movingAnim]);
 
-  useEffect(() => {
-    if (response?.type === "success") {
-      if (response.authentication.accessToken) {
-        getUserData(response.authentication.accessToken);
+  const opetAuthGoogle = async () => {
+    try {
+      addLinkingListener();
+      await WebBrowser.openBrowserAsync(
+        `https://whale-app-hkbku.ondigitalocean.app/auth/google`
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const addLinkingListener = () => {
+    Linking.addEventListener("url", handleRedirec);
+  };
+
+  const handleRedirec = async (event) => {
+    if (!event) return;
+    let data = Linking.parse(event.url);
+    if (data) {
+      dispatch(createUser(data.queryParams));
+      try {
+        await AsyncStorage.setItem("@user", data.queryParams.email);
+      } catch (error) {
+        console.log(error);
       }
     }
-    return () => {};
-  }, [response]);
-
-  const getUserData = (accessToken) => {
-    fetch("https://www.googleapis.com/userinfo/v2/me", {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        let dataTosend = {
-          email: data.email,
-          name: data.name,
-          image: data.picture,
-        };
-        dispatch(createUser(dataTosend));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   if (isLoading) {
@@ -92,7 +100,7 @@ const LoginScreen = ({ navigation }) => {
   }
 
   return (
-    <View style={[styles.container, { opacity: submitClick ? 0.3 : 1 }]}>
+    <View style={[styles.container]}>
       <View style={styles.buttonContent}>
         <View style={styles.imageContent}>
           <Animated.View
@@ -112,14 +120,19 @@ const LoginScreen = ({ navigation }) => {
             source={require("../assets/images/i_stop-logo.png")}
           />
         </View>
-        <SubmitButton
-          disabled={submitClick}
-          onPress={() => {
-            setSubmitClick(true);
-            promptAsync({ showInRecents: true });
-          }}
-        >
-          SIGN IN WITH A GOOGLE
+        <SubmitButton disabled={submitClick} onPress={() => opetAuthGoogle()}>
+          {!submitClick ? (
+            "SIGN IN WITH A GOOGLE"
+          ) : (
+            <View style={styles.loadingContainer}>
+              <Text style={styles.googleLoginText}>Auto Login</Text>
+              <ActivityIndicator
+                style={{ marginTop: 5 }}
+                size="large"
+                color="white"
+              />
+            </View>
+          )}
         </SubmitButton>
       </View>
     </View>
@@ -150,6 +163,16 @@ const styles = StyleSheet.create({
     color: "#222325",
     fontFamily: "HammersmithOne-Bold",
     fontSize: 12,
+  },
+  googleLoginText: {
+    color: "white",
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

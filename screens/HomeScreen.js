@@ -91,20 +91,24 @@ const HomeScreen = ({ navigation }) => {
           "Premission required",
           "Notification need the appropriate permissions."
         );
-        dispatch(userHealth(user._id, {}));
+        dispatch(userHealth({}, user._id));
+        console.log(finalStatus);
         return;
       }
 
       try {
         const pushTokenData = await Notifications.getExpoPushTokenAsync({
-          projectId: "f0b5f13d-478b-499a-b9a8-bff4e09320ce",
+          projectId: "2da74976-bf21-485c-bcea-cf2b97fada34",
         });
-        const dataToSend = {
+
+        let dataToSend = {
           notificationToken: pushTokenData.data,
         };
-        dispatch(userHealth(user._id, dataToSend));
+
+        dispatch(userHealth(dataToSend, user._id));
       } catch (error) {
-        dispatch(userHealth(user._id, {}));
+        console.log(error);
+        dispatch(userHealth({}, user._id));
       }
 
       if (Platform.OS === "android") {

@@ -32,18 +32,6 @@ export const ProfileScreen = ({ navigation }) => {
     backButtonHandler(navigation, "UserScreen");
   }, []);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: !!user && !!user.name && user.name.toUpperCase(),
-      headerStyle: {
-        backgroundColor: "#C39351",
-      },
-      headerShown: false,
-      headerBackVisible: false,
-      headerTintColor: "white",
-    });
-  }, [navigation, user]);
-
   const onNameChangeHandler = (enteredValue) => {
     setUserProfile((prev) => {
       return {

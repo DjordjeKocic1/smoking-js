@@ -1,7 +1,8 @@
 import * as Font from "expo-font";
+import * as Linking from "expo-linking";
 import * as SplashScreen from "expo-splash-screen";
 
-import { Text, TextInput } from "react-native";
+import { Text, TextInput, View } from "react-native";
 
 import { Asset } from "expo-asset";
 import CategorieScreen from "./screens/CategorieScreen";
@@ -15,7 +16,6 @@ import { Provider } from "react-redux";
 import { SmokingScreen } from "./screens/SmokingScreen";
 import { StatusBar } from "expo-status-bar";
 import VerifyScreen from "./screens/VerifyScreen";
-import { View } from "react-native-animatable";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { store } from "./store/store";
 import { useCallback } from "react";
@@ -116,9 +116,9 @@ export default function App() {
       <StatusBar style="light" backgroundColor="transparent" />
       <Provider store={store}>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Login">
+          <Stack.Navigator initialRouteName="login">
             <Stack.Screen
-              name="Login"
+              name="login"
               component={LoginScreen}
               options={{
                 headerShown: false,

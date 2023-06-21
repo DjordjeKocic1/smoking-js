@@ -15,14 +15,14 @@ import {
 } from "react-native";
 import { selectUser, userHealth } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
+import { Button } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
 import { MaterialIcons } from "@expo/vector-icons";
 import { backButtonHandlerAlert } from "../helper/helpers";
 import { getNotification } from "../store/notificationReducer";
-import { http } from "../utils/http";
 
 const UserScreen = ({ navigation }) => {
   const { user } = useSelector(selectUser);
@@ -35,7 +35,7 @@ const UserScreen = ({ navigation }) => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-      dispatch(userHealth(user._id, {}));
+      dispatch(userHealth({}, user._id));
       dispatch(getNotification(user._id));
     }, 2000);
   };

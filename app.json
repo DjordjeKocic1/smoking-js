@@ -24,15 +24,13 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "host.exp.exponent"
     },
     "android": {
       "versionCode": 1,
-      "useNextNotificationsApi": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -46,6 +44,7 @@
       "eas": {
         "projectId": "2da74976-bf21-485c-bcea-cf2b97fada34"
       }
-    }
+    },
+    "owner": "djole232"
   }
 }

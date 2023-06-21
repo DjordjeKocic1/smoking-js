@@ -3,7 +3,7 @@ import axios from "axios";
 const url = "https://whale-app-hkbku.ondigitalocean.app";
 
 const getUsers = () => {
-  return axios.get(url + "/send-user-info/users");
+  return axios.get(url + "/users");
 };
 
 const createUser = (data) => {
@@ -18,8 +18,8 @@ const updateUserCosts = (data, id) => {
   return axios.put(url + `/send-user-info/update-user-costs/${id}`, data);
 };
 
-const userHealthGet = (id, data) => {
-  return axios.get(url + `/send-user-info/user-health/${id}`, data);
+const userHealthGet = (data, id) => {
+  return axios.post(url + `/send-user-info/user-health/${id}`, data);
 };
 
 const categoriesGet = () => {
@@ -78,10 +78,6 @@ const deleteTask = (id) => {
   return axios.delete(url + `/send-user-info/delete-task/${id}`);
 };
 
-const sendPushNotification = (data) => {
-  return axios.post("https://exp.host/--/api/v2/push/send", data);
-};
-
 export const http = {
   getUsers,
   createUser,
@@ -102,5 +98,4 @@ export const http = {
   createTask,
   updateTask,
   deleteTask,
-  sendPushNotification,
 };

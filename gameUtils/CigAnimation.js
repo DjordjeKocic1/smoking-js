@@ -3,7 +3,6 @@ import { selectUser, updateUserCosts } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
-import { BackButton } from "../components/BackButton";
 import { FontAwesome } from "@expo/vector-icons";
 import { selectNotification } from "../store/notificationReducer";
 import { useNavigation } from "@react-navigation/native";

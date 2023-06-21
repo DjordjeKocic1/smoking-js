@@ -1,23 +1,6 @@
-import * as Font from "expo-font";
-
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useEffect, useState } from "react";
 
 export const SubmitButton = (props) => {
-  const [fontsLoaded, setFontsLoaded] = useState(false);
-  const loadFonts = async () => {
-    await Font.loadAsync({
-      "HammersmithOne-Bold": require("../assets/fonts/HammersmithOne-Regular.ttf"),
-    });
-    setFontsLoaded(true);
-  };
-  useEffect(() => {
-    loadFonts();
-    () => {};
-  }, []);
-  if (!fontsLoaded) {
-    return;
-  }
   return (
     <View>
       <Pressable

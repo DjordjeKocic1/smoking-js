@@ -24,13 +24,14 @@ import { BackButton } from "../../components/BackButton";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Loading } from "../../components/Loading";
+import { selectError } from "../../store/errorReducer";
 import { selectUser } from "../../store/userReducer";
 
 export const Mentor = ({ navigation }) => {
   const dispatch = useDispatch();
   const { mentor } = useSelector(selectMentor);
   const { user } = useSelector(selectUser);
-  const errors = useSelector((state) => state.mentor.errors);
+  const { msg } = useSelector(selectError);
   const isLoading = useSelector((state) => state.mentor.isLoading);
 
   const [mentorEmailValue, setMentorEmailValue] = useState("");
@@ -207,7 +208,7 @@ export const Mentor = ({ navigation }) => {
               onChangeText={mentorInputEmailChangeHandler}
               placeholder="Enter mentor email"
             />
-            {!!errors && (
+            {/* {!!msg && (
               <Text
                 style={{
                   color: "red",
@@ -218,7 +219,7 @@ export const Mentor = ({ navigation }) => {
               >
                 <AntDesign name="warning" size={12} color="red" /> {errors}
               </Text>
-            )}
+            )} */}
             <Pressable
               disabled={!isValid}
               onPress={createMentorHandler}
