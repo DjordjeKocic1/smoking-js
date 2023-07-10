@@ -45,6 +45,9 @@ const CigaretteCostScreen = ({ navigation }) => {
   };
 
   const decreaseHander = (state, innerState) => {
+    if(innerState == 0){
+      return
+    }
     state(innerState - 1);
   };
 

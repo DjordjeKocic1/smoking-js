@@ -1,5 +1,6 @@
 import {
   Animated,
+  Dimensions,
   Easing,
   Image,
   Pressable,
@@ -225,17 +226,17 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-evenly",
   },
-  card: { marginBottom: 10, width: 150, alignItems: "center" },
+  card: { marginBottom: 10, width: Dimensions.get("screen").width > 700 ? 200 : 150, alignItems: "center" },
   cardImage: {
-    width: 50,
-    height: 50,
+    width: Dimensions.get("screen").width > 700 ? 100 : 50,
+    height:Dimensions.get("screen").width > 700 ? 100 : 50,
     resizeMode: "contain",
     marginBottom: 5,
   },
   text: {
     textAlign: "center",
     fontFamily: "HammersmithOne-Bold",
-    fontSize: 13,
+    fontSize: 10,
     marginTop: 5,
     marginBottom: 10,
   },

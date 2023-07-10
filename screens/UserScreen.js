@@ -40,6 +40,7 @@ const UserScreen = ({ navigation }) => {
     }, 2000);
   };
 
+
   useEffect(() => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
     return () => {};

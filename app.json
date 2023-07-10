@@ -14,6 +14,12 @@
           "icon": "./assets/images/cigQuitIcon.png",
           "color": "#c39351"
         }
+      ],
+      [
+        "@stripe/stripe-react-native",
+        {
+          "enableGooglePay": true
+        }
       ]
     ],
     "splash": {

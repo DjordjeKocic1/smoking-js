@@ -18,7 +18,6 @@ export const Task = ({ navigation }) => {
   const { task } = useSelector(selectTask);
   const { user } = useSelector(selectUser);
   const isLoading = useSelector((state) => state.task.isLoading);
-
   useEffect(() => {
     dispatch(getTasks(user._id));
   }, [dispatch]);

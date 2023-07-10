@@ -5,7 +5,7 @@ import { setError } from "./errorReducer";
 const userSlice = createSlice({
   name: "users",
   initialState: {
-    user: {},
+    user: null,
     users: [],
     isLoading: false,
   },
@@ -38,7 +38,8 @@ export const getUsers = () => {
       .then((response) => {
         dispatch(fetchSuccessUsers(response.data.users));
       })
-      .catch(() => {
+      .catch((e) => {
+        console.log(e.response.data);
         dispatch(fetchError());
         dispatch(setError(e.response.data.error));
       });

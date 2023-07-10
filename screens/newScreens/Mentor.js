@@ -1,5 +1,9 @@
+import * as WebBrowser from "expo-web-browser";
+
 import {
   Alert,
+  Button,
+  Platform,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -24,22 +28,36 @@ import { BackButton } from "../../components/BackButton";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Loading } from "../../components/Loading";
+import { Payment } from "../../gameUtils/Payment";
 import { selectError } from "../../store/errorReducer";
 import { selectUser } from "../../store/userReducer";
 
+WebBrowser.maybeCompleteAuthSession();
+
 export const Mentor = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { mentor } = useSelector(selectMentor);
+  const { mentor, isLoading } = useSelector(selectMentor);
   const { user } = useSelector(selectUser);
   const { msg } = useSelector(selectError);
-  const isLoading = useSelector((state) => state.mentor.isLoading);
-
+  const [paymentVis, setPaymentVis] = useState(false);
   const [mentorEmailValue, setMentorEmailValue] = useState("");
   const [mentorNameValue, setMentorNameValue] = useState("");
   const [isModal, setIsModal] = useState(false);
   const [isValid, setIsValid] = useState(false);
 
   const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    if (mentorEmailValue != "" && mentorNameValue != "") setIsValid(true);
+    else setIsValid(false);
+
+    return () => {};
+  }, [mentorEmailValue, mentorNameValue]);
+
+  useEffect(() => {
+    dispatch(getMentor(user._id));
+    return () => {};
+  }, [dispatch]);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -115,8 +133,8 @@ export const Mentor = ({ navigation }) => {
 
   const createMentorHandler = () => {
     const dataToSend = {
-      name: mentorNameValue,
-      email: mentorEmailValue,
+      name: mentorNameValue.trim(),
+      email: mentorEmailValue.trim(),
       user: {
         email: user.email,
         _id: user._id,
@@ -131,17 +149,13 @@ export const Mentor = ({ navigation }) => {
     }, 5000);
   };
 
-  useEffect(() => {
-    if (mentorEmailValue != "" && mentorNameValue != "") setIsValid(true);
-    else setIsValid(false);
-
-    return () => {};
-  }, [mentorEmailValue, mentorNameValue]);
-
-  useEffect(() => {
-    dispatch(getMentor(user._id));
-    return () => {};
-  }, [dispatch]);
+  const askForHelpHanlder = () => {
+    if (!!user && !!user.subscriber) {
+      setIsModal(true);
+      return;
+    }
+    setPaymentVis(true);
+  };
 
   if (isLoading) {
     return <Loading />;
@@ -208,18 +222,6 @@ export const Mentor = ({ navigation }) => {
               onChangeText={mentorInputEmailChangeHandler}
               placeholder="Enter mentor email"
             />
-            {/* {!!msg && (
-              <Text
-                style={{
-                  color: "red",
-                  fontFamily: "HammersmithOne-Bold",
-                  fontSize: 12,
-                  marginTop: 8,
-                }}
-              >
-                <AntDesign name="warning" size={12} color="red" /> {errors}
-              </Text>
-            )} */}
             <Pressable
               disabled={!isValid}
               onPress={createMentorHandler}
@@ -341,13 +343,26 @@ export const Mentor = ({ navigation }) => {
         {!mentor && (
           <Pressable
             android_ripple={{ color: "#6A7152" }}
-            onPress={() => setIsModal(true)}
+            onPress={askForHelpHanlder}
             style={styles.pressableContainer}
           >
             <Text style={styles.pressableContainerText}>Ask for help</Text>
           </Pressable>
         )}
+        {!!user && !!user.subscribeDate && (
+          <Text
+            style={{
+              fontStyle: "italic",
+              marginTop: 10,
+              fontFamily: "HammersmithOne-Bold",
+              fontSize: 10,
+            }}
+          >
+            subscribed from {user.subscribeDate}
+          </Text>
+        )}
       </View>
+      {paymentVis && <Payment onCancel={(boolen) => setPaymentVis(boolen)} />}
     </ScrollView>
   );
 };
@@ -362,6 +377,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flexDirection: "row",
     justifyContent: "space-between",
+    position: "relative",
   },
   mentorViewText: {
     color: "black",

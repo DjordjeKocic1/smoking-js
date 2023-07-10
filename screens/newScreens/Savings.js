@@ -226,20 +226,6 @@ export const Savings = ({ navigation }) => {
                     : user.consumptionInfo.cigarettesInPack}
                 </Text>
               </View>
-              <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
-                  Cigarette Avoided
-                </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
-                  {!!user.savedInfo
-                    ? user.savedInfo.cigarettesAvoided
-                    : user.consumptionInfo.cigarettesAvoided}
-                </Text>
-              </View>
             </View>
           )}
         </Animated.View>
@@ -302,7 +288,7 @@ export const Savings = ({ navigation }) => {
                 <Text
                   style={[styles.savingText, { fontSize: 10, color: "black" }]}
                 >
-                  {!!user.savedInfo
+                  ${!!user.savedInfo
                     ? user.savedInfo.cigarettesInPack
                     : user.consumptionInfo.cigarettesInPack}
                 </Text>
@@ -311,7 +297,7 @@ export const Savings = ({ navigation }) => {
                 <Text
                   style={[styles.savingText, { fontSize: 10, color: "black" }]}
                 >
-                  Cigarette daily
+                  Cigarette/day
                 </Text>
                 <Text
                   style={[styles.savingText, { fontSize: 10, color: "black" }]}
@@ -392,14 +378,14 @@ export const Savings = ({ navigation }) => {
                 <Text
                   style={[styles.savingText, { fontSize: 10, color: "black" }]}
                 >
-                  Cigarette daily
+                  Cigarette/day
                 </Text>
                 <Text
                   style={[styles.savingText, { fontSize: 10, color: "black" }]}
                 >
                   {!!user.savedInfo
                     ? user.savedInfo.cigarettesDay
-                    : user.consumptionInfo.cigarettesInPack}
+                    : user.consumptionInfo.cigarettesDay}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -485,7 +471,7 @@ export const Savings = ({ navigation }) => {
                 <Text
                   style={[styles.savingText, { fontSize: 10, color: "black" }]}
                 >
-                  Cigarette daily
+                  Cigarette/day
                 </Text>
                 <Text
                   style={[styles.savingText, { fontSize: 10, color: "black" }]}
@@ -499,7 +485,7 @@ export const Savings = ({ navigation }) => {
                 <Text
                   style={[styles.savingText, { fontSize: 10, color: "black" }]}
                 >
-                  Year days
+                  Days
                 </Text>
                 <Text
                   style={[styles.savingText, { fontSize: 10, color: "black" }]}
@@ -578,7 +564,7 @@ export const Savings = ({ navigation }) => {
                 <Text
                   style={[styles.savingText, { fontSize: 10, color: "black" }]}
                 >
-                  Cigarette daily
+                  Cigarette/day
                 </Text>
                 <Text
                   style={[styles.savingText, { fontSize: 10, color: "black" }]}
@@ -671,7 +657,7 @@ export const Savings = ({ navigation }) => {
                 <Text
                   style={[styles.savingText, { fontSize: 10, color: "black" }]}
                 >
-                  Cigarette daily
+                  Cigarette/day
                 </Text>
                 <Text
                   style={[styles.savingText, { fontSize: 10, color: "black" }]}

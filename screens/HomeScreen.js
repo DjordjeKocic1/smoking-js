@@ -35,8 +35,8 @@ Notifications.setNotificationHandler({
   handleNotification: async () => {
     return {
       shouldPlaySound: true,
-      shouldSetBadge: true,
-      shouldShowAlert: true,
+      shouldSetBadge: false,
+      shouldShowAlert: false,
     };
   },
 });
@@ -92,7 +92,6 @@ const HomeScreen = ({ navigation }) => {
           "Notification need the appropriate permissions."
         );
         dispatch(userHealth({}, user._id));
-        console.log(finalStatus);
         return;
       }
 

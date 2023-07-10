@@ -38,3 +38,7 @@ export const backButtonHandlerAlert = (alertMsg, alertQuestion) => {
 export const costOfCigarette = (packCost, cigInPack) => {
   return +packCost / +cigInPack;
 };
+
+export const isObjEmpty = (obj) => {
+  return JSON.stringify(obj) == "{}"
+}

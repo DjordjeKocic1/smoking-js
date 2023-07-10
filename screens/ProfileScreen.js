@@ -89,7 +89,7 @@ export const ProfileScreen = ({ navigation }) => {
           !!user.userBasicInfo && !!user.userBasicInfo.city
             ? user.userBasicInfo.city
             : "",
-        image: !!user.image ? user.image : "",
+        image: require("../assets/images/user.png"),
       });
     }
 
@@ -114,7 +114,7 @@ export const ProfileScreen = ({ navigation }) => {
             <View style={[styles.imageContainer]}>
               <Image
                 style={{ width: "100%", height: "100%" }}
-                source={{ uri: user.image }}
+                source={require("../assets/images/user.png")}
               />
             </View>
             <Text style={styles.regText}>

@@ -33,6 +33,7 @@ export const getTasks = (id) => {
         dispatch(fetchSuccess(response.data.task));
       })
       .catch((e) => {
+        console.log(e.response.data);
         dispatch(fetchError());
         dispatch(setError(e.response.data.error));
       });

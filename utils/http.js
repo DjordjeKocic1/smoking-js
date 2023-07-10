@@ -7,75 +7,87 @@ const getUsers = () => {
 };
 
 const createUser = (data) => {
-  return axios.post(url + "/send-user-info/create-user", data);
+  return axios.post(url + "/create-user", data);
 };
 
 const updateUser = (data, id) => {
-  return axios.put(url + `/send-user-info/update-user/${id}`, data);
+  return axios.put(url + `/update-user/${id}`, data);
 };
 
 const updateUserCosts = (data, id) => {
-  return axios.put(url + `/send-user-info/update-user-costs/${id}`, data);
+  return axios.put(url + `/update-user-costs/${id}`, data);
 };
 
 const userHealthGet = (data, id) => {
-  return axios.post(url + `/send-user-info/user-health/${id}`, data);
+  return axios.post(url + `/user-health/${id}`, data);
 };
 
 const categoriesGet = () => {
-  return axios.get(url + "/send-user-info/categories");
+  return axios.get(url + "/categories");
 };
 
 const achievementGet = (id) => {
-  return axios.get(url + `/send-user-info/get-achievements/${id}`);
+  return axios.get(url + `/get-achievements/${id}`);
 };
 
 const getMentor = (id) => {
-  return axios.get(url + `/send-user-info/get-mentor/${id}`);
+  return axios.get(url + `/get-mentor/${id}`);
 };
 
 const createMentor = (data) => {
-  return axios.post(url + "/send-user-info/create-mentor", data);
+  return axios.post(url + "/create-mentor", data);
 };
 
 const updateMentor = (data, id) => {
-  return axios.put(url + `/send-user-info/update-mentor/${id}`, data);
+  return axios.put(url + `/update-mentor/${id}`, data);
 };
 
 const deleteMentor = (id) => {
-  return axios.delete(url + `/send-user-info/delete-mentor/${id}`);
+  return axios.delete(url + `/delete-mentor/${id}`);
 };
 
 const getNotification = (id) => {
-  return axios.get(url + `/send-user-info/get-notification/${id}`);
+  return axios.get(url + `/get-notification/${id}`);
 };
 
 const createNotification = (data) => {
-  return axios.post(url + `/send-user-info/create-notification`, data);
+  return axios.post(url + `/create-notification`, data);
 };
 
 const updateNotification = (data, id) => {
-  return axios.put(url + `/send-user-info/update-notification/${id}`, data);
+  return axios.put(url + `/update-notification/${id}`, data);
 };
 
 const deleteNotification = (id) => {
-  return axios.delete(url + `/send-user-info/delete-notifcation/${id}`);
+  return axios.delete(url + `/delete-notifcation/${id}`);
 };
 
 const getTasks = (id) => {
-  return axios.get(url + `/send-user-info/get-task/${id}`);
+  return axios.get(url + `/get-task/${id}`);
 };
 
 const createTask = (data) => {
-  return axios.post(url + `/send-user-info/create-task`, data);
+  return axios.post(url + `/create-task`, data);
 };
 
 const updateTask = (data, id) => {
-  return axios.put(url + `/send-user-info/update-task/${id}`, data);
+  return axios.put(url + `/update-task/${id}`, data);
 };
 
 const deleteTask = (id) => {
-  return axios.delete(url + `/send-user-info/delete-task/${id}`);
+  return axios.delete(url + `/delete-task/${id}`);
+};
+
+const stripeKey = () => {
+  return axios.get(url + "/fetch-key");
+};
+
+const paymentSheet = (data) => {
+  return axios.post(url + "/payment-sheet", data);
+};
+
+const paypalPay = (data) => {
+  return axios.post(url + "/paypal-pay", data);
 };
 
 export const http = {
@@ -98,4 +110,7 @@ export const http = {
   createTask,
   updateTask,
   deleteTask,
+  stripeKey,
+  paymentSheet,
+  paypalPay,
 };
