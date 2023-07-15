@@ -288,7 +288,8 @@ export const Savings = ({ navigation }) => {
                 <Text
                   style={[styles.savingText, { fontSize: 10, color: "black" }]}
                 >
-                  ${!!user.savedInfo
+                  $
+                  {!!user.savedInfo
                     ? user.savedInfo.cigarettesInPack
                     : user.consumptionInfo.cigarettesInPack}
                 </Text>
@@ -817,38 +818,10 @@ export const Savings = ({ navigation }) => {
           </>
         )}
       {user.smokingInfo.isQuiting && (
-        <View
-          style={{
-            marginTop: 10,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text
-            style={{
-              textAlign: "center",
-              fontFamily: "HammersmithOne-Bold",
-              fontSize: 17,
-              marginBottom: 5,
-            }}
-          >
-            You saved
-          </Text>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              width: 200,
-            }}
-          >
-            <Text
-              style={{
-                color: "green",
-                fontSize: 20,
-                fontFamily: "HammersmithOne-Bold",
-                textAlign: "center",
-              }}
-            >
+        <View style={styles.isQuitingContainer}>
+          <Text style={styles.isQuitingSavedText}>You saved</Text>
+          <View style={styles.isQuitingContainerInner}>
+            <Text style={styles.isQuitingContainerInnerText}>
               {!!user &&
                 !!user.consumptionInfo &&
                 (
@@ -858,30 +831,9 @@ export const Savings = ({ navigation }) => {
               $
             </Text>
           </View>
-          <Text
-            style={{
-              fontSize: 17,
-              fontFamily: "HammersmithOne-Bold",
-              textAlign: "center",
-              marginTop: 20,
-            }}
-          >
-            You didn't smoke
-          </Text>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-            }}
-          >
-            <Text
-              style={{
-                color: "#c39351",
-                fontSize: 25,
-                fontFamily: "HammersmithOne-Bold",
-                textAlign: "center",
-              }}
-            >
+          <Text style={styles.didSmokeText}>You didn't smoke</Text>
+          <View style={styles.didSmokeContainer}>
+            <Text style={styles.didSmokeContainerText}>
               {!!user &&
                 !!user.consumptionInfo &&
                 user.consumptionInfo.cigarettesDay *
@@ -991,5 +943,43 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: 120,
+  },
+  isQuitingContainer: {
+    marginTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  isQuitingSavedText: {
+    textAlign: "center",
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: 17,
+    marginBottom: 5,
+  },
+  isQuitingContainerInner: {
+    flexDirection: "row",
+    justifyContent: "center",
+    width: 200,
+  },
+  isQuitingContainerInnerText: {
+    color: "green",
+    fontSize: 20,
+    fontFamily: "HammersmithOne-Bold",
+    textAlign: "center",
+  },
+  didSmokeText: {
+    fontSize: 17,
+    fontFamily: "HammersmithOne-Bold",
+    textAlign: "center",
+    marginTop: 20,
+  },
+  didSmokeContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  didSmokeContainerText: {
+    color: "#c39351",
+    fontSize: 25,
+    fontFamily: "HammersmithOne-Bold",
+    textAlign: "center",
   },
 });

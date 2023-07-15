@@ -1,5 +1,3 @@
-import * as Notifications from "expo-notifications";
-
 import {
   Animated,
   Dimensions,
@@ -17,7 +15,6 @@ import { selectUser, userHealth } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
-import { Button } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
 import { MaterialIcons } from "@expo/vector-icons";

@@ -4,7 +4,9 @@ import * as WebBrowser from "expo-web-browser";
 import {
   ActivityIndicator,
   Alert,
+  Dimensions,
   Image,
+  Pressable,
   StyleSheet,
   Text,
   View,
@@ -15,7 +17,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { AntDesign } from "@expo/vector-icons";
-import { Loading } from "../components/Loading";
 import { http } from "../utils/http";
 
 export const Payment = ({ onCancel }) => {
@@ -23,7 +24,6 @@ export const Payment = ({ onCancel }) => {
   const { initPaymentSheet, presentPaymentSheet, loading } = usePaymentSheet();
   const [paymentActive, setPaymentActive] = useState(false);
   const { user } = useSelector(selectUser);
-  // stripe
   const [publishableKey, setPublishableKey] = useState("");
 
   useEffect(() => {
@@ -47,8 +47,10 @@ export const Payment = ({ onCancel }) => {
     if (!event) return;
     let data = Linking.parse(event.url);
     if (!!data && !!data.queryParams && !!data.queryParams.paymentId) {
-      dispatch(updateUser({ subscriber: true }, user._id));
-      Alert.alert("Success", "Your order is confirmed!");
+      dispatch(updateUser({ subscriber: true,subscribeDate: new Date().toDateString() }, user._id));
+      Alert.alert("Success", "Your order is confirmed!", [
+        { text: "OK", onPress: () => onCancel(false) },
+      ]);
     }
   };
 
@@ -60,7 +62,6 @@ export const Payment = ({ onCancel }) => {
       await WebBrowser.openBrowserAsync(r.data.link);
       setPaymentActive(false);
     } catch (error) {
-      console.log(error);
       setPaymentActive(false);
     }
   };
@@ -73,7 +74,7 @@ export const Payment = ({ onCancel }) => {
       setPaymentActive(false);
     } else {
       Alert.alert("Success", "Your order is confirmed!", [
-        { text: "YES", onPress: () => onCancel(false) },
+        { text: "OK", onPress: () => onCancel(false) },
       ]);
       dispatch(
         updateUser(
@@ -129,7 +130,7 @@ export const Payment = ({ onCancel }) => {
           Try the new menotring system for only{" "}
           <Text style={{ color: "blue" }}>$5</Text> a month!
         </Text>
-        <View onTouchEnd={paypalHandler} style={styles.paymentPay}>
+        <Pressable onPress={paypalHandler} style={styles.paymentPay}>
           {paymentActive ? (
             <ActivityIndicator
               style={{ width: 50, height: 50 }}
@@ -143,7 +144,7 @@ export const Payment = ({ onCancel }) => {
               resizeMode="contain"
             />
           )}
-        </View>
+        </Pressable>
         <Text style={[styles.paymentText, { fontSize: 12, marginBottom: 5 }]}>
           or
         </Text>
@@ -151,9 +152,8 @@ export const Payment = ({ onCancel }) => {
           publishableKey={publishableKey}
           merchantIdentifier="merchant.identifier" // required for Apple Pay
         >
-          <View
-            pointerEvents={paymentActive ? "none" : "auto"}
-            onTouchEnd={stripeHandler}
+          <Pressable
+            onPress={stripeHandler}
             style={[
               styles.paymentPay,
               { backgroundColor: "white", borderWidth: 0.3 },
@@ -172,7 +172,7 @@ export const Payment = ({ onCancel }) => {
                 resizeMode="contain"
               />
             )}
-          </View>
+          </Pressable>
         </StripeProvider>
         <View
           pointerEvents={paymentActive ? "none" : "auto"}
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   paymentContainer: {
-    width: "90%",
+    width: Dimensions.get("screen").width > 700 ? "60%" : "90%",
     padding: 15,
     backgroundColor: "white",
     borderRadius: 5,

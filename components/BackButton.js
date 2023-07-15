@@ -1,6 +1,6 @@
 import * as Font from "expo-font";
 
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { useEffect, useState } from "react";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -13,6 +13,7 @@ export const BackButton = ({ navigation, where }) => {
     });
     setFontsLoaded(true);
   };
+
   useEffect(() => {
     loadFonts();
     () => {};

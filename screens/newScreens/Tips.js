@@ -12,14 +12,13 @@ export const Tips = ({ navigation }) => {
   }, []);
 
   return (
-    <View style={[styles.mainContainer, { position: "relative" }]}>
-      <BackButton navigation={navigation} where={"UserScreen"} />
       <ScrollView
-        style={styles.innerContainer}
+        contentContainerStyle={[styles.mainContainer, { position: "relative" }]}
         showsHorizontalScrollIndicator={false}
         endFillColor="#000"
         overScrollMode="never"
       >
+        <BackButton navigation={navigation} where={"UserScreen"} />
         <Text style={styles.tipsHeaderText2}>Tips</Text>
         <View style={{ alignItems: "center" }}>
           <Text style={styles.tipsHeaderText}>
@@ -120,7 +119,6 @@ export const Tips = ({ navigation }) => {
           </Text>
         </View>
       </ScrollView>
-    </View>
   );
 };
 
