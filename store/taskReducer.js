@@ -33,7 +33,6 @@ export const getTasks = (id) => {
         dispatch(fetchSuccess(response.data.task));
       })
       .catch((e) => {
-        console.log(e.response.data);
         dispatch(fetchError());
         dispatch(setError(e.response.data.error));
       });
@@ -46,7 +45,7 @@ export const createTask = (data) => {
     http
       .createTask(data)
       .then((response) => {
-        let tasks = getState().task.task;
+        let tasks = getState().task.task || [];
         dispatch(fetchSuccess([...tasks, response.data.task]));
       })
       .catch((e) => {

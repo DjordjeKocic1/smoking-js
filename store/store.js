@@ -1,4 +1,5 @@
 import achievementReducer from "./achievementReducer";
+import alertPaymentReducer from "./common/alertPaymentReducer";
 import categorieReducer from "./categorieReducer";
 import { configureStore } from "@reduxjs/toolkit";
 import errorReducer from "./errorReducer";
@@ -16,6 +17,7 @@ export const store = configureStore({
     task: taskReducer,
     achievements: achievementReducer,
     error: errorReducer,
+    alertPayment: alertPaymentReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

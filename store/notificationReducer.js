@@ -91,5 +91,24 @@ export const deleteNotification = (id) => {
   };
 };
 
+export const deleteAllNotification = (id) => {
+  return (dispatch, getState) => {
+    dispatch(fetchStart());
+    http
+      .deleteAllNotification(id)
+      .then((response) => {
+        let notificaitons = getState().notification.notification;
+        let updatedNotifcation = notificaitons.filter(
+          (nots) => nots.userId != id
+        );
+        dispatch(fetchSuccess(updatedNotifcation));
+      })
+      .catch((e) => {
+        dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
+      });
+  };
+};
+
 export const selectNotification = (state) => state.notification;
 export default notificationSlice.reducer;

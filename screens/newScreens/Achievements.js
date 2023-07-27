@@ -12,6 +12,7 @@ import {
 } from "../../store/achievementReducer";
 import { useDispatch, useSelector } from "react-redux";
 
+import { BackButton } from "../../components/BackButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { Loading } from "../../components/Loading";
 import { backButtonHandler } from "../../helper/helpers";
@@ -37,6 +38,7 @@ export const Achievements = ({ navigation }) => {
 
   return (
     <View style={[styles.mainContainer]}>
+      <BackButton navigation={navigation} where={"UserScreen"} />
       <View style={{ alignItems: "center" }}>
         <Text style={styles.headerText}>Progress Overview</Text>
         <View style={styles.achievementsEarnContainer}>
@@ -145,6 +147,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#e1d5c9",
     position: "relative",
+    paddingTop: 50,
     paddingHorizontal: 10,
   },
   headerText: {

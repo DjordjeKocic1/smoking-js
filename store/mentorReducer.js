@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { http } from "../utils/http";
 import { setError } from "./errorReducer";
+import { updateUserMentors } from "./userReducer";
 
 const mentorSlice = createSlice({
   name: "mentor",
@@ -34,6 +35,7 @@ export const getMentor = (id) => {
       })
       .catch((e) => {
         dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };
@@ -45,9 +47,20 @@ export const createMentor = (data) => {
       .createMentor(data)
       .then((response) => {
         dispatch(fetchSuccess(response.data.mentor));
+        const responseData = response.data.mentor;
+        dispatch(
+          updateUserMentors({
+            _id: responseData._id,
+            name: responseData.name,
+            email: responseData.email,
+            accepted: false,
+            mentorId: responseData.mentorId,
+          })
+        );
       })
       .catch((e) => {
         dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };
@@ -62,6 +75,7 @@ export const updateMentor = (data, id) => {
       })
       .catch((e) => {
         dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };
@@ -76,6 +90,7 @@ export const deleteMentor = (id) => {
       })
       .catch((e) => {
         dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };

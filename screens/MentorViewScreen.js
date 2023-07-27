@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { createTask, getTasks, selectTask } from "../store/taskReducer";
 import { getMentor, selectMentor } from "../store/mentorReducer";
+import { selectUser, userHealthMentore } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
@@ -22,11 +23,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Loading } from "../components/Loading";
 import { MaterialIcons } from "@expo/vector-icons";
 
-export const MentorViewScreen = ({ navigation }) => {
+export const MentorViewScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const { mentor } = useSelector(selectMentor);
+  const { mentorUser, isLoading } = useSelector(selectUser);
   const { task } = useSelector(selectTask);
-  const isLoading = useSelector((state) => state.mentor.isLoading);
   const isLoadingTask = useSelector((state) => state.task.isLoading);
   const [taskValue, setTaskValue] = useState("");
   const [taskCommentValue, setTaskCommentValue] = useState("");
@@ -37,13 +38,45 @@ export const MentorViewScreen = ({ navigation }) => {
 
   const [refreshing, setRefreshing] = useState(false);
 
+  useEffect(() => {
+    dispatch(userHealthMentore({}, route.params.user_id));
+  }, [route.params.user_id]);
+
+  useEffect(() => {
+    dispatch(getTasks(route.params.user_id));
+  }, [route.params.user_id]);
+
+  useEffect(() => {
+    dispatch(getMentor(route.params.mentor.mentorId));
+  }, [route.params.mentor.mentorId]);
+
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-      dispatch(getMentor(mentor.mentorId));
-      dispatch(getTasks(mentor.mentoringUser[0]._id));
+      dispatch(userHealthMentore({}, route.params.user_id));
+      dispatch(getTasks(route.params.user_id));
     }, 2000);
+  };
+
+  const onCogClickHanlder = () => {
+    Animated.timing(cogAnim, {
+      toValue: 4,
+      duration: 1000,
+      easing: Easing.ease,
+      useNativeDriver: true,
+    }).start(({ finished }) => {
+      if (!!finished) {
+        Animated.timing(cogAnim, {
+          toValue: 0,
+          duration: 1000,
+          easing: Easing.ease,
+          useNativeDriver: true,
+        }).start();
+        dispatch(userHealthMentore({}, route.params.user_id));
+        dispatch(getTasks(route.params.user_id));
+      }
+    });
   };
 
   const exitMentoringHandler = () => {
@@ -98,45 +131,14 @@ export const MentorViewScreen = ({ navigation }) => {
     let dataToSend = {
       toDo: taskValue,
       comment: taskCommentValue,
-      userId: mentor.mentoringUser[0]._id,
+      userId: mentorUser._id,
       mentorId: mentor.mentorId,
     };
-
     dispatch(createTask(dataToSend));
     setTaskPopupShow(false);
     setTaskValue("");
     setTaskCommentValue("");
   };
-
-  const onCogClickHanlder = () => {
-    Animated.timing(cogAnim, {
-      toValue: 4,
-      duration: 1000,
-      easing: Easing.ease,
-      useNativeDriver: true,
-    }).start(({ finished }) => {
-      if (!!finished) {
-        Animated.timing(cogAnim, {
-          toValue: 0,
-          duration: 1000,
-          easing: Easing.ease,
-          useNativeDriver: true,
-        }).start();
-        dispatch(getMentor(mentor.mentorId));
-        dispatch(getTasks(mentor.mentoringUser[0]._id));
-      }
-    });
-  };
-
-  useEffect(() => {
-    dispatch(getMentor(mentor.mentorId));
-    return () => {};
-  }, []);
-
-  useEffect(() => {
-    dispatch(getTasks(mentor.mentoringUser[0]._id));
-    return () => {};
-  }, []);
 
   const spin = cogAnim.interpolate({
     inputRange: [0, 1, 2, 3, 4],
@@ -147,20 +149,18 @@ export const MentorViewScreen = ({ navigation }) => {
     {
       name: "No Smoking Days",
       dinamicInfo:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].smokingInfo &&
-        mentor.mentoringUser[0].smokingInfo.noSmokingDays,
+        !!mentorUser &&
+        !!mentorUser.smokingInfo &&
+        mentorUser.smokingInfo.noSmokingDays,
       prefix: "",
       info: "",
     },
     {
       name: "Is Quiting?",
       dinamicInfo:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].smokingInfo &&
-        mentor.mentoringUser[0].smokingInfo.isQuiting
+        !!mentorUser &&
+        !!mentorUser.smokingInfo &&
+        mentorUser.smokingInfo.isQuiting
           ? "YES"
           : "NO",
       prefix: "",
@@ -169,96 +169,84 @@ export const MentorViewScreen = ({ navigation }) => {
     {
       name: "Lunge Capacity",
       dinamicInfo:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].healthInfo &&
-        mentor.mentoringUser[0].healthInfo.lungCapacity,
+        !!mentorUser &&
+        !!mentorUser.healthInfo &&
+        mentorUser.healthInfo.lungCapacity,
       prefix: "%",
       info:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].healthInfo &&
-        mentor.mentoringUser[0].healthInfo.lungCapacity < 20
+        !!mentorUser &&
+        !!mentorUser.healthInfo &&
+        mentorUser.healthInfo.lungCapacity < 20
           ? "low"
           : "healing",
     },
     {
       name: "Blood Pressure",
       dinamicInfo:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].healthInfo &&
-        mentor.mentoringUser[0].healthInfo.bloodPressure,
+        !!mentorUser &&
+        !!mentorUser.healthInfo &&
+        mentorUser.healthInfo.bloodPressure,
       prefix: "%",
       info:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].healthInfo &&
-        mentor.mentoringUser[0].healthInfo.bloodPressure < 20
+        !!mentorUser &&
+        !!mentorUser.healthInfo &&
+        mentorUser.healthInfo.bloodPressure < 20
           ? "low"
           : "healing",
     },
     {
       name: "Heart Rhythm",
       dinamicInfo:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].healthInfo &&
-        mentor.mentoringUser[0].healthInfo.heartRhythm,
+        !!mentorUser &&
+        !!mentorUser.healthInfo &&
+        mentorUser.healthInfo.heartRhythm,
       prefix: "%",
       info:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].healthInfo &&
-        mentor.mentoringUser[0].healthInfo.heartRhythm < 20
+        !!mentorUser &&
+        !!mentorUser.healthInfo &&
+        mentorUser.healthInfo.heartRhythm < 20
           ? "low"
           : "healing",
     },
     {
       name: "Phisical Strength",
       dinamicInfo:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].healthInfo &&
-        mentor.mentoringUser[0].healthInfo.physicalAndBodilyStrength,
+        !!mentorUser &&
+        !!mentorUser.healthInfo &&
+        mentorUser.healthInfo.physicalAndBodilyStrength,
       prefix: "%",
       info:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].healthInfo &&
-        mentor.mentoringUser[0].healthInfo.physicalAndBodilyStrength < 20
+        !!mentorUser &&
+        !!mentorUser.healthInfo &&
+        mentorUser.healthInfo.physicalAndBodilyStrength < 20
           ? "low"
           : "healing",
     },
     {
       name: "Stress Tolerance",
       dinamicInfo:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].healthInfo &&
-        mentor.mentoringUser[0].healthInfo.stressTolerance,
+        !!mentorUser &&
+        !!mentorUser.healthInfo &&
+        mentorUser.healthInfo.stressTolerance,
       prefix: "%",
       info:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].healthInfo &&
-        mentor.mentoringUser[0].healthInfo.stressTolerance < 20
+        !!mentorUser &&
+        !!mentorUser.healthInfo &&
+        mentorUser.healthInfo.stressTolerance < 20
           ? "low"
           : "healing",
     },
     {
       name: "Irritating Cough",
       dinamicInfo:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].healthInfo &&
-        mentor.mentoringUser[0].healthInfo.irritatingCough,
+        !!mentorUser &&
+        !!mentorUser.healthInfo &&
+        mentorUser.healthInfo.irritatingCough,
       prefix: "%",
       info:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].healthInfo &&
-        mentor.mentoringUser[0].healthInfo.irritatingCough < 20
+        !!mentorUser &&
+        !!mentorUser.healthInfo &&
+        mentorUser.healthInfo.irritatingCough < 20
           ? "low"
           : "healing",
     },
@@ -268,37 +256,33 @@ export const MentorViewScreen = ({ navigation }) => {
     {
       name: "Cigarette Avoided",
       dinamicInfo:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].consumptionInfo &&
-        mentor.mentoringUser[0].consumptionInfo.cigarettesAvoided,
+        !!mentorUser &&
+        !!mentorUser.consumptionInfo &&
+        mentorUser.consumptionInfo.cigarettesAvoided,
       prefix: "",
     },
     {
       name: "Cigarette in a Pack",
       dinamicInfo:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].consumptionInfo &&
-        mentor.mentoringUser[0].consumptionInfo.cigarettesInPack,
+        !!mentorUser &&
+        !!mentorUser.consumptionInfo &&
+        mentorUser.consumptionInfo.cigarettesInPack,
       prefix: "",
     },
     {
       name: "Cigarette Daily Cost",
       dinamicInfo:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].consumptionInfo &&
-        mentor.mentoringUser[0].consumptionInfo.cigarettesDailyCost,
+        !!mentorUser &&
+        !!mentorUser.consumptionInfo &&
+        mentorUser.consumptionInfo.cigarettesDailyCost,
       prefix: "$",
     },
     {
       name: "Pack of Cigarette Cost",
       dinamicInfo:
-        !!mentor &&
-        !!mentor.mentoringUser &&
-        !!mentor.mentoringUser[0].consumptionInfo &&
-        mentor.mentoringUser[0].consumptionInfo.packCigarettesPrice,
+        !!mentorUser &&
+        !!mentorUser.consumptionInfo &&
+        mentorUser.consumptionInfo.packCigarettesPrice,
       prefix: "$",
     },
   ];
@@ -349,7 +333,7 @@ export const MentorViewScreen = ({ navigation }) => {
           },
         ]}
       >
-        -{!!mentor && !!mentor.mentoringUser && mentor.mentoringUser[0].name}-
+        -{!!mentorUser && mentorUser.name}-
       </Text>
       <View style={styles.basicLikesContainer}>
         <View style={styles.basicInfo}>
@@ -362,33 +346,19 @@ export const MentorViewScreen = ({ navigation }) => {
             Basic Info
           </Text>
           <Text style={[styles.basicText, { color: "gray" }]}>
-            name:{" "}
-            {!!mentor &&
-              !!mentor.mentoringUser &&
-              !!mentor.mentoringUser[0].name &&
-              mentor.mentoringUser[0].name}
+            name: {!!mentorUser && mentorUser.name}
           </Text>
           <Text style={[styles.basicText, { color: "gray" }]}>
-            e-mail:{" "}
-            {!!mentor &&
-              !!mentor.mentoringUser &&
-              !!mentor.mentoringUser[0].email &&
-              mentor.mentoringUser[0].email}
+            e-mail: {!!mentorUser && mentorUser.email}
           </Text>
           <Text style={[styles.basicText, { color: "gray" }]}>
-            verified:{" "}
-            {!!mentor &&
-              !!mentor.mentoringUser &&
-              !!mentor.mentoringUser[0].userVerified &&
-              "YES"}
+            verified: {!!mentorUser && !!mentorUser.userVerified && "YES"}
           </Text>
-          {!!mentor &&
-            !!mentor.mentoringUser &&
-            !!mentor.mentoringUser[0].smokingInfo &&
-            mentor.mentoringUser[0].smokingInfo.isQuiting && (
+          {!!mentorUser &&
+            !!mentorUser.smokingInfo &&
+            !!mentorUser.smokingInfo.isQuiting && (
               <Text style={[styles.basicText, { color: "gray" }]}>
-                Quiting Date:{" "}
-                {mentor.mentoringUser[0].smokingInfo.dateOfQuiting}
+                Quiting Date: {mentorUser.smokingInfo.dateOfQuiting}
               </Text>
             )}
         </View>
@@ -401,10 +371,9 @@ export const MentorViewScreen = ({ navigation }) => {
           >
             Likes
           </Text>
-          {!!mentor &&
-            !!mentor.mentoringUser &&
-            !!mentor.mentoringUser[0].categories &&
-            mentor.mentoringUser[0].categories.map((cat) => {
+          {!!mentorUser &&
+            !!mentorUser.categories &&
+            mentorUser.categories.map((cat) => {
               return (
                 <Text
                   key={cat._id}
@@ -495,9 +464,7 @@ export const MentorViewScreen = ({ navigation }) => {
                 styles.input,
                 {
                   height: 100,
-                  borderWidth: 0.2,
                   textAlignVertical: "top",
-                  padding: 5,
                 },
               ]}
             />
@@ -577,16 +544,17 @@ const styles = StyleSheet.create({
     width: Dimensions.get("screen").width / 1.1,
     paddingVertical: 20,
     backgroundColor: "white",
-    borderWidth: 0.2,
+    borderWidth: 0.5,
     borderRadius: 5,
   },
   input: {
     height: 30,
     width: "80%",
     marginTop: 20,
-    borderBottomWidth: 0.3,
+    borderWidth: 1,
     borderColor: "black",
     fontFamily: "HammersmithOne-Bold",
+    padding: 5,
   },
   pressebleContainerAdd: {
     padding: 10,
@@ -611,6 +579,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   mainContainer: {
+    flexGrow: 1,
     paddingTop: 80,
     paddingBottom: 20,
     alignItems: "center",
@@ -708,7 +677,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   cigaretteInfoCosts: {
-    flex: 1,
     marginVertical: 10,
     marginHorizontal: 10,
     width: Dimensions.get("screen").width / 1.1,

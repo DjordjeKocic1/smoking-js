@@ -2,8 +2,6 @@ import * as WebBrowser from "expo-web-browser";
 
 import {
   Alert,
-  Button,
-  Platform,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -20,31 +18,34 @@ import {
   selectMentor,
   updateMentor,
 } from "../../store/mentorReducer";
+import {
+  paymentModalShow,
+  selectAlert,
+} from "../../store/common/alertPaymentReducer";
+import { selectUser, updateUserMentors } from "../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
+import { AlertPayment } from "../../components/AlertPayment";
 import { AntDesign } from "@expo/vector-icons";
 import { BackButton } from "../../components/BackButton";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Loading } from "../../components/Loading";
 import { Payment } from "../../gameUtils/Payment";
-import { selectError } from "../../store/errorReducer";
-import { selectUser } from "../../store/userReducer";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export const Mentor = ({ navigation }) => {
   const dispatch = useDispatch();
   const { mentor, isLoading } = useSelector(selectMentor);
+
+  const { isVisible, isModalVisible } = useSelector(selectAlert);
   const { user } = useSelector(selectUser);
-  const { msg } = useSelector(selectError);
-  const [paymentVis, setPaymentVis] = useState(false);
   const [mentorEmailValue, setMentorEmailValue] = useState("");
   const [mentorNameValue, setMentorNameValue] = useState("");
   const [isModal, setIsModal] = useState(false);
   const [isValid, setIsValid] = useState(false);
-
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
@@ -75,10 +76,10 @@ export const Mentor = ({ navigation }) => {
     setMentorNameValue(e);
   };
 
-  const acceptMentorHandler = () => {
+  const acceptMentorHandler = (userValue) => {
     Alert.alert(
       "Mentor Request",
-      `${mentor.mentoringUser[0].email} invited you to become his/her mentor.`,
+      `${userValue.email} invited you to become his/her mentor.`,
       [
         {
           text: "Decline",
@@ -89,7 +90,12 @@ export const Mentor = ({ navigation }) => {
           text: "Accept",
           onPress: () => {
             const dataToSend = {
-              accepted: true,
+              name: mentor.name,
+              user: {
+                userId: userValue._id,
+                accepted: true,
+                name: userValue.name,
+              },
             };
 
             dispatch(updateMentor(dataToSend, mentor._id));
@@ -99,7 +105,7 @@ export const Mentor = ({ navigation }) => {
     );
   };
 
-  const mentorViewHandler = () => {
+  const mentorViewHandler = (userValue, mentor) => {
     Alert.alert("Mentor", `Are you sure you want to mentor a user?`, [
       {
         text: "No",
@@ -109,7 +115,10 @@ export const Mentor = ({ navigation }) => {
       {
         text: "Yes",
         onPress: () => {
-          navigation.replace("MentorViewScreen");
+          navigation.replace("MentorViewScreen", {
+            user_id: userValue._id,
+            mentor,
+          });
         },
       },
     ]);
@@ -142,8 +151,10 @@ export const Mentor = ({ navigation }) => {
     };
     setMentorEmailValue("");
     setMentorNameValue("");
+
     dispatch(createMentor(dataToSend));
 
+    setIsModal(false);
     setTimeout(() => {
       dispatch(fetchError(null));
     }, 5000);
@@ -154,7 +165,7 @@ export const Mentor = ({ navigation }) => {
       setIsModal(true);
       return;
     }
-    setPaymentVis(true);
+    dispatch(paymentModalShow(true));
   };
 
   if (isLoading) {
@@ -241,60 +252,68 @@ export const Mentor = ({ navigation }) => {
       <BackButton navigation={navigation} where={"UserScreen"} />
       <View style={[styles.mentoring, { marginTop: 40 }]}>
         <Text style={styles.mentoringHeader}>Mentoring</Text>
-        {!!mentor && mentor.email == user.email ? (
-          <View style={[styles.mentorView]}>
-            <View>
-              <Text style={styles.mentorViewText}>
-                {!!mentor.mentoringUser && mentor.mentoringUser[0].name}
-              </Text>
-              <Text
-                style={[
-                  styles.mentorViewText,
-                  { textTransform: "lowercase", fontSize: 10, color: "gray" },
-                ]}
+        {!!mentor && mentor.email == user.email && !!mentor.mentoringUser ? (
+          mentor.mentoringUser.map((v) => {
+            return (
+              <View
+                key={v._id}
+                style={[styles.mentorView, { marginBottom: 5 }]}
               >
-                {!!mentor.mentoringUser && mentor.mentoringUser[0].email}
-              </Text>
-            </View>
-            <View>
-              <Text style={styles.statusText}>
-                Status:{" "}
-                <Text
-                  style={{
-                    color: !!mentor && mentor.accepted ? "green" : "gray",
-                  }}
-                >
-                  {!!mentor && mentor.accepted ? "Active" : "Pending"}
-                </Text>
-              </Text>
-
-              {!!mentor && !mentor.accepted ? (
-                <Pressable
-                  style={styles.acceptedContainer}
-                  android_ripple={{ color: "#0aec0a" }}
-                  onPress={acceptMentorHandler}
-                >
-                  <Text style={styles.accepted}>Accept</Text>
-                </Pressable>
-              ) : (
-                <Pressable
-                  onPress={mentorViewHandler}
-                  android_ripple={{ color: "#c39351" }}
-                  style={styles.mentorViewUser}
-                >
-                  <Text style={styles.mentorViewUserText}>Go Mentor</Text>
-                </Pressable>
-              )}
-            </View>
-            <View>
-              <Pressable
-                onPress={deleteMentorHandler}
-                style={styles.mentorViewPressable}
-              >
-                <AntDesign name="close" size={15} color="white" />
-              </Pressable>
-            </View>
-          </View>
+                <View style={{ width: "30%" }}>
+                  <Text style={styles.mentorViewText}>{v.name}</Text>
+                  <Text
+                    style={[
+                      styles.mentorViewText,
+                      {
+                        textTransform: "lowercase",
+                        fontSize: 10,
+                        color: "gray",
+                      },
+                    ]}
+                  >
+                    {v.email}
+                  </Text>
+                </View>
+                <View style={{ width: "20%" }}>
+                  <Text style={styles.statusText}>
+                    Status:{" "}
+                    <Text
+                      style={{
+                        color: v.accepted ? "green" : "gray",
+                      }}
+                    >
+                      {v.accepted ? "Active" : "Pending"}
+                    </Text>
+                  </Text>
+                  {!v.accepted ? (
+                    <Pressable
+                      style={styles.acceptedContainer}
+                      android_ripple={{ color: "#0aec0a" }}
+                      onPress={() => acceptMentorHandler(v)}
+                    >
+                      <Text style={styles.accepted}>Accept</Text>
+                    </Pressable>
+                  ) : (
+                    <Pressable
+                      onPress={() => mentorViewHandler(v, mentor)}
+                      android_ripple={{ color: "#c39351" }}
+                      style={styles.mentorViewUser}
+                    >
+                      <Text style={styles.mentorViewUserText}>Go Mentor</Text>
+                    </Pressable>
+                  )}
+                </View>
+                <View>
+                  <Pressable
+                    onPress={deleteMentorHandler}
+                    style={styles.mentorViewPressable}
+                  >
+                    <AntDesign name="close" size={15} color="white" />
+                  </Pressable>
+                </View>
+              </View>
+            );
+          })
         ) : (
           <Text style={styles.mentoringInfo}>
             Your are not mentoring anyone
@@ -302,53 +321,62 @@ export const Mentor = ({ navigation }) => {
         )}
       </View>
       <View style={styles.mentoring}>
-        <Text style={styles.mentoringHeader}>Mentor</Text>
-        {!!mentor && mentor.mentoringUser[0].email == user.email ? (
-          <View style={[styles.mentorView]}>
-            <View>
-              <Text style={styles.mentorViewText}>{mentor.name}</Text>
-              <Text
-                style={[
-                  styles.mentorViewText,
-                  { textTransform: "lowercase", fontSize: 10, color: "gray" },
-                ]}
+        <Text style={styles.mentoringHeader}>Mentor(s)</Text>
+        {!!user && !!user.mentors ? (
+          user.mentors.map((v) => {
+            return (
+              <View
+                key={v._id}
+                style={[styles.mentorView, { marginBottom: 5 }]}
               >
-                {mentor.email}
-              </Text>
-            </View>
-            <View>
-              <Text style={styles.statusText}>
-                Status:{" "}
-                <Text
-                  style={{
-                    color: !!mentor && mentor.accepted ? "green" : "gray",
-                  }}
-                >
-                  {!!mentor && mentor.accepted ? "Active" : "Pending"}
-                </Text>
-              </Text>
-            </View>
-            <View>
-              <Pressable
-                onPress={deleteMentorHandler}
-                style={styles.mentorViewPressable}
-              >
-                <AntDesign name="close" size={15} color="white" />
-              </Pressable>
-            </View>
-          </View>
+                <View>
+                  <Text style={styles.mentorViewText}>{v.name}</Text>
+                  <Text
+                    style={[
+                      styles.mentorViewText,
+                      {
+                        textTransform: "lowercase",
+                        fontSize: 10,
+                        color: "gray",
+                      },
+                    ]}
+                  >
+                    {v.email}
+                  </Text>
+                </View>
+                <View>
+                  <Text style={styles.statusText}>
+                    Status:{" "}
+                    <Text
+                      style={{
+                        color: v.accepted ? "green" : "gray",
+                      }}
+                    >
+                      {v.accepted ? "Active" : "Pending"}
+                    </Text>
+                  </Text>
+                </View>
+                <View>
+                  <Pressable
+                    onPress={deleteMentorHandler}
+                    style={styles.mentorViewPressable}
+                  >
+                    <AntDesign name="close" size={15} color="white" />
+                  </Pressable>
+                </View>
+              </View>
+            );
+          })
         ) : (
           <Text style={styles.mentoringInfo}>You dont have a mentor</Text>
         )}
-        {!mentor && (
-          <Pressable
-            android_ripple={{ color: "#6A7152" }}
-            onPress={askForHelpHanlder}
-            style={styles.pressableContainer}
-          >
-            <Text style={styles.pressableContainerText}>Ask for help</Text>
-          </Pressable>
-        )}
+        <Pressable
+          android_ripple={{ color: "#6A7152" }}
+          onPress={askForHelpHanlder}
+          style={styles.pressableContainer}
+        >
+          <Text style={styles.pressableContainerText}>Ask for help</Text>
+        </Pressable>
         {!!user && !!user.subscribeDate && (
           <Text
             style={{
@@ -358,11 +386,14 @@ export const Mentor = ({ navigation }) => {
               fontSize: 10,
             }}
           >
-            subscribed from {user.subscribeDate}
+            <AntDesign name="star" size={12} color="#c39351" /> subscribed from{" "}
+            {user.subscribeDate}{" "}
+            <AntDesign name="star" size={12} color="#c39351" />
           </Text>
         )}
       </View>
-      {paymentVis && <Payment onCancel={(boolen) => setPaymentVis(boolen)} />}
+      {isModalVisible && <Payment />}
+      {isVisible && <AlertPayment />}
     </ScrollView>
   );
 };

@@ -4,17 +4,10 @@ import * as SplashScreen from "expo-splash-screen";
 import { Text, TextInput, View } from "react-native";
 
 import { Asset } from "expo-asset";
-import CategorieScreen from "./screens/CategorieScreen";
-import CigaretteCostScreen from "./screens/CigaretteCostScreen";
-import HomeScreen from "./screens/HomeScreen";
-import LoadingScreen from "./screens/LoadingScreen";
-import LoginScreen from "./screens/LoginScreen";
-import { MentorViewScreen } from "./screens/MentorViewScreen";
+import { Main } from "./screens/Main";
 import { NavigationContainer } from "@react-navigation/native";
 import { Provider } from "react-redux";
-import { SmokingScreen } from "./screens/SmokingScreen";
 import { StatusBar } from "expo-status-bar";
-import VerifyScreen from "./screens/VerifyScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { store } from "./store/store";
 import { useCallback } from "react";
@@ -117,60 +110,11 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator initialRouteName="login">
             <Stack.Screen
-              name="login"
-              component={LoginScreen}
+              name="main"
+              component={Main}
               options={{
                 headerShown: false,
               }}
-            />
-            <Stack.Screen
-              name="LoadingScreen"
-              component={LoadingScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="Smoke Calculator"
-              component={CigaretteCostScreen}
-              options={{
-                headerStyle: {
-                  backgroundColor: "#e1d5c9",
-                },
-              }}
-            />
-            <Stack.Screen
-              name="SmokingScreen"
-              component={SmokingScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="Categories"
-              options={{
-                headerShown: false,
-              }}
-              component={CategorieScreen}
-            />
-            <Stack.Screen
-              name="VerifyScreen"
-              component={VerifyScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="HomeScreen"
-              component={HomeScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="MentorViewScreen"
-              options={{
-                headerShown: false,
-              }}
-              component={MentorViewScreen}
             />
           </Stack.Navigator>
         </NavigationContainer>

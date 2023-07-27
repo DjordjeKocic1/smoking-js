@@ -62,6 +62,10 @@ const deleteNotification = (id) => {
   return axios.delete(url + `/delete-notifcation/${id}`);
 };
 
+const deleteAllNotification = (userId) => {
+  return axios.delete(url + `/delete-all-notifcation/${userId}`);
+};
+
 const getTasks = (id) => {
   return axios.get(url + `/get-task/${id}`);
 };
@@ -106,6 +110,7 @@ export const http = {
   updateNotification,
   getNotification,
   deleteNotification,
+  deleteAllNotification,
   getTasks,
   createTask,
   updateTask,

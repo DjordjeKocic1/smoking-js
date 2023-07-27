@@ -85,7 +85,7 @@ const LoginScreen = ({ navigation }) => {
   const handleRedirec = async (event) => {
     if (!event) return;
     let data = Linking.parse(event.url);
-    if (data) {
+    if (!!data && !!data.queryParams) {
       dispatch(createUser(data.queryParams));
       try {
         await AsyncStorage.setItem("@user", data.queryParams.email);

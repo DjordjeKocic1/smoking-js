@@ -6,6 +6,7 @@ const userSlice = createSlice({
   name: "users",
   initialState: {
     user: null,
+    mentorUser: null,
     users: [],
     isLoading: false,
   },
@@ -15,10 +16,24 @@ const userSlice = createSlice({
     },
     fetchSuccessUsers: (state, action) => {
       state.users = action.payload.sort((a, b) => b.gameScore - a.gameScore);
+      state.mentorUser = null;
       state.isLoading = false;
     },
     fetchSuccess: (state, action) => {
       state.user = action.payload;
+      state.mentorUser = null;
+      state.isLoading = false;
+    },
+    updateUserMentors: (state, action) => {
+      state.user = {
+        ...state.user,
+        mentors: [...state.user.mentors, action.payload],
+      };
+      state.mentorUser = null;
+      state.isLoading = false;
+    },
+    updateMentorUser: (state, action) => {
+      state.mentorUser = action.payload;
       state.isLoading = false;
     },
     fetchError: (state) => {
@@ -27,8 +42,14 @@ const userSlice = createSlice({
   },
 });
 
-export const { fetchStart, fetchSuccess, fetchError, fetchSuccessUsers } =
-  userSlice.actions;
+export const {
+  fetchStart,
+  fetchSuccess,
+  fetchError,
+  fetchSuccessUsers,
+  updateUserMentors,
+  updateMentorUser,
+} = userSlice.actions;
 
 export const getUsers = () => {
   return (dispatch) => {
@@ -39,7 +60,6 @@ export const getUsers = () => {
         dispatch(fetchSuccessUsers(response.data.users));
       })
       .catch((e) => {
-        console.log(e.response.data);
         dispatch(fetchError());
         dispatch(setError(e.response.data.error));
       });
@@ -81,8 +101,9 @@ export const updateUserNotificationToken = (data, id) => {
     http
       .updateUser(data, id)
       .then((response) => {})
-      .catch(() => {
+      .catch((e) => {
         dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
       });
   };
 };
@@ -109,6 +130,21 @@ export const userHealth = (data, id) => {
       .userHealthGet(data, id)
       .then((response) => {
         dispatch(fetchSuccess(response.data.user));
+      })
+      .catch(() => {
+        dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
+      });
+  };
+};
+
+export const userHealthMentore = (data, id) => {
+  return (dispatch) => {
+    dispatch(fetchStart());
+    http
+      .userHealthGet(data, id)
+      .then((response) => {
+        dispatch(updateMentorUser(response.data.user));
       })
       .catch(() => {
         dispatch(fetchError());
