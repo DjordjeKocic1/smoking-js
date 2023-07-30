@@ -42,8 +42,8 @@ const updateMentor = (data, id) => {
   return axios.put(url + `/update-mentor/${id}`, data);
 };
 
-const deleteMentor = (id) => {
-  return axios.delete(url + `/delete-mentor/${id}`);
+const deleteMentor = (mentorId,userId) => {
+  return axios.delete(url + `/delete-mentor/${mentorId}/${userId}`);
 };
 
 const getNotification = (id) => {

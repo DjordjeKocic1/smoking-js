@@ -48,7 +48,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderWidth: 1,
     borderRadius: 5,
-    padding: 20,
+    padding: 10,
+    margin:1
   },
   errorText: { fontSize: 17, fontFamily: "HammersmithOne-Bold" },
   errorPressable: {

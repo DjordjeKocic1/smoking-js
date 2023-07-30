@@ -18,11 +18,11 @@ import {
   selectMentor,
   updateMentor,
 } from "../../store/mentorReducer";
+import { deleteUserMentors, selectUser } from "../../store/userReducer";
 import {
   paymentModalShow,
   selectAlert,
 } from "../../store/common/alertPaymentReducer";
-import { selectUser, updateUserMentors } from "../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
@@ -38,10 +38,9 @@ WebBrowser.maybeCompleteAuthSession();
 
 export const Mentor = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { mentor, isLoading } = useSelector(selectMentor);
-
+  const { mentor, isMentorLoading } = useSelector(selectMentor);
   const { isVisible, isModalVisible } = useSelector(selectAlert);
-  const { user } = useSelector(selectUser);
+  const { user,isLoading } = useSelector(selectUser);
   const [mentorEmailValue, setMentorEmailValue] = useState("");
   const [mentorNameValue, setMentorNameValue] = useState("");
   const [isModal, setIsModal] = useState(false);
@@ -51,14 +50,11 @@ export const Mentor = ({ navigation }) => {
   useEffect(() => {
     if (mentorEmailValue != "" && mentorNameValue != "") setIsValid(true);
     else setIsValid(false);
-
-    return () => {};
   }, [mentorEmailValue, mentorNameValue]);
 
   useEffect(() => {
     dispatch(getMentor(user._id));
-    return () => {};
-  }, [dispatch]);
+  }, [dispatch,user._id]);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -124,8 +120,8 @@ export const Mentor = ({ navigation }) => {
     ]);
   };
 
-  const deleteMentorHandler = () => {
-    Alert.alert("Mentor", `Remove mentor?`, [
+  const deleteMentorHandler = (mentorId,userId) => {
+    Alert.alert("", `Are you sure?`, [
       {
         text: "No",
         onPress: () => null,
@@ -134,7 +130,23 @@ export const Mentor = ({ navigation }) => {
       {
         text: "Yes",
         onPress: () => {
-          dispatch(deleteMentor(mentor._id));
+          dispatch(deleteMentor(mentorId,userId));
+        },
+      },
+    ]);
+  };
+
+  const deleteUserMentorHandler = (mentorId,userId) => {
+    Alert.alert("", `Are you sure?`, [
+      {
+        text: "No",
+        onPress: () => null,
+        style: "cancel",
+      },
+      {
+        text: "Yes",
+        onPress: () => {
+          dispatch(deleteUserMentors(mentorId,userId));
         },
       },
     ]);
@@ -168,7 +180,7 @@ export const Mentor = ({ navigation }) => {
     dispatch(paymentModalShow(true));
   };
 
-  if (isLoading) {
+  if (isMentorLoading || isLoading) {
     return <Loading />;
   }
 
@@ -252,14 +264,14 @@ export const Mentor = ({ navigation }) => {
       <BackButton navigation={navigation} where={"UserScreen"} />
       <View style={[styles.mentoring, { marginTop: 40 }]}>
         <Text style={styles.mentoringHeader}>Mentoring</Text>
-        {!!mentor && mentor.email == user.email && !!mentor.mentoringUser ? (
+        {!!mentor && !!mentor.mentoringUser ? (
           mentor.mentoringUser.map((v) => {
             return (
               <View
                 key={v._id}
                 style={[styles.mentorView, { marginBottom: 5 }]}
               >
-                <View style={{ width: "30%" }}>
+                <View>
                   <Text style={styles.mentorViewText}>{v.name}</Text>
                   <Text
                     style={[
@@ -274,7 +286,7 @@ export const Mentor = ({ navigation }) => {
                     {v.email}
                   </Text>
                 </View>
-                <View style={{ width: "20%" }}>
+                <View>
                   <Text style={styles.statusText}>
                     Status:{" "}
                     <Text
@@ -305,7 +317,7 @@ export const Mentor = ({ navigation }) => {
                 </View>
                 <View>
                   <Pressable
-                    onPress={deleteMentorHandler}
+                    onPress={()=>deleteMentorHandler(mentor.mentorId,v.userId)}
                     style={styles.mentorViewPressable}
                   >
                     <AntDesign name="close" size={15} color="white" />
@@ -358,7 +370,7 @@ export const Mentor = ({ navigation }) => {
                 </View>
                 <View>
                   <Pressable
-                    onPress={deleteMentorHandler}
+                    onPress={()=>deleteUserMentorHandler(v.mentorId,user._id)}
                     style={styles.mentorViewPressable}
                   >
                     <AntDesign name="close" size={15} color="white" />
@@ -413,7 +425,7 @@ const styles = StyleSheet.create({
   mentorViewText: {
     color: "black",
     fontFamily: "HammersmithOne-Bold",
-    fontSize: 13,
+    fontSize: 10,
     textTransform: "uppercase",
   },
   mentorViewPressable: {

@@ -178,7 +178,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
         !!mentorUser.healthInfo &&
         mentorUser.healthInfo.lungCapacity < 20
           ? "low"
-          : "healing",
+          : "healing...",
     },
     {
       name: "Blood Pressure",
@@ -192,7 +192,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
         !!mentorUser.healthInfo &&
         mentorUser.healthInfo.bloodPressure < 20
           ? "low"
-          : "healing",
+          : "healing...",
     },
     {
       name: "Heart Rhythm",
@@ -206,7 +206,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
         !!mentorUser.healthInfo &&
         mentorUser.healthInfo.heartRhythm < 20
           ? "low"
-          : "healing",
+          : "healing...",
     },
     {
       name: "Phisical Strength",
@@ -220,7 +220,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
         !!mentorUser.healthInfo &&
         mentorUser.healthInfo.physicalAndBodilyStrength < 20
           ? "low"
-          : "healing",
+          : "healing...",
     },
     {
       name: "Stress Tolerance",
@@ -234,7 +234,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
         !!mentorUser.healthInfo &&
         mentorUser.healthInfo.stressTolerance < 20
           ? "low"
-          : "healing",
+          : "healing...",
     },
     {
       name: "Irritating Cough",
@@ -248,7 +248,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
         !!mentorUser.healthInfo &&
         mentorUser.healthInfo.irritatingCough < 20
           ? "low"
-          : "healing",
+          : "healing...",
     },
   ];
 
