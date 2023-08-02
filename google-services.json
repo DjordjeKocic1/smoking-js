@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "911231751467",
+    "project_id": "istop-11fe0",
+    "storage_bucket": "istop-11fe0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911231751467:android:8d2ed44801efdfdacfa16e",
+        "android_client_info": {
+          "package_name": "com.istop.quitsmoking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "911231751467-9vvtr5slfh2puednatbso7nuer4hobah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_Q-qflFZcIAEO6APyZHHFcm10e2HYJao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "911231751467-9vvtr5slfh2puednatbso7nuer4hobah.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

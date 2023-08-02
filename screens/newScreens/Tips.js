@@ -21,7 +21,7 @@ export const Tips = ({ navigation }) => {
         <BackButton navigation={navigation} where={"UserScreen"} />
         <Text style={styles.tipsHeaderText2}>Tips</Text>
         <View style={{ alignItems: "center" }}>
-          <Text style={styles.tipsHeaderText}>
+          <Text style={[styles.tipsHeaderText]}>
             1. Prepare before you go 'Cold Turkey'.
           </Text>
           <Text
@@ -35,8 +35,8 @@ export const Tips = ({ navigation }) => {
             the day you choose to quit.
           </Text>
         </View>
-        <View style={{ alignItems: "center", marginTop: 20 }}>
-          <Text style={styles.tipsHeaderText}>
+        <View style={{marginTop: 20 }}>
+          <Text style={[styles.tipsHeaderText]}>
             2. Try nicotine replacement therapy.
           </Text>
           <Text
@@ -49,8 +49,8 @@ export const Tips = ({ navigation }) => {
             stop-smoking drugs.
           </Text>
         </View>
-        <View style={{ alignItems: "center", marginTop: 20 }}>
-          <Text style={styles.tipsHeaderText}>3. Avoid triggers.</Text>
+        <View style={{ marginTop: 20 }}>
+          <Text style={[styles.tipsHeaderText,{textAlign:'left'}]}>3. Avoid triggers.</Text>
           <Text
             style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}
           >
@@ -59,7 +59,7 @@ export const Tips = ({ navigation }) => {
             nearby to keep busy with doodling rather than smoking..
           </Text>
         </View>
-        <View style={{ alignItems: "center", marginTop: 20 }}>
+        <View style={{  marginTop: 20 }}>
           <Text style={styles.tipsHeaderText}>4. Delay.</Text>
           <Text
             style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}
@@ -71,7 +71,7 @@ export const Tips = ({ navigation }) => {
             you past your tobacco craving.
           </Text>
         </View>
-        <View style={{ alignItems: "center", marginTop: 20 }}>
+        <View style={{ marginTop: 20 }}>
           <Text style={styles.tipsHeaderText}>5. Chew on it.</Text>
           <Text
             style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}
@@ -81,7 +81,7 @@ export const Tips = ({ navigation }) => {
             sunflower seeds — something crunchy and tasty.
           </Text>
         </View>
-        <View style={{ alignItems: "center", marginTop: 20 }}>
+        <View style={{ marginTop: 20 }}>
           <Text style={styles.tipsHeaderText}>6. Don't have 'just one'.</Text>
           <Text
             style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}
@@ -92,7 +92,7 @@ export const Tips = ({ navigation }) => {
             you may end up using tobacco again.
           </Text>
         </View>
-        <View style={{ alignItems: "center", marginTop: 20 }}>
+        <View style={{marginTop: 20 }}>
           <Text style={styles.tipsHeaderText}>
             7. Try relaxation techniques.
           </Text>
@@ -106,7 +106,7 @@ export const Tips = ({ navigation }) => {
             music.
           </Text>
         </View>
-        <View style={{ alignItems: "center", marginTop: 20 }}>
+        <View style={{ marginTop: 20 }}>
           <Text style={styles.tipsHeaderText}>
             8. Remind yourself of the benefits.
           </Text>
@@ -124,7 +124,7 @@ export const Tips = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: "#e1d5c9",
     position: "relative",
     paddingVertical: 20,
@@ -136,6 +136,7 @@ const styles = StyleSheet.create({
   tipsHeaderText: {
     fontFamily: "HammersmithOne-Bold",
     fontSize: 18,
+    textAlign:'left'
   },
   tipsHeaderText2: {
     fontFamily: "HammersmithOne-Bold",

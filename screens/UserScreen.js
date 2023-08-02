@@ -146,12 +146,6 @@ const UserScreen = ({ navigation }) => {
                 !!user.smokingInfo && !user.smokingInfo.isQuiting ? 0.3 : 1,
             }}
           >
-            <Entypo
-              name="cross"
-              size={30}
-              color="black"
-              style={{ position: "absolute" }}
-            />
             <Pressable
               disabled={!!user.smokingInfo && !user.smokingInfo.isQuiting}
               onPress={() => {

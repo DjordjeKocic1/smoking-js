@@ -11,7 +11,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/images/cigQuitIcon.png",
+          "icon": "./assets/images/cigQuit.png",
           "color": "#c39351"
         }
       ],
@@ -33,7 +33,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "host.exp.exponent"
+      "bundleIdentifier": "com.istop.quitsmoking"
     },
     "android": {
       "versionCode": 1,
@@ -41,7 +41,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "host.exp.exponent"
+      "googleServicesFile": "./google-services.json",
+      "useNextNotificationsApi":true,
+      "package": "com.istop.quitsmoking"
     },
     "web": {
       "favicon": "./assets/favicon.png"

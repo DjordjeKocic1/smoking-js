@@ -43,13 +43,13 @@ export const Mentor = ({ navigation }) => {
   const { user,isLoading } = useSelector(selectUser);
   const [mentorEmailValue, setMentorEmailValue] = useState("");
   const [mentorNameValue, setMentorNameValue] = useState("");
-  const [isModal, setIsModal] = useState(false);
-  const [isValid, setIsValid] = useState(false);
+  const [mentorInvForm, setMentorInvForm] = useState(false);
+  const [isInputsValid, setInputsValid] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    if (mentorEmailValue != "" && mentorNameValue != "") setIsValid(true);
-    else setIsValid(false);
+    if (mentorEmailValue != "" && mentorNameValue != "") setInputsValid(true);
+    else setInputsValid(false);
   }, [mentorEmailValue, mentorNameValue]);
 
   useEffect(() => {
@@ -73,6 +73,10 @@ export const Mentor = ({ navigation }) => {
   };
 
   const acceptMentorHandler = (userValue) => {
+    if (!!user && !user.subscriber) {
+      dispatch(paymentModalShow(true));
+      return;
+    }
     Alert.alert(
       "Mentor Request",
       `${userValue.email} invited you to become his/her mentor.`,
@@ -166,7 +170,7 @@ export const Mentor = ({ navigation }) => {
 
     dispatch(createMentor(dataToSend));
 
-    setIsModal(false);
+    setmentrib(false);
     setTimeout(() => {
       dispatch(fetchError(null));
     }, 5000);
@@ -174,7 +178,7 @@ export const Mentor = ({ navigation }) => {
 
   const askForHelpHanlder = () => {
     if (!!user && !!user.subscriber) {
-      setIsModal(true);
+      setMentorInvForm(true);
       return;
     }
     dispatch(paymentModalShow(true));
@@ -218,11 +222,11 @@ export const Mentor = ({ navigation }) => {
           </Text>
         </View>
       </View>
-      {isModal && (
+      {mentorInvForm && (
         <View style={styles.mentorInvContainer}>
           <View style={[styles.mentorInvInnerContainer]}>
             <Pressable
-              onPress={() => setIsModal(false)}
+              onPress={() => setMentorInvForm(false)}
               style={styles.mentorInvCloseBtn}
               android_ripple={{ color: "#c39351" }}
             >
@@ -246,11 +250,11 @@ export const Mentor = ({ navigation }) => {
               placeholder="Enter mentor email"
             />
             <Pressable
-              disabled={!isValid}
+              disabled={!isInputsValid}
               onPress={createMentorHandler}
               style={[
                 styles.pressableContainer,
-                { opacity: !isValid ? 0.3 : 1 },
+                { opacity: !isInputsValid ? 0.3 : 1 },
               ]}
               android_ripple={{ color: "#6A7152" }}
             >
@@ -264,7 +268,7 @@ export const Mentor = ({ navigation }) => {
       <BackButton navigation={navigation} where={"UserScreen"} />
       <View style={[styles.mentoring, { marginTop: 40 }]}>
         <Text style={styles.mentoringHeader}>Mentoring</Text>
-        {!!mentor && !!mentor.mentoringUser ? (
+        {!!mentor && !!mentor.mentoringUser && !!mentor.mentoringUser.length ? (
           mentor.mentoringUser.map((v) => {
             return (
               <View
@@ -334,7 +338,7 @@ export const Mentor = ({ navigation }) => {
       </View>
       <View style={styles.mentoring}>
         <Text style={styles.mentoringHeader}>Mentor(s)</Text>
-        {!!user && !!user.mentors ? (
+        {!!user && !!user.mentors && !!user.mentors.length ? (
           user.mentors.map((v) => {
             return (
               <View

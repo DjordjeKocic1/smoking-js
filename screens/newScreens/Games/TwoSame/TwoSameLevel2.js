@@ -34,7 +34,7 @@ export const TwoSameLevel2 = ({ navigation }) => {
     },
     {
       id: 3,
-      src: require("../../../../assets/images/twoSameImgs/painapple.jpg"),
+      src: require("../../../../assets/images/twoSameImgs/painapple.png"),
       catgorie: "painapple",
       active: false,
     },
@@ -52,7 +52,7 @@ export const TwoSameLevel2 = ({ navigation }) => {
     },
     {
       id: 6,
-      src: require("../../../../assets/images/twoSameImgs/painapple.jpg"),
+      src: require("../../../../assets/images/twoSameImgs/painapple.png"),
       catgorie: "painapple",
       active: false,
     },
@@ -149,7 +149,7 @@ export const TwoSameLevel2 = ({ navigation }) => {
               { fontSize: 17, marginLeft: 5 },
             ]}
           >
-            {!!user && !!user.gameScore && user.gameScore}
+            {!!user && !!user.gameScore ? user.gameScore : 0}
           </Text>
         </View>
         <Pressable
@@ -180,15 +180,18 @@ export const TwoSameLevel2 = ({ navigation }) => {
               onPress={() => onImagePressHandler(img)}
               style={styles.imagePressable}
             >
-              <ImageBackground
-                source={
-                  img.active
-                    ? require("../../../../assets/images/games/wallBrake.png")
-                    : require("../../../../assets/images/games/wall.png")
-                }
-                style={[styles.imageOverlay, { zIndex: 2, overflow: "hidden" }]}
-                resizeMode="stretch"
-              ></ImageBackground>
+              <View
+                style={[
+                  styles.imageOverlay,
+                  {
+                    zIndex: 2,
+                    overflow: "hidden",
+                    alignItems:'center',
+                    justifyContent:'center',
+                    backgroundColor: img.active ? "transparent" : "orange",
+                  },
+                ]}
+              ><Text style={{fontFamily: "HammersmithOne-Bold",}}>{img.active ? "" : "Click"}</Text></View>
               <Image source={img["src"]} style={styles.image} />
             </Pressable>
           );
@@ -205,6 +208,7 @@ export const TwoSameLevel2 = ({ navigation }) => {
                   {
                     gameScore:
                       (!!user && !!user.gameScore ? user.gameScore : 0) + 10,
+                      latestScore:(!!user && !!user.latestScore ? user.latestScore : 0) + 10
                   },
                   user._id
                 )
@@ -213,11 +217,6 @@ export const TwoSameLevel2 = ({ navigation }) => {
             style={styles.nextLevelImgBG}
           ></ImageBackground>
           <View style={styles.imageNextContainer}>
-            <ImageBackground
-              source={require("../../../../assets/images/twoSameImgs/redo.png")}
-              resizeMode="contain"
-              style={[styles.nextLevelImgBGNext, { marginRight: 15 }]}
-            ></ImageBackground>
             <ImageBackground
               source={require("../../../../assets/images/twoSameImgs/next.png")}
               resizeMode="contain"

@@ -173,14 +173,9 @@ export const Payment = () => {
               />
             ) : (
               <>
-                <Text style={[styles.paymentText, { fontSize: 11 }]}>
+                <Text style={[styles.paymentText, { fontSize: 15,borderWidth:0.3,borderRadius:5,width:'100%',padding:10 }]}>
                   Credit Card
                 </Text>
-                <Image
-                  source={require("../assets/images/cards.png")}
-                  style={{ width: 200, height: 50 }}
-                  resizeMode="contain"
-                />
               </>
             )}
           </Pressable>

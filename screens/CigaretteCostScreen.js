@@ -24,6 +24,7 @@ const CigaretteCostScreen = ({ navigation }) => {
   const [counter, setCounter] = useState(0);
   const [amount, setAmount] = useState(0);
   const [cigarettesInPack, setCigarettesInPack] = useState(0);
+  const[imgOpacitiy,setImgOpacity] = useState(false)
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -90,7 +91,7 @@ const CigaretteCostScreen = ({ navigation }) => {
   }
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
+      <View onTouchStart={() => setImgOpacity(true)} onTouchEnd={() => setImgOpacity(false)} style={styles.headerContainer}>
         <Text
           style={[styles.headerText, { fontFamily: "HammersmithOne-Bold" }]}
         >
@@ -102,6 +103,7 @@ const CigaretteCostScreen = ({ navigation }) => {
             height: 200,
             resizeMode: "stretch",
             aspectRatio: 2,
+            opacity:imgOpacitiy ? 0.4 : 1
           }}
           source={require("../assets/images/spendings.png")}
         />

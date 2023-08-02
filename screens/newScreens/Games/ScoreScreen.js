@@ -34,6 +34,11 @@ export const ScoreScreen = ({ navigation }) => {
   if (isLoading) {
     return <Loading />;
   }
+  let userArrayCopy = !!users && [...users];
+  
+  let userLatestScoreArr =
+    !!userArrayCopy &&
+    userArrayCopy.sort((a, b) => b.latestScore - a.latestScore);
 
   return (
     <ScrollView
@@ -45,21 +50,39 @@ export const ScoreScreen = ({ navigation }) => {
       <BackButton navigation={navigation} where={"UserScreen"} />
       <Text style={styles.rankText}>Rank List</Text>
       {!!users &&
-        users.map((v, i) => {
+        users.map((v, i, row) => {
           return (
             <View key={i} style={styles.userCont}>
               <Text
                 style={[
                   styles.userName,
-                  { backgroundColor: i == 0 ? "#91d491" : "#e1d5c9" },
+                  {
+                    backgroundColor:
+                      i == 0
+                        ? "#91d491"
+                        : i == 1
+                        ? "#ffa50085"
+                        : i + 1 === row.length
+                        ? "#ff000085"
+                        : "#e1d5c9",
+                  },
                 ]}
               >
-                {i + 1}. {v.name}
+                {i + 1}. {v.email}
               </Text>
               <Text
                 style={[
                   styles.gameScore,
-                  { backgroundColor: i == 0 ? "#91d491" : "#e1d5c9" },
+                  {
+                    backgroundColor:
+                      i == 0
+                        ? "#91d491"
+                        : i == 1
+                        ? "#ffa50085"
+                        : i + 1 === row.length
+                        ? "#ff000085"
+                        : "#e1d5c9",
+                  },
                 ]}
               >
                 {!!v.gameScore ? v.gameScore : 0}
@@ -67,13 +90,37 @@ export const ScoreScreen = ({ navigation }) => {
             </View>
           );
         })}
+      <Text style={styles.latestScore}>Latest Rounds</Text>
+      <View style={{ width: "70%", marginBottom: 10 }}>
+        {!!userLatestScoreArr &&
+          userLatestScoreArr.map((v, i, row) => {
+            return (
+              <View
+                key={i}
+                style={[
+                  styles.userCont,
+                  {
+                    padding: 10,
+                    backgroundColor: "#bbbbbb85",
+                    margin: 5,
+                  },
+                ]}
+              >
+                <Text style={styles.latestScoreText}>{v.email}</Text>
+                <Text style={styles.latestScoreText}>
+                  {v.latestScore ? v.latestScore : 0}
+                </Text>
+              </View>
+            );
+          })}
+      </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: "center",
     position: "relative",
     paddingHorizontal: 20,
@@ -102,5 +149,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     padding: 10,
     fontFamily: "HammersmithOne-Bold",
+  },
+  latestScore: {
+    paddingTop: 60,
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: 20,
+    paddingBottom: 10,
+  },
+  latestScoreText: {
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: 12,
   },
 });

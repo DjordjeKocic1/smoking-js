@@ -17,6 +17,9 @@ const mentorSlice = createSlice({
       state.mentor = action.payload;
       state.isMentorLoading = false;
     },
+    createMentorSuccess:(state,action) => {
+      state.isMentorLoading = false;
+    },
     removeMentoringUser:(state,action) => {
       let removedMentoringUser = state.mentor.mentoringUser.filter(v => v.userId !== action.payload.userId)
       state.mentor.mentoringUser = removedMentoringUser;
@@ -28,7 +31,7 @@ const mentorSlice = createSlice({
   },
 });
 
-export const { fetchStart, fetchSuccess, fetchError,removeMentoringUser } = mentorSlice.actions;
+export const { fetchStart, fetchSuccess, fetchError,removeMentoringUser,createMentorSuccess } = mentorSlice.actions;
 
 export const getMentor = (id) => {
   return (dispatch) => {
@@ -51,7 +54,6 @@ export const createMentor = (data) => {
     http
       .createMentor(data)
       .then((response) => {
-        dispatch(fetchSuccess(response.data.mentor));
         const responseData = response.data.mentor;
         dispatch(
           updateUserMentors({
@@ -62,6 +64,7 @@ export const createMentor = (data) => {
             mentorId: responseData.mentorId,
           })
         );
+        dispatch(createMentorSuccess())
       })
       .catch((e) => {
         dispatch(fetchError());
