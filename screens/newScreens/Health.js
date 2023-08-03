@@ -228,12 +228,12 @@ const styles = StyleSheet.create({
   },
   card: {
     marginBottom: 10,
-    width: Dimensions.get("screen").width > 700 ? 200 : 150,
+    width: Dimensions.get("screen").width > 600 ? 200 : 150,
     alignItems: "center",
   },
   cardImage: {
-    width: Dimensions.get("screen").width > 700 ? 100 : 50,
-    height: Dimensions.get("screen").width > 700 ? 100 : 50,
+    width: Dimensions.get("screen").width > 600 ? 100 : 50,
+    height: Dimensions.get("screen").width > 600 ? 100 : 50,
     resizeMode: "contain",
     marginBottom: 5,
   },

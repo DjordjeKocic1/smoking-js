@@ -2,6 +2,7 @@ import * as WebBrowser from "expo-web-browser";
 
 import {
   Alert,
+  Dimensions,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -111,8 +112,8 @@ export const Mentor = ({ navigation }) => {
         text: "Yes",
         onPress: () => {
           navigation.replace("MentorViewScreen", {
-            user_id: userValue.userId,
-            mentor,
+            user_idParam: userValue.userId,
+            mentorParam:mentor,
           });
         },
       },
@@ -213,7 +214,7 @@ export const Mentor = ({ navigation }) => {
           />
           <Text style={styles.infoTextInner}>
             Mentorship is the influence, guidance, or direction given by a
-            mentor. Primary <Text style={{ fontSize: 18 }}>"MENTORING"</Text> is
+            mentor. Primary <Text style={{ fontSize:Dimensions.get("screen").width > 600 ? 25 : 18 }}>"MENTORING"</Text> is
             there so that someone close to you can help you achieve your goals
             by assigning tasks and monitoring your progress.
           </Text>
@@ -277,7 +278,7 @@ export const Mentor = ({ navigation }) => {
                       styles.mentorViewText,
                       {
                         textTransform: "lowercase",
-                        fontSize: 10,
+                        fontSize: Dimensions.get("screen").width > 600 ? 15 : 10,
                         color: "gray",
                       },
                     ]}
@@ -347,7 +348,7 @@ export const Mentor = ({ navigation }) => {
                       styles.mentorViewText,
                       {
                         textTransform: "lowercase",
-                        fontSize: 10,
+                        fontSize:Dimensions.get("screen").width > 600 ? 15 : 10,
                         color: "gray",
                       },
                     ]}
@@ -424,7 +425,7 @@ const styles = StyleSheet.create({
   mentorViewText: {
     color: "black",
     fontFamily: "HammersmithOne-Bold",
-    fontSize: 10,
+    fontSize: Dimensions.get("screen").width > 600 ? 15 : 10,
     textTransform: "uppercase",
   },
   mentorViewPressable: {
@@ -523,6 +524,7 @@ const styles = StyleSheet.create({
     fontFamily: "HammersmithOne-Bold",
     padding: 10,
     textAlign: "center",
+    fontSize:Dimensions.get("screen").width > 600 ? 20 : 15
   },
   taskPressable: {
     marginTop: 20,
@@ -534,7 +536,7 @@ const styles = StyleSheet.create({
   taskPressableText: { color: "white", fontFamily: "HammersmithOne-Bold" },
   statusText: {
     fontFamily: "HammersmithOne-Bold",
-    fontSize: 12,
+    fontSize: Dimensions.get("screen").width > 600 ? 15 : 12,
   },
   acceptedContainer: {
     backgroundColor: "green",
@@ -544,7 +546,7 @@ const styles = StyleSheet.create({
   },
   accepted: {
     fontFamily: "HammersmithOne-Bold",
-    fontSize: 12,
+    fontSize: Dimensions.get("screen").width > 600 ? 15 : 12,
     textAlign: "center",
     color: "white",
   },
@@ -558,5 +560,6 @@ const styles = StyleSheet.create({
     fontFamily: "HammersmithOne-Bold",
     color: "white",
     textAlign: "center",
+    fontSize:Dimensions.get("screen").width > 600 ? 18 : 15
   },
 });

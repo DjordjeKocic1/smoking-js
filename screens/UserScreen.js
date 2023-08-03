@@ -57,7 +57,7 @@ const UserScreen = ({ navigation }) => {
 
   const onShareHandler = async () => {
     let url =
-      "https://play.google.com/store/apps/details?id=com.instagram.android&hl=en_IN&gl=US&pli=1";
+      "https://play.google.com/store/apps/details?id=com.istop.quitsmoking&hl=en-US&ah=cYxTqLi55y9Ru3OKo3yiN2YnYWc";
     try {
       const result = await Share.share({
         title: "The most detailed application to stop smoking",
@@ -74,9 +74,8 @@ const UserScreen = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.mainContainer}>
       <ScrollView
-        style={{ flexGrow: 1 }}
+        contentContainerStyle={styles.mainContainer}
         showsHorizontalScrollIndicator={false}
         endFillColor="#000"
         overScrollMode="never"
@@ -91,8 +90,8 @@ const UserScreen = ({ navigation }) => {
           >
             <Image
               style={{
-                width: Dimensions.get("screen").width > 700 ? 80 : 30,
-                height: Dimensions.get("screen").width > 700 ? 80 : 30,
+                width: Dimensions.get("screen").width > 600 ? 80 : 30,
+                height: Dimensions.get("screen").width > 600 ? 80 : 30,
               }}
               resizeMode="contain"
               source={require("../assets/images/games/money.png")}
@@ -154,8 +153,8 @@ const UserScreen = ({ navigation }) => {
             >
               <Image
                 style={{
-                  width: Dimensions.get("screen").width > 700 ? 80 : 30,
-                  height: Dimensions.get("screen").width > 700 ? 80 : 30,
+                  width: Dimensions.get("screen").width > 600 ? 80 : 30,
+                  height: Dimensions.get("screen").width > 600 ? 80 : 30,
                 }}
                 resizeMode="contain"
                 source={require("../assets/images/games/heart.png")}
@@ -182,7 +181,7 @@ const UserScreen = ({ navigation }) => {
             >
               <MaterialIcons
                 name="smoke-free"
-                size={Dimensions.get("screen").width > 700 ? 80 : 27}
+                size={Dimensions.get("screen").width > 600 ? 80 : 27}
                 color="#222325"
               />
               <Text style={styles.statsheader}>
@@ -199,7 +198,7 @@ const UserScreen = ({ navigation }) => {
             >
               <MaterialIcons
                 name="smoke-free"
-                size={Dimensions.get("screen").width > 700 ? 80 : 27}
+                size={Dimensions.get("screen").width > 600 ? 80 : 27}
                 color="#222325"
               />
               <Text style={styles.statsheader}>
@@ -400,12 +399,11 @@ const UserScreen = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-    </View>
   );
 };
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
+    flexGrow: 1,
     flexDirection: "column",
     backgroundColor: "#e1d5c9",
     justifyContent: "center",
@@ -433,7 +431,7 @@ const styles = StyleSheet.create({
   innerText: {
     fontFamily: "HammersmithOne-Bold",
     marginTop: 10,
-    fontSize: Dimensions.get("screen").width > 700 ? 25 : 12,
+    fontSize: Dimensions.get("screen").width > 600 ? 16 : 12,
   },
   container: {
     flex: 1,
@@ -451,13 +449,13 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderColor: "#22232533",
     borderRadius: 30,
-    width: Dimensions.get("screen").width > 700 ? 250 : 130,
-    height: Dimensions.get("screen").width > 700 ? 250 : 130,
+    width: Dimensions.get("screen").width > 600 ? 250 : 130,
+    height: Dimensions.get("screen").width > 600 ? 250 : 130,
     overflow: "hidden",
   },
   innerContainerImg: {
-    width: Dimensions.get("screen").width > 700 ? 200 : 100,
-    height: Dimensions.get("screen").width > 700 ? 200 : 100,
+    width: Dimensions.get("screen").width > 600 ? 200 : 100,
+    height: Dimensions.get("screen").width > 600 ? 200 : 100,
     aspectRatio: 1,
   },
   innerContainerBox: {

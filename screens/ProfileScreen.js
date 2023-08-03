@@ -17,7 +17,6 @@ import { SubmitButton } from "../components/SubmitButton";
 
 export const ProfileScreen = ({ navigation }) => {
   const { user } = useSelector(selectUser);
-  const isLoading = useSelector((state) => state.user.isLoading);
   const dispatch = useDispatch();
 
   const [userProfile, setUserProfile] = useState({
@@ -96,10 +95,6 @@ export const ProfileScreen = ({ navigation }) => {
     return () => {};
   }, [user]);
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1, position: "relative" }}
@@ -124,6 +119,7 @@ export const ProfileScreen = ({ navigation }) => {
           <View style={styles.inputsContent}>
             <Text>Full Name</Text>
             <TextInput
+              placeholder="enter full name"
               onChangeText={onNameChangeHandler}
               value={userProfile.name}
               style={styles.input}
@@ -132,6 +128,7 @@ export const ProfileScreen = ({ navigation }) => {
           <View style={styles.inputsContent}>
             <Text>Email</Text>
             <TextInput
+              placeholder="enter email address"
               onChangeText={onEmailChangeHandler}
               value={userProfile.email}
               style={styles.input}

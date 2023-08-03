@@ -37,17 +37,19 @@ export const MentorViewScreen = ({ navigation, route }) => {
 
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    dispatch(userHealthMentore({}, route.params.user_id));
-  }, [route.params.user_id]);
+  const { user_idParam, mentorParam } = route.params;
 
   useEffect(() => {
-    dispatch(getTasks(route.params.user_id));
-  }, [route.params.user_id]);
+    dispatch(userHealthMentore({}, user_idParam));
+  }, [dispatch, user_idParam]);
 
   useEffect(() => {
-    dispatch(getMentor(route.params.mentor.mentorId));
-  }, [route.params.mentor.mentorId]);
+    dispatch(getTasks(user_idParam));
+  }, [dispatch, user_idParam]);
+
+  useEffect(() => {
+    dispatch(getMentor(mentorParam.mentorId));
+  }, [dispatch, mentorParam.mentorId]);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -606,12 +608,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#c39351",
     borderRadius: 30,
-    width: 130,
-    height: 100,
+    width:Dimensions.get("screen").width > 600 ? 200 : 130,
+    height:Dimensions.get("screen").width > 600 ? 180 : 100,
     overflow: "hidden",
   },
   innerboxContainerText: {
-    fontSize: 12,
+    fontSize:Dimensions.get("screen").width > 600 ? 18 : 12,
     fontFamily: "HammersmithOne-Bold",
     marginBottom: 15,
     color: "black",
@@ -619,7 +621,7 @@ const styles = StyleSheet.create({
   },
   innerboxContainerText2: {
     fontFamily: "HammersmithOne-Bold",
-    fontSize: 20,
+    fontSize:Dimensions.get("screen").width > 600 ? 25 : 20,
     color: "black",
   },
   taskList: {
@@ -692,10 +694,11 @@ const styles = StyleSheet.create({
   cigaretteInfoCostsInnerText: {
     fontFamily: "HammersmithOne-Bold",
     color: "white",
+    fontSize:Dimensions.get("screen").width > 600 ? 20 : 15
   },
   userhTextInfo: {
     fontFamily: "HammersmithOne-Bold",
     marginTop: 10,
-    fontSize: 12,
+    fontSize:Dimensions.get("screen").width > 600 ? 15 : 12,
   },
 });

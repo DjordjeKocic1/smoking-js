@@ -1,5 +1,6 @@
 import {
   Animated,
+  Dimensions,
   Easing,
   Image,
   Pressable,
@@ -42,12 +43,24 @@ export const Savings = ({ navigation }) => {
   const moveAnime1 = useRef(new Animated.Value(0)).current;
   const moveAnime2 = useRef(new Animated.Value(0)).current;
 
-  const savingBox1Anim = useRef(new Animated.Value(120)).current;
-  const savingBox2Anim = useRef(new Animated.Value(120)).current;
-  const savingBox3Anim = useRef(new Animated.Value(120)).current;
-  const savingBox4Anim = useRef(new Animated.Value(120)).current;
-  const savingBox5Anim = useRef(new Animated.Value(120)).current;
-  const savingBox6Anim = useRef(new Animated.Value(120)).current;
+  const savingBox1Anim = useRef(
+    new Animated.Value(Dimensions.get("screen").width > 600 ? 200 : 120)
+  ).current;
+  const savingBox2Anim = useRef(
+    new Animated.Value(Dimensions.get("screen").width > 600 ? 200 : 120)
+  ).current;
+  const savingBox3Anim = useRef(
+    new Animated.Value(Dimensions.get("screen").width > 600 ? 200 : 120)
+  ).current;
+  const savingBox4Anim = useRef(
+    new Animated.Value(Dimensions.get("screen").width > 600 ? 200 : 120)
+  ).current;
+  const savingBox5Anim = useRef(
+    new Animated.Value(Dimensions.get("screen").width > 600 ? 200 : 120)
+  ).current;
+  const savingBox6Anim = useRef(
+    new Animated.Value(Dimensions.get("screen").width > 600 ? 200 : 120)
+  ).current;
 
   useEffect(() => {
     backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
@@ -142,7 +155,7 @@ export const Savings = ({ navigation }) => {
     if (!savedBoxBool) {
       savedBoxBoolState(true);
       Animated.timing(savedBoxAnim, {
-        toValue: 160,
+        toValue: Dimensions.get("screen").width > 600 ? 250 : 160,
         duration: 700,
         useNativeDriver: false,
         easing: Easing.bounce,
@@ -150,7 +163,7 @@ export const Savings = ({ navigation }) => {
     } else {
       savedBoxBoolState(false);
       Animated.timing(savedBoxAnim, {
-        toValue: 120,
+        toValue: Dimensions.get("screen").width > 600 ? 200 : 120,
         duration: 1000,
         useNativeDriver: false,
         easing: Easing.bounce,
@@ -198,14 +211,10 @@ export const Savings = ({ navigation }) => {
           {savingBox1Enable && (
             <View style={{ marginTop: 15 }}>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/Price
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   $
                   {!!user.savedInfo
                     ? user.savedInfo.packCigarettesPrice
@@ -213,14 +222,10 @@ export const Savings = ({ navigation }) => {
                 </Text>
               </View>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/Pack
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   {!!user.savedInfo
                     ? user.savedInfo.cigarettesInPack
                     : user.consumptionInfo.cigarettesInPack}
@@ -247,7 +252,7 @@ export const Savings = ({ navigation }) => {
           <Text style={[styles.savingText]}>Cigarette daily</Text>
           <Text
             style={[
-              styles.savingText,
+              styles.savingTextHeader,
               {
                 color:
                   !!user.smokingInfo && user.smokingInfo.isQuiting
@@ -265,14 +270,10 @@ export const Savings = ({ navigation }) => {
           {savingBox2Enable && (
             <View style={{ marginTop: 15 }}>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/Price
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   $
                   {!!user.savedInfo
                     ? user.savedInfo.packCigarettesPrice
@@ -280,14 +281,10 @@ export const Savings = ({ navigation }) => {
                 </Text>
               </View>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/Pack
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   $
                   {!!user.savedInfo
                     ? user.savedInfo.cigarettesInPack
@@ -295,14 +292,10 @@ export const Savings = ({ navigation }) => {
                 </Text>
               </View>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/day
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   {!!user.savedInfo
                     ? user.savedInfo.cigarettesDay
                     : user.consumptionInfo.cigarettesDay}
@@ -329,7 +322,7 @@ export const Savings = ({ navigation }) => {
           <Text style={[styles.savingText]}>Cigarette monthly</Text>
           <Text
             style={[
-              styles.savingText,
+              styles.savingTextHeader,
               {
                 color:
                   !!user.smokingInfo && user.smokingInfo.isQuiting
@@ -347,14 +340,10 @@ export const Savings = ({ navigation }) => {
           {savingBox3Enable && (
             <View style={{ marginTop: 15, marginBottom: 5 }}>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/Price
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   $
                   {!!user.savedInfo
                     ? user.savedInfo.packCigarettesPrice
@@ -362,42 +351,30 @@ export const Savings = ({ navigation }) => {
                 </Text>
               </View>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/Pack
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   {!!user.savedInfo
                     ? user.savedInfo.cigarettesInPack
                     : user.consumptionInfo.cigarettesInPack}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/day
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   {!!user.savedInfo
                     ? user.savedInfo.cigarettesDay
                     : user.consumptionInfo.cigarettesDay}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Avg. Month days
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   30
                 </Text>
               </View>
@@ -422,7 +399,7 @@ export const Savings = ({ navigation }) => {
           <Text style={[styles.savingText]}>Cigarette yearly</Text>
           <Text
             style={[
-              styles.savingText,
+              styles.savingTextHeader,
               {
                 color:
                   !!user.smokingInfo && user.smokingInfo.isQuiting
@@ -440,14 +417,10 @@ export const Savings = ({ navigation }) => {
           {savingBox4Enable && (
             <View style={{ marginTop: 15, marginBottom: 5 }}>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/Price
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   $
                   {!!user.savedInfo
                     ? user.savedInfo.packCigarettesPrice
@@ -455,42 +428,30 @@ export const Savings = ({ navigation }) => {
                 </Text>
               </View>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/Pack
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   {!!user.savedInfo
                     ? user.savedInfo.cigarettesInPack
                     : user.consumptionInfo.cigarettesInPack}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/day
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   {!!user.savedInfo
                     ? user.savedInfo.cigarettesDay
                     : user.consumptionInfo.cigarettesDay}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Days
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   365
                 </Text>
               </View>
@@ -515,7 +476,7 @@ export const Savings = ({ navigation }) => {
           <Text style={[styles.savingText]}>Cigarette 5 Years</Text>
           <Text
             style={[
-              styles.savingText,
+              styles.savingTextHeader,
               {
                 color:
                   !!user.smokingInfo && user.smokingInfo.isQuiting
@@ -533,14 +494,10 @@ export const Savings = ({ navigation }) => {
           {savingBox5Enable && (
             <View style={{ marginTop: 15, marginBottom: 5 }}>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/Price
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   $
                   {!!user.savedInfo
                     ? user.savedInfo.packCigarettesPrice
@@ -548,42 +505,30 @@ export const Savings = ({ navigation }) => {
                 </Text>
               </View>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/Pack
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   {!!user.savedInfo
                     ? user.savedInfo.cigarettesInPack
                     : user.consumptionInfo.cigarettesInPack}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/day
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   {!!user.savedInfo
                     ? user.savedInfo.cigarettesDay
                     : user.consumptionInfo.cigarettesDay}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Year
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   5
                 </Text>
               </View>
@@ -608,7 +553,7 @@ export const Savings = ({ navigation }) => {
           <Text style={[styles.savingText]}>Cigarette 10 Years</Text>
           <Text
             style={[
-              styles.savingText,
+              styles.savingTextHeader,
               {
                 color:
                   !!user.smokingInfo && user.smokingInfo.isQuiting
@@ -626,14 +571,10 @@ export const Savings = ({ navigation }) => {
           {savingBox6Enable && (
             <View style={{ marginTop: 15, marginBottom: 5 }}>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/Price
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   $
                   {!!user.savedInfo
                     ? user.savedInfo.packCigarettesPrice
@@ -641,42 +582,30 @@ export const Savings = ({ navigation }) => {
                 </Text>
               </View>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/Pack
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   {!!user.savedInfo
                     ? user.savedInfo.cigarettesInPack
                     : user.consumptionInfo.cigarettesInPack}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Cigarette/day
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   {!!user.savedInfo
                     ? user.savedInfo.cigarettesDay
                     : user.consumptionInfo.cigarettesDay}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   Year
                 </Text>
-                <Text
-                  style={[styles.savingText, { fontSize: 10, color: "black" }]}
-                >
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   10
                 </Text>
               </View>
@@ -867,8 +796,8 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   savingBox: {
-    width: 150,
-    height: 120,
+    width: Dimensions.get("screen").width > 600 ? 200 : 130,
+    height: Dimensions.get("screen").width > 600 ? 200 : 120,
     borderBottomWidth: 0.5,
     borderLeftWidth: 0.1,
     borderRightWidth: 0.1,
@@ -883,6 +812,12 @@ const styles = StyleSheet.create({
   savingText: {
     textAlign: "center",
     fontFamily: "HammersmithOne-Bold",
+    fontSize: Dimensions.get("screen").width > 600 ? 20 : 12,
+  },
+  savingTextHeader: {
+    textAlign: "center",
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: Dimensions.get("screen").width > 600 ? 12 : 10,
   },
   updateCost: {
     backgroundColor: "#c39351",
@@ -934,8 +869,8 @@ const styles = StyleSheet.create({
     bottom: 5,
   },
   costImage: {
-    width: 50,
-    height: 50,
+    width: Dimensions.get("screen").width > 600 ? 100 : 50,
+    height: Dimensions.get("screen").width > 600 ? 100 : 50,
   },
   costImage2: { width: 100, height: 50 },
   extraContainer: {
