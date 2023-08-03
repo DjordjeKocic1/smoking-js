@@ -28,13 +28,6 @@ export default function App() {
   const catchResourses = async () => {
     let images = [
       require("./assets/images/i_stop-logo.png"),
-      require("./assets/images/games/bird1.png"),
-      require("./assets/images/games/bird2.png"),
-      require("./assets/images/games/bird3.png"),
-      require("./assets/images/games/floor.png"),
-      require("./assets/images/bg.png"),
-      require("./assets/images/games/blood.png"),
-      require("./assets/images/games/cigHome.png"),
       require("./assets/images/games/heart.png"),
       require("./assets/images/games/money.png"),
       require("./assets/images/games/nosmoking.png"),

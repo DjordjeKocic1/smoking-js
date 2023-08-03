@@ -32,7 +32,6 @@ export const MentorViewScreen = ({ navigation, route }) => {
   const [taskValue, setTaskValue] = useState("");
   const [taskCommentValue, setTaskCommentValue] = useState("");
   const [taskPopupShow, setTaskPopupShow] = useState(false);
-
   const popUpAnim = useRef(new Animated.Value(0)).current;
   const cogAnim = new Animated.Value(0);
 

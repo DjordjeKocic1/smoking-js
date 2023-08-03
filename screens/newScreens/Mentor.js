@@ -18,7 +18,7 @@ import {
   selectMentor,
   updateMentor,
 } from "../../store/mentorReducer";
-import { deleteUserMentors, selectUser } from "../../store/userReducer";
+import { deleteUserMentors, selectUser, userHealth } from "../../store/userReducer";
 import {
   paymentModalShow,
   selectAlert,
@@ -44,13 +44,7 @@ export const Mentor = ({ navigation }) => {
   const [mentorEmailValue, setMentorEmailValue] = useState("");
   const [mentorNameValue, setMentorNameValue] = useState("");
   const [mentorInvForm, setMentorInvForm] = useState(false);
-  const [isInputsValid, setInputsValid] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
-  useEffect(() => {
-    if (mentorEmailValue != "" && mentorNameValue != "") setInputsValid(true);
-    else setInputsValid(false);
-  }, [mentorEmailValue, mentorNameValue]);
 
   useEffect(() => {
     dispatch(getMentor(user._id));
@@ -61,6 +55,7 @@ export const Mentor = ({ navigation }) => {
     setTimeout(() => {
       setRefreshing(false);
       dispatch(getMentor(user._id));
+      dispatch(userHealth({}, user._id));
     }, 2000);
   };
 
@@ -92,7 +87,7 @@ export const Mentor = ({ navigation }) => {
             const dataToSend = {
               name: mentor.name,
               user: {
-                userId: userValue._id,
+                userId: userValue.userId,
                 accepted: true,
                 name: userValue.name,
               },
@@ -116,7 +111,7 @@ export const Mentor = ({ navigation }) => {
         text: "Yes",
         onPress: () => {
           navigation.replace("MentorViewScreen", {
-            user_id: userValue._id,
+            user_id: userValue.userId,
             mentor,
           });
         },
@@ -157,6 +152,9 @@ export const Mentor = ({ navigation }) => {
   };
 
   const createMentorHandler = () => {
+    if (mentorEmailValue == "" && mentorNameValue == "") {
+      return
+    }
     const dataToSend = {
       name: mentorNameValue.trim(),
       email: mentorEmailValue.trim(),
@@ -170,7 +168,6 @@ export const Mentor = ({ navigation }) => {
 
     dispatch(createMentor(dataToSend));
 
-    setmentrib(false);
     setTimeout(() => {
       dispatch(fetchError(null));
     }, 5000);
@@ -250,11 +247,9 @@ export const Mentor = ({ navigation }) => {
               placeholder="Enter mentor email"
             />
             <Pressable
-              disabled={!isInputsValid}
               onPress={createMentorHandler}
               style={[
                 styles.pressableContainer,
-                { opacity: !isInputsValid ? 0.3 : 1 },
               ]}
               android_ripple={{ color: "#6A7152" }}
             >
