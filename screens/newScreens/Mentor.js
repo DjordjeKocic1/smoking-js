@@ -19,7 +19,11 @@ import {
   selectMentor,
   updateMentor,
 } from "../../store/mentorReducer";
-import { deleteUserMentors, selectUser, userHealth } from "../../store/userReducer";
+import {
+  deleteUserMentors,
+  selectUser,
+  userHealth,
+} from "../../store/userReducer";
 import {
   paymentModalShow,
   selectAlert,
@@ -33,7 +37,7 @@ import { BackButton } from "../../components/BackButton";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Loading } from "../../components/Loading";
-import { Payment } from "../../gameUtils/Payment";
+import { Payment } from "../../components/Payment";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -41,7 +45,7 @@ export const Mentor = ({ navigation }) => {
   const dispatch = useDispatch();
   const { mentor, isMentorLoading } = useSelector(selectMentor);
   const { isVisible, isModalVisible } = useSelector(selectAlert);
-  const { user,isLoading } = useSelector(selectUser);
+  const { user, isLoading } = useSelector(selectUser);
   const [mentorEmailValue, setMentorEmailValue] = useState("");
   const [mentorNameValue, setMentorNameValue] = useState("");
   const [mentorInvForm, setMentorInvForm] = useState(false);
@@ -49,7 +53,7 @@ export const Mentor = ({ navigation }) => {
 
   useEffect(() => {
     dispatch(getMentor(user._id));
-  }, [dispatch,user._id]);
+  }, [dispatch, user._id]);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -69,10 +73,6 @@ export const Mentor = ({ navigation }) => {
   };
 
   const acceptMentorHandler = (userValue) => {
-    if (!!user && !user.subscriber) {
-      dispatch(paymentModalShow(true));
-      return;
-    }
     Alert.alert(
       "Mentor Request",
       `${userValue.email} invited you to become his/her mentor.`,
@@ -113,14 +113,14 @@ export const Mentor = ({ navigation }) => {
         onPress: () => {
           navigation.replace("MentorViewScreen", {
             user_idParam: userValue.userId,
-            mentorParam:mentor,
+            mentorParam: mentor,
           });
         },
       },
     ]);
   };
 
-  const deleteMentorHandler = (mentorId,userId) => {
+  const deleteMentorHandler = (mentorId, userId) => {
     Alert.alert("", `Are you sure?`, [
       {
         text: "No",
@@ -130,13 +130,13 @@ export const Mentor = ({ navigation }) => {
       {
         text: "Yes",
         onPress: () => {
-          dispatch(deleteMentor(mentorId,userId));
+          dispatch(deleteMentor(mentorId, userId));
         },
       },
     ]);
   };
 
-  const deleteUserMentorHandler = (mentorId,userId) => {
+  const deleteUserMentorHandler = (mentorId, userId) => {
     Alert.alert("", `Are you sure?`, [
       {
         text: "No",
@@ -146,7 +146,7 @@ export const Mentor = ({ navigation }) => {
       {
         text: "Yes",
         onPress: () => {
-          dispatch(deleteUserMentors(mentorId,userId));
+          dispatch(deleteUserMentors(mentorId, userId));
         },
       },
     ]);
@@ -154,7 +154,7 @@ export const Mentor = ({ navigation }) => {
 
   const createMentorHandler = () => {
     if (mentorEmailValue == "" && mentorNameValue == "") {
-      return
+      return;
     }
     const dataToSend = {
       name: mentorNameValue.trim(),
@@ -182,7 +182,7 @@ export const Mentor = ({ navigation }) => {
     dispatch(paymentModalShow(true));
   };
 
-  if (isMentorLoading || isLoading) {
+  if (isMentorLoading && isLoading) {
     return <Loading />;
   }
 
@@ -214,9 +214,16 @@ export const Mentor = ({ navigation }) => {
           />
           <Text style={styles.infoTextInner}>
             Mentorship is the influence, guidance, or direction given by a
-            mentor. Primary <Text style={{ fontSize:Dimensions.get("screen").width > 600 ? 25 : 18 }}>"MENTORING"</Text> is
-            there so that someone close to you can help you achieve your goals
-            by assigning tasks and monitoring your progress.
+            mentor. Primary{" "}
+            <Text
+              style={{
+                fontSize: Dimensions.get("screen").width > 600 ? 25 : 18,
+              }}
+            >
+              "MENTORING"
+            </Text>{" "}
+            is there so that someone close to you can help you achieve your
+            goals by assigning tasks and monitoring your progress.
           </Text>
         </View>
       </View>
@@ -249,9 +256,7 @@ export const Mentor = ({ navigation }) => {
             />
             <Pressable
               onPress={createMentorHandler}
-              style={[
-                styles.pressableContainer,
-              ]}
+              style={[styles.pressableContainer]}
               android_ripple={{ color: "#6A7152" }}
             >
               <Text style={[styles.pressableContainerText, { fontSize: 15 }]}>
@@ -278,7 +283,8 @@ export const Mentor = ({ navigation }) => {
                       styles.mentorViewText,
                       {
                         textTransform: "lowercase",
-                        fontSize: Dimensions.get("screen").width > 600 ? 15 : 10,
+                        fontSize:
+                          Dimensions.get("screen").width > 600 ? 15 : 10,
                         color: "gray",
                       },
                     ]}
@@ -317,7 +323,9 @@ export const Mentor = ({ navigation }) => {
                 </View>
                 <View>
                   <Pressable
-                    onPress={()=>deleteMentorHandler(mentor.mentorId,v.userId)}
+                    onPress={() =>
+                      deleteMentorHandler(mentor.mentorId, v.userId)
+                    }
                     style={styles.mentorViewPressable}
                   >
                     <AntDesign name="close" size={15} color="white" />
@@ -348,7 +356,8 @@ export const Mentor = ({ navigation }) => {
                       styles.mentorViewText,
                       {
                         textTransform: "lowercase",
-                        fontSize:Dimensions.get("screen").width > 600 ? 15 : 10,
+                        fontSize:
+                          Dimensions.get("screen").width > 600 ? 15 : 10,
                         color: "gray",
                       },
                     ]}
@@ -370,7 +379,9 @@ export const Mentor = ({ navigation }) => {
                 </View>
                 <View>
                   <Pressable
-                    onPress={()=>deleteUserMentorHandler(v.mentorId,user._id)}
+                    onPress={() =>
+                      deleteUserMentorHandler(v.mentorId, user._id)
+                    }
                     style={styles.mentorViewPressable}
                   >
                     <AntDesign name="close" size={15} color="white" />
@@ -524,7 +535,7 @@ const styles = StyleSheet.create({
     fontFamily: "HammersmithOne-Bold",
     padding: 10,
     textAlign: "center",
-    fontSize:Dimensions.get("screen").width > 600 ? 20 : 15
+    fontSize: Dimensions.get("screen").width > 600 ? 20 : 15,
   },
   taskPressable: {
     marginTop: 20,
@@ -560,6 +571,6 @@ const styles = StyleSheet.create({
     fontFamily: "HammersmithOne-Bold",
     color: "white",
     textAlign: "center",
-    fontSize:Dimensions.get("screen").width > 600 ? 18 : 15
+    fontSize: Dimensions.get("screen").width > 600 ? 18 : 15,
   },
 });

@@ -61,11 +61,7 @@ export const updateNotification = (data, id) => {
     http
       .updateNotification(data, id)
       .then((response) => {
-        let notificaitons = getState().notification.notification;
-        let updatedNotifcation = notificaitons.filter(
-          (nots) => nots._id != response.data.notification._id
-        );
-        dispatch(fetchSuccess(updatedNotifcation));
+        dispatch(fetchSuccess(response));
       })
       .catch((e) => {
         dispatch(fetchError());
@@ -74,14 +70,21 @@ export const updateNotification = (data, id) => {
   };
 };
 
-export const deleteNotification = (id) => {
+export const deleteNotification = (userId, isTask, isMentoring) => {
   return (dispatch, getState) => {
     dispatch(fetchStart());
     http
-      .deleteNotification(id)
+      .deleteNotification(userId, isTask, isMentoring)
       .then((response) => {
         let notificaitons = getState().notification.notification;
-        let updatedNotifcation = notificaitons.filter((nots) => nots._id != id);
+        let updatedNotifcation = notificaitons.filter((v) => {
+          if (userId != v.userId) {
+            return;
+          }
+          if (isTask != v.isTask || isMentoring != v.isMentoring) {
+            return v;
+          }
+        });
         dispatch(fetchSuccess(updatedNotifcation));
       })
       .catch((e) => {

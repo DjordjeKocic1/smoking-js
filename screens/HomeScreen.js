@@ -5,9 +5,10 @@ import { selectUser, userHealth } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
-import { Achievements } from "./newScreens/Achievements";
+import { Achievements } from "./newScreens/Achievement/Achievements";
+import { Breath } from "./newScreens/Breath/Breath";
 import { Chats } from "./newScreens/Chats";
-import { CigAnimation } from "../gameUtils/CigAnimation";
+import { CigAnimation } from "../components/CigAnimation";
 import { Games } from "./newScreens/Games";
 import { Goals } from "./newScreens/Goals";
 import { Health } from "./newScreens/Health";
@@ -25,7 +26,6 @@ import { TwoSame } from "./newScreens/Games/TwoSame/TwoSame";
 import { TwoSameLevel2 } from "./newScreens/Games/TwoSame/TwoSameLevel2";
 import { TwoSameLevel3 } from "./newScreens/Games/TwoSame/TwoSameLevel3";
 import UserScreen from "./UserScreen";
-import { backButtonHandlerAlert } from "../helper/helpers";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { getNotification } from "../store/notificationReducer";
 
@@ -45,12 +45,6 @@ const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { user } = useSelector(selectUser);
   const [cigIsFin, setCigFin] = useState(false);
-  const heartBeat = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
-    return () => {};
-  }, []);
 
   useEffect(() => {
     if (cigIsFin) {
@@ -60,18 +54,6 @@ const HomeScreen = ({ navigation }) => {
       return () => clearTimeout(timer);
     }
   });
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.timing(heartBeat, {
-        toValue: 1.08,
-        duration: 700,
-        easing: Easing.bounce,
-        useNativeDriver: true,
-      })
-    ).start();
-    return () => {};
-  }, [heartBeat]);
 
   useEffect(() => {
     dispatch(getNotification(user._id));
@@ -137,6 +119,7 @@ const HomeScreen = ({ navigation }) => {
           <Stack.Screen name="UserScreen" component={UserScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="Tips" component={Tips} />
+          <Stack.Screen name="Breath" component={Breath} />
           <Stack.Screen name="Savings" component={Savings} />
           <Stack.Screen name="Health" component={Health} />
           <Stack.Screen name="Goals" component={Goals} />

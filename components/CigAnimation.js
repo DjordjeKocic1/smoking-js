@@ -1,4 +1,12 @@
-import { Animated, Easing, Image, StyleSheet, Text, View } from "react-native";
+import {
+  Animated,
+  Easing,
+  Image,
+  Share,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { selectUser, updateUserCosts } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
@@ -101,6 +109,19 @@ export const CigAnimation = ({ onCigFinishHandler }) => {
     return () => {};
   }, [user, onFinAnimation]);
 
+  const onShareHandler = async () => {
+    let url =
+      "https://play.google.com/store/apps/details?id=com.istop.quitsmoking&hl=en-US&ah=cYxTqLi55y9Ru3OKo3yiN2YnYWc";
+    try {
+      const result = await Share.share({
+        title: "The most detailed application to stop smoking",
+        message: url,
+      });
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   const spin = bellAnim.interpolate({
     inputRange: [0, 1, 2, 3, 4],
     outputRange: ["0deg", "30deg", "-30deg", "30deg", "0deg"],
@@ -166,6 +187,14 @@ export const CigAnimation = ({ onCigFinishHandler }) => {
           </Animated.View>
         </View>
       </View>
+      <View
+        onTouchStart={onShareHandler}
+        style={[styles.notificationContainer, { right: 65 }]}
+      >
+        <View style={styles.shareContainer}>
+          <FontAwesome name="share-alt" size={24} color="black" />
+        </View>
+      </View>
     </View>
   );
 };
@@ -173,7 +202,7 @@ export const CigAnimation = ({ onCigFinishHandler }) => {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 50,
-    paddingBottom: 35,
+    paddingBottom: 55,
     justifyContent: "flex-end",
     backgroundColor: "#e1d5c9",
   },

@@ -7,7 +7,6 @@ import {
   View,
 } from "react-native";
 
-import { Entypo } from "@expo/vector-icons";
 import { costOfCigarette } from "../helper/helpers";
 import { useEffect } from "react";
 import { useRef } from "react";
@@ -41,7 +40,7 @@ export const Info = ({ text, user }) => {
         <Text
           style={{
             fontFamily: "HammersmithOne-Bold",
-            fontSize: 15,
+            fontSize: 17,
           }}
         >
           {text}
@@ -52,7 +51,7 @@ export const Info = ({ text, user }) => {
           style={{
             textAlign: "center",
             fontFamily: "HammersmithOne-Bold",
-            fontSize: 12,
+            fontSize: 20,
             color: "green",
           }}
         >
@@ -69,8 +68,7 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "white",
     zIndex: 9999,
@@ -79,6 +77,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: "#C39351",
     borderRadius: 10,
+    height: 150,
   },
   innerContainer: {
     flexDirection: "row",

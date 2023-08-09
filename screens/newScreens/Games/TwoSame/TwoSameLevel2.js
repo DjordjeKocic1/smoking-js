@@ -9,6 +9,7 @@ import {
 import { selectUser, updateUser } from "../../../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 
+import { BackButton } from "../../../../components/BackButton";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { ImageBackground } from "react-native";
@@ -199,6 +200,7 @@ export const TwoSameLevel2 = ({ navigation }) => {
       </View>
       {images.length == 0 && (
         <View style={styles.nextLevel}>
+          <BackButton navigation={navigation} where={"UserScreen"}/>
           <ImageBackground
             source={require("../../../../assets/images/twoSameImgs/nextLvl2.png")}
             resizeMode="contain"

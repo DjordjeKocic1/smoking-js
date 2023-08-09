@@ -23,6 +23,7 @@ export const Task = ({ navigation }) => {
   }, [dispatch]);
 
   const onTaskStatusHandler = (status, id, userId) => {
+    console.log(status);
     Alert.alert(
       "Task",
       `Are you sure ${
@@ -122,8 +123,7 @@ export const Task = ({ navigation }) => {
                           t.status == "accept"
                             ? "done"
                             : t.status == "" && "accept",
-                          t._id,
-                          t.userId
+                          t._id
                         )
                       }
                       style={[

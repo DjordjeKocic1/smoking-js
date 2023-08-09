@@ -34,6 +34,10 @@ export const QuitNow = ({ navigation }) => {
                 isQuiting: true,
                 noSmokingDays: 0,
               },
+              healthInfo: {
+                ...user.healthInfo,
+                avgHealth: 0,
+              },
             };
 
             dispatch(updateUser(dataToSend, user._id));

@@ -136,7 +136,7 @@ export const Payment = () => {
           smoking
         </Text>
         <Text style={[styles.paymentText, { marginBottom: 20, fontSize: 12 }]}>
-          Try the new menotring system for only{" "}
+          Try the new mentoring system for only{" "}
           <Text style={{ color: "blue" }}>$5</Text> a month!
         </Text>
         <Pressable onPress={paypalHandler} style={styles.paymentPay}>

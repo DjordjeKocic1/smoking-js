@@ -42,7 +42,7 @@ const updateMentor = (data, id) => {
   return axios.put(url + `/update-mentor/${id}`, data);
 };
 
-const deleteMentor = (mentorId,userId) => {
+const deleteMentor = (mentorId, userId) => {
   return axios.delete(url + `/delete-mentor/${mentorId}/${userId}`);
 };
 
@@ -58,8 +58,11 @@ const updateNotification = (data, id) => {
   return axios.put(url + `/update-notification/${id}`, data);
 };
 
-const deleteNotification = (id) => {
-  return axios.delete(url + `/delete-notifcation/${id}`);
+const deleteNotification = (userId, isTask, isMentoring) => {
+  return axios.delete(
+    url +
+      `/delete-notifcation/${userId}?isTask=${isTask}&isMentoring=${isMentoring}`
+  );
 };
 
 const deleteAllNotification = (userId) => {

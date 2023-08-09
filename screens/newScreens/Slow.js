@@ -18,7 +18,7 @@ export const Slow = ({ navigation }) => {
   const onSaveHandler = () => {
     Alert.alert(
       "Are you sure?",
-      "if you accept this, all your progress(the time you have not smoked and a money you saved) when you didnt smoke will be removed.",
+      "if you accept this, all your progress(the time you have not smoked , achievements and a money you saved) when you didnt smoke will be removed.",
       [
         {
           text: "Cancel",
@@ -33,6 +33,10 @@ export const Slow = ({ navigation }) => {
                 dateOfQuiting: new Date().toDateString(),
                 isQuiting: false,
                 noSmokingDays: 0,
+              },
+              healthInfo: {
+                ...user.healthInfo,
+                avgHealth: 0,
               },
             };
 

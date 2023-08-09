@@ -14,7 +14,6 @@ import { useEffect, useRef } from "react";
 import { BackButton } from "../../components/BackButton";
 import { Entypo } from "@expo/vector-icons";
 import { Loading } from "../../components/Loading";
-import { backButtonHandlerAlert } from "../../helper/helpers";
 import { selectUser } from "../../store/userReducer";
 import { useSelector } from "react-redux";
 
@@ -22,6 +21,7 @@ export const Health = ({ navigation }) => {
   const { user } = useSelector(selectUser);
   const isLoading = useSelector((state) => state.user.isLoading);
   const borderAnim = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
     Animated.loop(
       Animated.timing(borderAnim, {
@@ -32,11 +32,6 @@ export const Health = ({ navigation }) => {
       })
     ).start();
   }, [borderAnim]);
-
-  useEffect(() => {
-    backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
-    return () => {};
-  }, []);
 
   if (isLoading) return <Loading />;
 
@@ -203,6 +198,45 @@ export const Health = ({ navigation }) => {
           );
         })}
       </View>
+      <View style={styles.smokingContainer}>
+        <Text style={styles.smokingContainerText}>
+          Effects of smoking cessation on the body
+        </Text>
+        <Text style={styles.smokingContainerText2}>
+          <Text style={styles.boldText}>20 MINUTES</Text> - blood pressure and
+          pulse stabilize, and peripheral circulation increases
+        </Text>
+        <Text style={styles.smokingContainerText2}>
+          <Text style={styles.boldText}>8 HOURS</Text> - the concentration of
+          nicotine and carbon monoxide is eliminated from the body
+        </Text>
+        <Text style={styles.smokingContainerText2}>
+          <Text style={styles.boldText}>24 HOURS</Text> - complete carbon
+          monoxide is eliminated from the body
+        </Text>
+        <Text style={styles.smokingContainerText2}>
+          <Text style={styles.boldText}>48 HOURS</Text> - is enough for complete
+          nicotine to disappear from the body and to significantly improve the
+          sense of smell and taste
+        </Text>
+        <Text style={styles.smokingContainerText2}>
+          <Text style={styles.boldText}>72 HOURS</Text> - it is easier to
+          breathe because the bronchi relax
+        </Text>
+        <Text style={styles.smokingContainerText2}>
+          <Text style={styles.boldText}>9 MONTHS</Text> - after stopping
+          smoking, the secretion in the lungs disappears, thus the cough and the
+          characteristic "whistling"
+        </Text>
+        <Text style={styles.smokingContainerText2}>
+          <Text style={styles.boldText}>1 YEAR</Text> - heart attack risk is
+          reduced by 50%!
+        </Text>
+        <Text style={styles.smokingContainerText2}>
+          <Text style={styles.boldText}>15 YEARS</Text> - the risk of stroke is
+          the same as that of a non-smoker.
+        </Text>
+      </View>
       <Pressable
         style={styles.helpBtn}
         onPress={() => navigation.replace("Tips")}
@@ -214,6 +248,27 @@ export const Health = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  smokingContainer: {
+    justifyContent: "center",
+  },
+  boldText: {
+    fontWeight: "bold",
+  },
+  smokingContainerText: {
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: Dimensions.get("screen").width > 600 ? 20 : 15,
+    textAlign: "center",
+    marginBottom: 10,
+    marginTop: 20,
+  },
+  smokingContainerText2: {
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: Dimensions.get("screen").width > 600 ? 15 : 12,
+    textAlign: "left",
+    fontWeight: "100",
+    paddingHorizontal: Dimensions.get("screen").width > 600 ? 30 : 15,
+    margin: 5,
+  },
   container: {
     flexGrow: 1,
     justifyContent: "space-evenly",
@@ -274,6 +329,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#222325",
     paddingVertical: 10,
     paddingHorizontal: 20,
+    marginTop: 20,
     marginBottom: 20,
     borderRadius: 5,
   },

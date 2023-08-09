@@ -6,7 +6,6 @@ import {
   Pressable,
   RefreshControl,
   ScrollView,
-  Share,
   StyleSheet,
   Text,
   View,
@@ -15,16 +14,13 @@ import { selectUser, userHealth } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
-import { Entypo } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
 import { MaterialIcons } from "@expo/vector-icons";
-import { backButtonHandlerAlert } from "../helper/helpers";
 import { getNotification } from "../store/notificationReducer";
 
 const UserScreen = ({ navigation }) => {
-  const { user } = useSelector(selectUser);
+  const { user, isLoading } = useSelector(selectUser);
   const dispatch = useDispatch();
-  const isLoading = useSelector((state) => state.user.isLoading);
   const heartBeat = useRef(new Animated.Value(1)).current;
   const [refreshing, setRefreshing] = useState(false);
 
@@ -36,12 +32,6 @@ const UserScreen = ({ navigation }) => {
       dispatch(getNotification(user._id));
     }, 2000);
   };
-
-
-  useEffect(() => {
-    backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
-    return () => {};
-  }, []);
 
   useEffect(() => {
     Animated.loop(
@@ -55,38 +45,67 @@ const UserScreen = ({ navigation }) => {
     return () => {};
   }, [heartBeat]);
 
-  const onShareHandler = async () => {
-    let url =
-      "https://play.google.com/store/apps/details?id=com.istop.quitsmoking&hl=en-US&ah=cYxTqLi55y9Ru3OKo3yiN2YnYWc";
-    try {
-      const result = await Share.share({
-        title: "The most detailed application to stop smoking",
-        message: url,
-      });
-      setActiveStyle(true);
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-
   if (isLoading) {
     return <Loading />;
   }
 
   return (
-      <ScrollView
-        contentContainerStyle={styles.mainContainer}
-        showsHorizontalScrollIndicator={false}
-        endFillColor="#000"
-        overScrollMode="never"
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <View style={styles.stats}>
-          <View
-            onTouchEnd={() => navigation.navigate("Savings")}
-            style={{ alignItems: "center" }}
+    <ScrollView
+      contentContainerStyle={styles.mainContainer}
+      showsHorizontalScrollIndicator={false}
+      endFillColor="#000"
+      overScrollMode="never"
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <View style={styles.stats}>
+        <View
+          onTouchEnd={() => navigation.navigate("Savings")}
+          style={{ alignItems: "center" }}
+        >
+          <Image
+            style={{
+              width: Dimensions.get("screen").width > 600 ? 80 : 30,
+              height: Dimensions.get("screen").width > 600 ? 80 : 30,
+            }}
+            resizeMode="contain"
+            source={require("../assets/images/games/money.png")}
+          />
+          <Text
+            style={[
+              styles.statsheader,
+              {
+                color:
+                  !!user &&
+                  !!user.consumptionInfo &&
+                  !!user.consumptionInfo.cigarettesAvoided
+                    ? "green"
+                    : "#222325",
+              },
+            ]}
+          >
+            +
+            {!!user.savedInfo && !!user.savedInfo.cigarettesAvoidedCost
+              ? user.savedInfo.cigarettesAvoidedCost +
+                !!user.consumptionInfo.cigarettesAvoidedCost
+              : user.consumptionInfo.cigarettesAvoidedCost}
+            $
+          </Text>
+        </View>
+        <View
+          style={{
+            alignItems: "center",
+            position: "relative",
+            opacity:
+              !!user.smokingInfo && !user.smokingInfo.isQuiting ? 0.3 : 1,
+          }}
+        >
+          <Pressable
+            disabled={!!user.smokingInfo && !user.smokingInfo.isQuiting}
+            onPress={() => {
+              navigation.navigate("Health");
+            }}
           >
             <Image
               style={{
@@ -94,311 +113,248 @@ const UserScreen = ({ navigation }) => {
                 height: Dimensions.get("screen").width > 600 ? 80 : 30,
               }}
               resizeMode="contain"
-              source={require("../assets/images/games/money.png")}
+              source={require("../assets/images/games/heart.png")}
             />
-            {!!user.smokingInfo && user.smokingInfo.isQuiting ? (
-              <Text
-                style={[
-                  styles.statsheader,
-                  {
-                    color: "green",
-                  },
-                ]}
-              >
-                +
-                {!!user &&
-                  !!user.consumptionInfo &&
-                  (
-                    user.consumptionInfo.cigarettesDailyCost *
-                    user.smokingInfo.noSmokingDays
-                  ).toFixed(1)}
-                $
-              </Text>
-            ) : (
-              <Text
-                style={[
-                  styles.statsheader,
-                  {
-                    color:
-                      !!user &&
-                      !!user.consumptionInfo &&
-                      !!user.consumptionInfo.cigarettesAvoided
-                        ? "green"
-                        : "#222325",
-                  },
-                ]}
-              >
-                +
-                {!!user.savedInfo && !!user.savedInfo.cigarettesAvoidedCost
-                  ? user.savedInfo.cigarettesAvoidedCost +
-                    !!user.consumptionInfo.cigarettesAvoidedCost
-                  : user.consumptionInfo.cigarettesAvoidedCost}
-                $
-              </Text>
-            )}
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              position: "relative",
-              opacity:
-                !!user.smokingInfo && !user.smokingInfo.isQuiting ? 0.3 : 1,
-            }}
+          </Pressable>
+          <Text
+            style={[
+              styles.statsheader,
+              {
+                color: "red",
+              },
+            ]}
           >
-            <Pressable
-              disabled={!!user.smokingInfo && !user.smokingInfo.isQuiting}
-              onPress={() => {
-                navigation.navigate("Health");
-              }}
-            >
-              <Image
-                style={{
-                  width: Dimensions.get("screen").width > 600 ? 80 : 30,
-                  height: Dimensions.get("screen").width > 600 ? 80 : 30,
-                }}
-                resizeMode="contain"
-                source={require("../assets/images/games/heart.png")}
-              />
-            </Pressable>
-            <Text
-              style={[
-                styles.statsheader,
-                {
-                  color: "red",
-                },
-              ]}
-            >
-              {!!user.healthInfo && !!user.healthInfo.avgHealth
-                ? user.healthInfo.avgHealth
-                : 0}
-              %
+            {!!user.healthInfo && !!user.healthInfo.avgHealth
+              ? user.healthInfo.avgHealth
+              : 0}
+            %
+          </Text>
+        </View>
+        {!!user.smokingInfo && !user.smokingInfo.isQuiting ? (
+          <View
+            onTouchEnd={() => navigation.navigate("Savings")}
+            style={{ alignItems: "center" }}
+          >
+            <MaterialIcons
+              name="smoke-free"
+              size={Dimensions.get("screen").width > 600 ? 80 : 27}
+              color="#222325"
+            />
+            <Text style={styles.statsheader}>
+              {!!user.savedInfo && !!user.savedInfo.cigarettesAvoided
+                ? user.savedInfo.cigarettesAvoided + !!user.consumptionInfo &&
+                  !!user.consumptionInfo.cigarettesAvoided
+                : user.consumptionInfo.cigarettesAvoided}
             </Text>
           </View>
-          {!!user.smokingInfo && !user.smokingInfo.isQuiting ? (
-            <View
-              onTouchEnd={() => navigation.navigate("Savings")}
-              style={{ alignItems: "center" }}
-            >
-              <MaterialIcons
-                name="smoke-free"
-                size={Dimensions.get("screen").width > 600 ? 80 : 27}
-                color="#222325"
-              />
-              <Text style={styles.statsheader}>
-                {!!user.savedInfo && !!user.savedInfo.cigarettesAvoided
-                  ? user.savedInfo.cigarettesAvoided + !!user.consumptionInfo &&
-                    !!user.consumptionInfo.cigarettesAvoided
-                  : user.consumptionInfo.cigarettesAvoided}
+        ) : (
+          <View
+            onTouchEnd={() => navigation.navigate("Savings")}
+            style={{ alignItems: "center" }}
+          >
+            <MaterialIcons
+              name="smoke-free"
+              size={Dimensions.get("screen").width > 600 ? 80 : 27}
+              color="#222325"
+            />
+            <Text style={styles.statsheader}>
+              <Text style={{ fontSize: 17 }}>
+                {!!user.smokingInfo && !!user.smokingInfo.noSmokingDays
+                  ? user.smokingInfo.noSmokingDays
+                  : 0}
               </Text>
-            </View>
-          ) : (
+              /<Text style={{ fontSize: 9 }}>day</Text>
+            </Text>
+          </View>
+        )}
+      </View>
+      <View style={styles.container}>
+        <View style={styles.innerContainer}>
+          <Pressable
+            onPress={() => {
+              navigation.navigate("Savings");
+            }}
+            style={styles.innerContainerBox}
+            android_ripple={{ color: "#c39351" }}
+          >
+            <Text style={styles.innerText}>
+              {!!user && !!user.smokingInfo && user.smokingInfo.isQuiting
+                ? "Savings"
+                : "Costs"}
+            </Text>
+            <Image
+              source={require("../assets/images/economy.png")}
+              style={styles.innerContainerImg}
+            />
+          </Pressable>
+        </View>
+        <View style={styles.innerContainer}>
+          <Pressable
+            onPress={() => navigation.navigate("TwoSame")}
+            style={styles.innerContainerBox}
+          >
+            <Text style={styles.innerText}>Stop It</Text>
+            <Image
+              source={require("../assets/images/game.png")}
+              style={styles.innerContainerImg}
+            />
+          </Pressable>
+        </View>
+        <View style={[styles.innerContainer]}>
+          {!!user.smokingInfo && !user.smokingInfo.isQuiting && (
             <View
-              onTouchEnd={() => navigation.navigate("Savings")}
-              style={{ alignItems: "center" }}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
-              <MaterialIcons
-                name="smoke-free"
-                size={Dimensions.get("screen").width > 600 ? 80 : 27}
-                color="#222325"
-              />
-              <Text style={styles.statsheader}>
-                <Text style={{ fontSize: 17 }}>
-                  {!!user.smokingInfo && !!user.smokingInfo.noSmokingDays
-                    ? user.smokingInfo.noSmokingDays
-                    : 0}
-                </Text>
-                /<Text style={{ fontSize: 9 }}>day</Text>
+              <Text
+                style={{
+                  fontSize: 13,
+                  fontFamily: "HammersmithOne-Bold",
+                  textAlign: "center",
+                  transform: [
+                    {
+                      rotate: "45deg",
+                    },
+                  ],
+                }}
+              >
+                Not available in slow quit mode!
               </Text>
             </View>
           )}
+          <Pressable
+            disabled={!user.smokingInfo.isQuiting}
+            onPress={() => navigation.navigate("Health")}
+            android_ripple={{ color: "#c39351" }}
+            style={[
+              styles.innerContainerBox,
+              {
+                opacity:
+                  !!user.smokingInfo && user.smokingInfo.isQuiting ? 1 : 0.3,
+              },
+            ]}
+          >
+            <Text style={styles.innerText}>Health Tracker</Text>
+            <Image
+              source={require("../assets/images/traning.png")}
+              style={styles.innerContainerImg}
+            />
+          </Pressable>
         </View>
-        <View style={styles.container}>
-          <View style={styles.innerContainer}>
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Savings");
-              }}
-              style={styles.innerContainerBox}
-              android_ripple={{ color: "#c39351" }}
-            >
-              <Text style={styles.innerText}>
-                {!!user && !!user.smokingInfo && user.smokingInfo.isQuiting
-                  ? "Savings"
-                  : "Costs"}
-              </Text>
-              <Image
-                source={require("../assets/images/economy.png")}
-                style={styles.innerContainerImg}
-              />
-            </Pressable>
-          </View>
-          <View style={styles.innerContainer}>
-            <Pressable
-              onPress={() => navigation.navigate("TwoSame")}
-              style={styles.innerContainerBox}
-            >
-              <Text style={styles.innerText}>Stop It</Text>
-              <Image
-                source={require("../assets/images/game.png")}
-                style={styles.innerContainerImg}
-              />
-            </Pressable>
-          </View>
-          <View style={[styles.innerContainer]}>
-            {!!user.smokingInfo && !user.smokingInfo.isQuiting && (
-              <View
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  bottom: 0,
-                  right: 0,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 13,
-                    fontFamily: "HammersmithOne-Bold",
-                    textAlign: "center",
-                    transform: [
-                      {
-                        rotate: "45deg",
-                      },
-                    ],
-                  }}
-                >
-                  Not available in slow quit mode!
-                </Text>
-              </View>
-            )}
-            <Pressable
-              disabled={!user.smokingInfo.isQuiting}
-              onPress={() => navigation.navigate("Health")}
-              android_ripple={{ color: "#c39351" }}
-              style={[
-                styles.innerContainerBox,
-                {
-                  opacity:
-                    !!user.smokingInfo && user.smokingInfo.isQuiting ? 1 : 0.3,
-                },
-              ]}
-            >
-              <Text style={styles.innerText}>Health Tracker</Text>
-              <Image
-                source={require("../assets/images/traning.png")}
-                style={styles.innerContainerImg}
-              />
-            </Pressable>
-          </View>
-          <View style={styles.innerContainer}>
-            <Pressable
-              onPress={() => navigation.navigate("Task")}
-              android_ripple={{ color: "#c39351" }}
-              style={[styles.innerContainerBox, { position: "relative" }]}
-            >
-              <Text style={styles.innerText}>Tasks</Text>
-              <Image
-                source={require("../assets/images/tasksImg.png")}
-                style={styles.innerContainerImg}
-              />
-            </Pressable>
-          </View>
-          <View style={styles.innerContainer}>
-            <Pressable
-              onPress={() => navigation.navigate("Mentor")}
-              android_ripple={{ color: "#c39351" }}
-              style={styles.innerContainerBox}
-            >
-              <Text style={styles.innerText}>Mentor</Text>
-              <Image
-                source={require("../assets/images/community.png")}
-                style={styles.innerContainerImg}
-              />
-            </Pressable>
-          </View>
-          <View style={styles.innerContainer}>
-            {!!user.smokingInfo && user.smokingInfo.isQuiting ? (
-              <Pressable
-                onPress={() => navigation.navigate("Slow")}
-                android_ripple={{ color: "#c39351" }}
-                style={styles.innerContainerBox}
-              >
-                <Text style={styles.innerText}>Take it Slow</Text>
-                <Image
-                  source={require("../assets/images/clock.png")}
-                  style={styles.innerContainerImg}
-                />
-              </Pressable>
-            ) : (
-              <Pressable
-                onPress={() => navigation.navigate("QuitNow")}
-                android_ripple={{ color: "#c39351" }}
-                style={styles.innerContainerBox}
-              >
-                <Text style={styles.innerText}>Quit Now</Text>
-                <Image
-                  source={require("../assets/images/cigQuit.png")}
-                  style={styles.innerContainerImg}
-                />
-              </Pressable>
-            )}
-          </View>
-          <View style={styles.innerContainer}>
-            <Pressable
-              onPress={() => navigation.navigate("Achievements")}
-              android_ripple={{ color: "#c39351" }}
-              style={styles.innerContainerBox}
-            >
-              <Text style={styles.innerText}>Achievements</Text>
-              <Image
-                source={require("../assets/images/ach.png")}
-                style={styles.innerContainerImg}
-              />
-            </Pressable>
-          </View>
-          <View style={styles.innerContainer}>
-            <Pressable
-              onPress={() => navigation.navigate("Profile")}
-              android_ripple={{ color: "#c39351" }}
-              style={styles.innerContainerBox}
-            >
-              <Text style={styles.innerText}>Profile</Text>
-              <Image
-                source={require("../assets/images/profile.png")}
-                style={styles.innerContainerImg}
-              />
-            </Pressable>
-          </View>
-          <View style={styles.innerContainer}>
-            <Pressable
-              onPress={() => navigation.navigate("Tips")}
-              android_ripple={{ color: "#c39351" }}
-              style={styles.innerContainerBox}
-            >
-              <Text style={styles.innerText}>Tips</Text>
-              <Image
-                source={require("../assets/images/advice.png")}
-                style={styles.innerContainerImg}
-              />
-            </Pressable>
-          </View>
-          <View style={styles.innerContainer}>
-            <Pressable
-              onPress={onShareHandler}
-              android_ripple={{ color: "#c39351" }}
-              style={styles.innerContainerBox}
-            >
-              <Text style={styles.innerText}>Share</Text>
-              <Image
-                source={require("../assets/images/shareImg.png")}
-                style={styles.innerContainerImg}
-              />
-            </Pressable>
-          </View>
+        <View style={styles.innerContainer}>
+          <Pressable
+            onPress={() => navigation.navigate("Task")}
+            android_ripple={{ color: "#c39351" }}
+            style={[styles.innerContainerBox, { position: "relative" }]}
+          >
+            <Text style={styles.innerText}>Tasks</Text>
+            <Image
+              source={require("../assets/images/tasksImg.png")}
+              style={styles.innerContainerImg}
+            />
+          </Pressable>
         </View>
-      </ScrollView>
+        <View style={styles.innerContainer}>
+          <Pressable
+            onPress={() => navigation.navigate("Mentor")}
+            android_ripple={{ color: "#c39351" }}
+            style={styles.innerContainerBox}
+          >
+            <Text style={styles.innerText}>Mentor</Text>
+            <Image
+              source={require("../assets/images/community.png")}
+              style={styles.innerContainerImg}
+            />
+          </Pressable>
+        </View>
+        <View style={styles.innerContainer}>
+          {!!user.smokingInfo && user.smokingInfo.isQuiting ? (
+            <Pressable
+              onPress={() => navigation.navigate("Slow")}
+              android_ripple={{ color: "#c39351" }}
+              style={styles.innerContainerBox}
+            >
+              <Text style={styles.innerText}>Take it Slow</Text>
+              <Image
+                source={require("../assets/images/clock.png")}
+                style={styles.innerContainerImg}
+              />
+            </Pressable>
+          ) : (
+            <Pressable
+              onPress={() => navigation.navigate("QuitNow")}
+              android_ripple={{ color: "#c39351" }}
+              style={styles.innerContainerBox}
+            >
+              <Text style={styles.innerText}>Quit Now</Text>
+              <Image
+                source={require("../assets/images/cigQuit.png")}
+                style={styles.innerContainerImg}
+              />
+            </Pressable>
+          )}
+        </View>
+        <View style={styles.innerContainer}>
+          <Pressable
+            onPress={() => navigation.navigate("Breath")}
+            android_ripple={{ color: "#c39351" }}
+            style={styles.innerContainerBox}
+          >
+            <Text style={styles.innerText}>Breath Exercies</Text>
+            <Image
+              source={require("../assets/images/lungsCartoon.png")}
+              style={styles.innerContainerImg}
+            />
+          </Pressable>
+        </View>
+        <View style={styles.innerContainer}>
+          <Pressable
+            onPress={() => navigation.navigate("Achievements")}
+            android_ripple={{ color: "#c39351" }}
+            style={styles.innerContainerBox}
+          >
+            <Text style={styles.innerText}>Achievements</Text>
+            <Image
+              source={require("../assets/images/ach.png")}
+              style={styles.innerContainerImg}
+            />
+          </Pressable>
+        </View>
+        <View style={styles.innerContainer}>
+          <Pressable
+            onPress={() => navigation.navigate("Profile")}
+            android_ripple={{ color: "#c39351" }}
+            style={styles.innerContainerBox}
+          >
+            <Text style={styles.innerText}>Profile</Text>
+            <Image
+              source={require("../assets/images/profile.png")}
+              style={styles.innerContainerImg}
+            />
+          </Pressable>
+        </View>
+        <View style={styles.innerContainer}>
+          <Pressable
+            onPress={() => navigation.navigate("Tips")}
+            android_ripple={{ color: "#c39351" }}
+            style={styles.innerContainerBox}
+          >
+            <Text style={styles.innerText}>Tips</Text>
+            <Image
+              source={require("../assets/images/advice.png")}
+              style={styles.innerContainerImg}
+            />
+          </Pressable>
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({

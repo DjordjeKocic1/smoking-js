@@ -8,14 +8,8 @@ import {
 } from "react-native";
 
 import { Shadow } from "react-native-shadow-2";
-import { backButtonHandler } from "../../helper/helpers";
-import { useEffect } from "react";
 
 export const Games = ({ navigation }) => {
-  useEffect(() => {
-    backButtonHandler(navigation, "HomeScreen");
-  }, []);
-
   return (
     <View
       style={{

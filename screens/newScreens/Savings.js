@@ -9,11 +9,7 @@ import {
   Text,
   View,
 } from "react-native";
-import {
-  selectUser,
-  updateUser,
-  updateUserCosts,
-} from "../../store/userReducer";
+import { selectUser, updateUserCosts } from "../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
@@ -21,7 +17,6 @@ import { BackButton } from "../../components/BackButton";
 import { Ionicons } from "@expo/vector-icons";
 import { Loading } from "../../components/Loading";
 import { SubmitButton } from "../../components/SubmitButton";
-import { backButtonHandlerAlert } from "../../helper/helpers";
 
 export const Savings = ({ navigation }) => {
   const { user } = useSelector(selectUser);
@@ -61,11 +56,6 @@ export const Savings = ({ navigation }) => {
   const savingBox6Anim = useRef(
     new Animated.Value(Dimensions.get("screen").width > 600 ? 200 : 120)
   ).current;
-
-  useEffect(() => {
-    backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
-    return () => {};
-  }, []);
 
   useEffect(() => {
     !!user && !!user.savedInfo && !!user.savedInfo.cigarettesDay
@@ -229,6 +219,16 @@ export const Savings = ({ navigation }) => {
                   {!!user.savedInfo
                     ? user.savedInfo.cigarettesInPack
                     : user.consumptionInfo.cigarettesInPack}
+                </Text>
+              </View>
+              <View style={styles.extraContainer}>
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
+                  Burnt cigarettes
+                </Text>
+                <Text style={[styles.savingTextHeader, { color: "black" }]}>
+                  {!!user.savedInfo
+                    ? user.savedInfo.cigarettesAvoided
+                    : user.consumptionInfo.cigarettesAvoided}
                 </Text>
               </View>
             </View>

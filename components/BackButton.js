@@ -24,7 +24,7 @@ export const BackButton = ({ navigation, where }) => {
   }
 
   return (
-    <View style={{ position: "absolute", left: 10, top: 5, zIndex: 999 }}>
+    <View style={{ position: "absolute", left: 10, top: 5, zIndex: 9 }}>
       <Pressable
         onPress={() => navigation.navigate(where)}
         style={styles.submitButton}

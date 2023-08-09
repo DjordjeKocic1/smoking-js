@@ -9,13 +9,12 @@ import {
 } from "react-native";
 import { selectUser, updateUserCosts } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
 
 import { Ionicons } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
-import { backButtonHandlerAlert } from "../helper/helpers";
 import { useLayoutEffect } from "react";
+import { useState } from "react";
 
 const CigaretteCostScreen = ({ navigation }) => {
   const { user } = useSelector(selectUser);
@@ -24,7 +23,7 @@ const CigaretteCostScreen = ({ navigation }) => {
   const [counter, setCounter] = useState(0);
   const [amount, setAmount] = useState(0);
   const [cigarettesInPack, setCigarettesInPack] = useState(0);
-  const[imgOpacitiy,setImgOpacity] = useState(false)
+  const [imgOpacitiy, setImgOpacity] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -32,11 +31,6 @@ const CigaretteCostScreen = ({ navigation }) => {
       headerShadowVisible: false,
     });
   }, [navigation]);
-
-  useEffect(() => {
-    backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
-    return () => {};
-  }, []);
 
   const increaseHander = (state, innerState) => {
     state(innerState + 1);
@@ -46,8 +40,8 @@ const CigaretteCostScreen = ({ navigation }) => {
   };
 
   const decreaseHander = (state, innerState) => {
-    if(innerState == 0){
-      return
+    if (innerState == 0) {
+      return;
     }
     state(innerState - 1);
   };
@@ -91,7 +85,11 @@ const CigaretteCostScreen = ({ navigation }) => {
   }
   return (
     <View style={styles.container}>
-      <View onTouchStart={() => setImgOpacity(true)} onTouchEnd={() => setImgOpacity(false)} style={styles.headerContainer}>
+      <View
+        onTouchStart={() => setImgOpacity(true)}
+        onTouchEnd={() => setImgOpacity(false)}
+        style={styles.headerContainer}
+      >
         <Text
           style={[styles.headerText, { fontFamily: "HammersmithOne-Bold" }]}
         >
@@ -103,7 +101,7 @@ const CigaretteCostScreen = ({ navigation }) => {
             height: 200,
             resizeMode: "stretch",
             aspectRatio: 2,
-            opacity:imgOpacitiy ? 0.4 : 1
+            opacity: imgOpacitiy ? 0.4 : 1,
           }}
           source={require("../assets/images/spendings.png")}
         />

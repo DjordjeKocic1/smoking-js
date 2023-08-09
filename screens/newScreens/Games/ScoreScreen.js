@@ -8,7 +8,6 @@ import { Loading } from "../../../components/Loading";
 import { RefreshControl } from "react-native";
 import { ScrollView } from "react-native";
 import { StyleSheet } from "react-native";
-import { backButtonHandler } from "../../../helper/helpers";
 
 export const ScoreScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -27,18 +26,16 @@ export const ScoreScreen = ({ navigation }) => {
     dispatch(getUsers());
   }, []);
 
-  useEffect(() => {
-    backButtonHandler(navigation, "UserScreen");
-  }, []);
-
   if (isLoading) {
     return <Loading />;
   }
   let userArrayCopy = !!users && [...users];
-  
+
   let userLatestScoreArr =
     !!userArrayCopy &&
-    userArrayCopy.sort((a, b) => b.latestScore - a.latestScore);
+    userArrayCopy
+      .sort((a, b) => b.latestScore - a.latestScore)
+      .filter((v) => v.latestScore != 0);
 
   return (
     <ScrollView
@@ -108,7 +105,7 @@ export const ScoreScreen = ({ navigation }) => {
               >
                 <Text style={styles.latestScoreText}>{v.email}</Text>
                 <Text style={styles.latestScoreText}>
-                  {v.latestScore ? v.latestScore : 0}
+                  {!!v.latestScore && v.latestScore}
                 </Text>
               </View>
             );

@@ -6,13 +6,11 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { backButtonHandler, backButtonHandlerAlert } from "../helper/helpers";
 import { selectUser, updateUser } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { BackButton } from "../components/BackButton";
-import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
 
 export const ProfileScreen = ({ navigation }) => {
@@ -26,10 +24,6 @@ export const ProfileScreen = ({ navigation }) => {
     city: "",
     image: "",
   });
-
-  useEffect(() => {
-    backButtonHandler(navigation, "UserScreen");
-  }, []);
 
   const onNameChangeHandler = (enteredValue) => {
     setUserProfile((prev) => {

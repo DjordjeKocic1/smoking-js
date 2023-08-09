@@ -2,6 +2,7 @@ import { Animated, Image, StyleSheet, Text, View } from "react-native";
 import {
   deleteNotification,
   selectNotification,
+  updateNotification,
 } from "../../store/notificationReducer";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -16,27 +17,11 @@ import { useRef } from "react";
 export const Notification = ({ navigation }) => {
   const { notification } = useSelector(selectNotification);
   const isLoading = useSelector((state) => state.notification.isLoading);
-  const pulsAnim = useRef(new Animated.Value(3)).current;
   const dispatch = useDispatch();
 
   if (isLoading) {
     return <Loading />;
   }
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.timing(pulsAnim, {
-        toValue: 0,
-        duration: 1000,
-        useNativeDriver: false,
-        easing: Easing.ease,
-      }),
-      {
-        iterations: 2,
-      }
-    ).start();
-    return () => {};
-  }, [pulsAnim]);
 
   return (
     <View style={styles.mainContainer}>
@@ -53,39 +38,29 @@ export const Notification = ({ navigation }) => {
       {!!notification && notification.length > 0 ? (
         notification.map((notif) => {
           return (
-            <Animated.View
+            <View
               onTouchStart={() => {
-                dispatch(deleteNotification(notif._id));
+                dispatch(
+                  deleteNotification(
+                    notif.userId,
+                    notif.isTask,
+                    notif.isMentoring
+                  )
+                );
                 notif.isMentoring
                   ? navigation.replace("Mentor")
                   : navigation.replace("Task");
               }}
               key={notif._id}
-              style={[
-                styles.pressebleNotificaiton,
-                { borderWidth: pulsAnim, borderColor: "#c39351" },
-              ]}
+              style={[styles.pressebleNotificaiton, { borderColor: "#c39351" }]}
             >
               <View style={styles.pressebleNotificaitonInner}>
-                {notif.isMentoring ? (
-                  <Image
-                    source={require("../../assets/images/notImg.png")}
-                    style={styles.pressebleNotificaitonInnerImage}
-                  />
-                ) : (
-                  <FontAwesome
-                    name="cog"
-                    size={24}
-                    color="#c39351"
-                    style={{ marginRight: 20 }}
-                  />
-                )}
                 <Text style={styles.pressebleNotificaitonInnerText}>
                   {notif.isMentoring ? "New mentor request" : "New Task!"}
                 </Text>
               </View>
               <Feather name="info" size={24} color="black" />
-            </Animated.View>
+            </View>
           );
         })
       ) : (
