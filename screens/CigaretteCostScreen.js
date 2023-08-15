@@ -3,6 +3,7 @@ import {
   Dimensions,
   Image,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -10,10 +11,10 @@ import {
 import { selectUser, updateUserCosts } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 
+import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
-import { useLayoutEffect } from "react";
 import { useState } from "react";
 
 const CigaretteCostScreen = ({ navigation }) => {
@@ -24,13 +25,6 @@ const CigaretteCostScreen = ({ navigation }) => {
   const [amount, setAmount] = useState(0);
   const [cigarettesInPack, setCigarettesInPack] = useState(0);
   const [imgOpacitiy, setImgOpacity] = useState(false);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: "",
-      headerShadowVisible: false,
-    });
-  }, [navigation]);
 
   const increaseHander = (state, innerState) => {
     state(innerState + 1);
@@ -49,13 +43,13 @@ const CigaretteCostScreen = ({ navigation }) => {
   const submittionHandler = () => {
     const dataToSend = {
       consumptionInfo: {
-        cigarettesDay: counter,
-        packCigarettesPrice: amount == "" ? 20 : amount,
-        cigarettesInPack: cigarettesInPack == "" ? 20 : cigarettesInPack,
+        cigarettesDay: counter == 0 ? 10 : counter,
+        packCigarettesPrice: amount == 0 ? 10 : amount,
+        cigarettesInPack: cigarettesInPack == 0 ? 10 : cigarettesInPack,
         cigarettesAvoided: 0,
       },
     };
-    if (amount == "" || cigarettesInPack == "") {
+    if (amount == 0 || cigarettesInPack == 0) {
       return Alert.alert(
         "Are you sure",
         "We need infomation about how much do you smoke and the costs",
@@ -68,23 +62,52 @@ const CigaretteCostScreen = ({ navigation }) => {
           {
             text: "YES",
             onPress: () => {
-              dispatch(updateUserCosts(dataToSend, user._id));
-              navigation.replace("SmokingScreen");
+              dispatch(
+                updateUserCosts(
+                  dataToSend,
+                  user._id,
+                  navigation,
+                  "SmokingScreen"
+                )
+              );
             },
           },
         ]
       );
     }
 
-    dispatch(updateUserCosts(dataToSend, user._id));
-    navigation.replace("SmokingScreen");
+    dispatch(
+      updateUserCosts(dataToSend, user._id, navigation, "SmokingScreen")
+    );
+  };
+
+  const onMentorChangeHandler = () => {
+    const dataToSend = {
+      type: "mentor",
+      userVerified: true,
+      consumptionInfo: {
+        cigarettesDay: counter == 0 ? 10 : counter,
+        packCigarettesPrice: amount == 0 ? 10 : amount,
+        cigarettesInPack: cigarettesInPack == 0 ? 10 : cigarettesInPack,
+        cigarettesAvoided: 0,
+      },
+    };
+    dispatch(
+      updateUserCosts(dataToSend, user._id, navigation, "LoadingScreen")
+    );
   };
 
   if (isLoading) {
     return <Loading />;
   }
+
   return (
-    <View style={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsHorizontalScrollIndicator={false}
+      endFillColor="#000"
+      overScrollMode="never"
+    >
       <View
         onTouchStart={() => setImgOpacity(true)}
         onTouchEnd={() => setImgOpacity(false)}
@@ -203,26 +226,41 @@ const CigaretteCostScreen = ({ navigation }) => {
             </View>
           </View>
         </View>
-
         <View style={{ marginVertical: 30 }}>
           <SubmitButton onPress={submittionHandler}>{"Done"}</SubmitButton>
         </View>
+        <View style={styles.mentorContainer}>
+          <Pressable
+            onPress={onMentorChangeHandler}
+            android_ripple={{ color: "#c39351" }}
+            style={styles.pressebleContentMentor}
+          >
+            <Text style={styles.pressebleContentMentorText}>
+              I'm joining as a mentor
+            </Text>
+            <FontAwesome
+              name="hand-pointer-o"
+              size={20}
+              color="white"
+              style={{ marginLeft: 5 }}
+            />
+          </Pressable>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: "#e1d5c9",
     paddingHorizontal: 20,
+    justifyContent: "center",
   },
   headerContainer: {
     backgroundColor: "#e1d5c9",
-    flex: 1,
     flexDirection: "column",
-    justifyContent: "space-evenly",
     alignItems: "center",
   },
   headerText: {
@@ -231,7 +269,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   mainContainer: {
-    flex: 1,
     paddingTop: 20,
     backgroundColor: "#e1d5c9",
   },
@@ -270,6 +307,24 @@ const styles = StyleSheet.create({
   input: {
     color: "#222325",
     fontFamily: "HammersmithOne-Bold",
+  },
+  mentorContainer: {
+    alignItems: "center",
+  },
+  pressebleContentMentor: {
+    padding: 10,
+    borderRadius: 5,
+    width: "70%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#c39351",
+  },
+  pressebleContentMentorText: {
+    fontFamily: "HammersmithOne-Bold",
+    color: "white",
+    textAlign: "center",
+    fontSize: 17,
   },
 });
 

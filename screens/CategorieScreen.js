@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { SubmitButton } from "../components/SubmitButton";
-import { backButtonHandler } from "../helper/helpers";
 import { renderIcons } from "../helper/iconsHelper";
 
 const { UIManager } = NativeModules;
@@ -31,10 +30,6 @@ const CategorieScreen = ({ navigation }) => {
     dispatch(getCategories());
     return () => {};
   }, [dispatch]);
-
-  useEffect(() => {
-    backButtonHandler(navigation, "Smoke Calculator");
-  }, []);
 
   useEffect(() => {
     !!categories &&

@@ -51,7 +51,7 @@ const LoadingScreen = ({ navigation }) => {
       if (!!finished) {
         !!user && !!user.userVerified
           ? navigation.replace("HomeScreen")
-          : navigation.replace("Smoke Calculator");
+          : navigation.replace("SmokeCalculator");
       }
     });
     return () => {};

@@ -1,20 +1,24 @@
 import {
+  Alert,
   Image,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
-import { selectUser, updateUser } from "../store/userReducer";
+import { deleteUser, selectUser, updateUser } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BackButton } from "../components/BackButton";
+import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
 
 export const ProfileScreen = ({ navigation }) => {
-  const { user } = useSelector(selectUser);
+  const { user, isLoading } = useSelector(selectUser);
   const dispatch = useDispatch();
 
   const [userProfile, setUserProfile] = useState({
@@ -33,6 +37,7 @@ export const ProfileScreen = ({ navigation }) => {
       };
     });
   };
+
   const onEmailChangeHandler = (enteredValue) => {
     setUserProfile((prev) => {
       return {
@@ -41,6 +46,7 @@ export const ProfileScreen = ({ navigation }) => {
       };
     });
   };
+
   const onAddressChangeHandler = (enteredValue) => {
     setUserProfile((prev) => {
       return {
@@ -49,6 +55,7 @@ export const ProfileScreen = ({ navigation }) => {
       };
     });
   };
+
   const onCityChangeHandler = (enteredValue) => {
     setUserProfile((prev) => {
       return {
@@ -57,6 +64,7 @@ export const ProfileScreen = ({ navigation }) => {
       };
     });
   };
+
   const submittionHandler = () => {
     const dataTosend = {
       email: userProfile.email,
@@ -67,6 +75,24 @@ export const ProfileScreen = ({ navigation }) => {
       },
     };
     dispatch(updateUser(dataTosend, user._id));
+  };
+
+  const onRemoveAccount = () => {
+    Alert.alert("Are you sure?", "Your are about to remove your account", [
+      {
+        text: "No",
+        onPress: () => null,
+        style: "cancel",
+      },
+      {
+        text: "Yes",
+        onPress: () => {
+          AsyncStorage.removeItem("@user").then((r) => {
+            dispatch(deleteUser(user._id, navigation));
+          });
+        },
+      },
+    ]);
   };
 
   useEffect(() => {
@@ -89,6 +115,10 @@ export const ProfileScreen = ({ navigation }) => {
     return () => {};
   }, [user]);
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1, position: "relative" }}
@@ -106,8 +136,13 @@ export const ProfileScreen = ({ navigation }) => {
                 source={require("../assets/images/user.png")}
               />
             </View>
+            <Text style={styles.regText}>{!!user && user.name}</Text>
             <Text style={styles.regText}>
-              {!!user.smokingInfo && user.smokingInfo.dateOfQuiting}
+              Last updated:{" "}
+              {!!user && new Date(user.updatedAt).toLocaleDateString()}
+            </Text>
+            <Text style={[styles.regText, { fontSize: 15 }]}>
+              type: {!!user && !!user.type ? user.type : "user"}
             </Text>
           </View>
           <View style={styles.inputsContent}>
@@ -148,6 +183,11 @@ export const ProfileScreen = ({ navigation }) => {
           </View>
         </View>
         <SubmitButton onPress={submittionHandler}>Save Changes</SubmitButton>
+        <View style={styles.removeAccContainer}>
+          <Pressable onPress={onRemoveAccount} style={styles.removeAcc}>
+            <Text style={styles.removeAccText}>Remove account</Text>
+          </Pressable>
+        </View>
       </View>
     </ScrollView>
   );
@@ -159,6 +199,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#e1d5c9",
     padding: 30,
   },
+  removeAccContainer: {
+    alignItems: "center",
+    marginTop: 10,
+  },
+  removeAcc: {
+    borderBottomWidth: 1,
+    borderColor: "gray",
+    padding: 3,
+  },
+  removeAccText: { fontSize: 15, fontFamily: "HammersmithOne-Bold" },
   innerContainer: {
     flexDirection: "column",
     justifyContent: "center",
@@ -194,6 +244,8 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerContainer_text: {
     textAlign: "center",

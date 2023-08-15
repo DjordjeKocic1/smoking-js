@@ -22,6 +22,10 @@ const userHealthGet = (data, id) => {
   return axios.post(url + `/user-health/${id}`, data);
 };
 
+const deleteUser = (id) => {
+  return axios.delete(url + `/delete-user/${id}`);
+};
+
 const categoriesGet = () => {
   return axios.get(url + "/categories");
 };
@@ -103,6 +107,7 @@ export const http = {
   updateUser,
   updateUserCosts,
   userHealthGet,
+  deleteUser,
   categoriesGet,
   achievementGet,
   createMentor,

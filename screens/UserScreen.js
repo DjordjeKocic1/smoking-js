@@ -1,7 +1,7 @@
+import * as Notifications from "expo-notifications";
+
 import {
-  Animated,
   Dimensions,
-  Easing,
   Image,
   Pressable,
   RefreshControl,
@@ -18,10 +18,19 @@ import { Loading } from "../components/Loading";
 import { MaterialIcons } from "@expo/vector-icons";
 import { getNotification } from "../store/notificationReducer";
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+      shouldShowAlert: false,
+    };
+  },
+});
+
 const UserScreen = ({ navigation }) => {
   const { user, isLoading } = useSelector(selectUser);
   const dispatch = useDispatch();
-  const heartBeat = useRef(new Animated.Value(1)).current;
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = () => {
@@ -34,16 +43,50 @@ const UserScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    Animated.loop(
-      Animated.timing(heartBeat, {
-        toValue: 1.08,
-        duration: 700,
-        easing: Easing.bounce,
-        useNativeDriver: true,
-      })
-    ).start();
-    return () => {};
-  }, [heartBeat]);
+    const confPushNotification = async () => {
+      const { status } = await Notifications.getPermissionsAsync();
+      let finalStatus = status;
+      if (finalStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== "granted") {
+        Alert.alert(
+          "Premission required",
+          "Notification need the appropriate permissions."
+        );
+        dispatch(userHealth({}, user._id));
+        return;
+      }
+
+      try {
+        const pushTokenData = await Notifications.getExpoPushTokenAsync({
+          projectId: "2da74976-bf21-485c-bcea-cf2b97fada34",
+        });
+
+        let dataToSend = {
+          notificationToken: pushTokenData.data,
+        };
+
+        dispatch(userHealth(dataToSend, user._id));
+      } catch (error) {
+        console.log(error);
+        dispatch(userHealth({}, user._id));
+      }
+
+      if (Platform.OS === "android") {
+        Notifications.setNotificationChannelAsync("default", {
+          name: "default",
+          importance: Notifications.AndroidImportance.DEFAULT,
+        });
+      }
+    };
+    confPushNotification();
+  }, [user._id]);
+
+  useEffect(() => {
+    dispatch(getNotification(user._id));
+  }, [user._id]);
 
   if (isLoading) {
     return <Loading />;
@@ -86,10 +129,8 @@ const UserScreen = ({ navigation }) => {
             ]}
           >
             +
-            {!!user.savedInfo && !!user.savedInfo.cigarettesAvoidedCost
-              ? user.savedInfo.cigarettesAvoidedCost +
-                !!user.consumptionInfo.cigarettesAvoidedCost
-              : user.consumptionInfo.cigarettesAvoidedCost}
+            {!!user.consumptionInfo &&
+              user.consumptionInfo.cigarettesAvoidedCost}
             $
           </Text>
         </View>
@@ -98,7 +139,11 @@ const UserScreen = ({ navigation }) => {
             alignItems: "center",
             position: "relative",
             opacity:
-              !!user.smokingInfo && !user.smokingInfo.isQuiting ? 0.3 : 1,
+              !!user.smokingInfo &&
+              !!user.smokingInfo.isQuiting &&
+              user.smokingInfo.isQuiting
+                ? 1
+                : 0.3,
           }}
         >
           <Pressable
@@ -130,43 +175,19 @@ const UserScreen = ({ navigation }) => {
             %
           </Text>
         </View>
-        {!!user.smokingInfo && !user.smokingInfo.isQuiting ? (
-          <View
-            onTouchEnd={() => navigation.navigate("Savings")}
-            style={{ alignItems: "center" }}
-          >
-            <MaterialIcons
-              name="smoke-free"
-              size={Dimensions.get("screen").width > 600 ? 80 : 27}
-              color="#222325"
-            />
-            <Text style={styles.statsheader}>
-              {!!user.savedInfo && !!user.savedInfo.cigarettesAvoided
-                ? user.savedInfo.cigarettesAvoided + !!user.consumptionInfo &&
-                  !!user.consumptionInfo.cigarettesAvoided
-                : user.consumptionInfo.cigarettesAvoided}
-            </Text>
-          </View>
-        ) : (
-          <View
-            onTouchEnd={() => navigation.navigate("Savings")}
-            style={{ alignItems: "center" }}
-          >
-            <MaterialIcons
-              name="smoke-free"
-              size={Dimensions.get("screen").width > 600 ? 80 : 27}
-              color="#222325"
-            />
-            <Text style={styles.statsheader}>
-              <Text style={{ fontSize: 17 }}>
-                {!!user.smokingInfo && !!user.smokingInfo.noSmokingDays
-                  ? user.smokingInfo.noSmokingDays
-                  : 0}
-              </Text>
-              /<Text style={{ fontSize: 9 }}>day</Text>
-            </Text>
-          </View>
-        )}
+        <View
+          onTouchEnd={() => navigation.navigate("Savings")}
+          style={{ alignItems: "center" }}
+        >
+          <MaterialIcons
+            name="smoke-free"
+            size={Dimensions.get("screen").width > 600 ? 80 : 27}
+            color="#222325"
+          />
+          <Text style={styles.statsheader}>
+            {!!user.consumptionInfo && user.consumptionInfo.cigarettesAvoided}
+          </Text>
+        </View>
       </View>
       <View style={styles.container}>
         <View style={styles.innerContainer}>
@@ -178,7 +199,10 @@ const UserScreen = ({ navigation }) => {
             android_ripple={{ color: "#c39351" }}
           >
             <Text style={styles.innerText}>
-              {!!user && !!user.smokingInfo && user.smokingInfo.isQuiting
+              {!!user &&
+              !!user.smokingInfo &&
+              !!user.smokingInfo.isQuiting &&
+              user.smokingInfo.isQuiting
                 ? "Savings"
                 : "Costs"}
             </Text>
@@ -201,43 +225,19 @@ const UserScreen = ({ navigation }) => {
           </Pressable>
         </View>
         <View style={[styles.innerContainer]}>
-          {!!user.smokingInfo && !user.smokingInfo.isQuiting && (
-            <View
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 0,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 13,
-                  fontFamily: "HammersmithOne-Bold",
-                  textAlign: "center",
-                  transform: [
-                    {
-                      rotate: "45deg",
-                    },
-                  ],
-                }}
-              >
-                Not available in slow quit mode!
-              </Text>
-            </View>
-          )}
           <Pressable
-            disabled={!user.smokingInfo.isQuiting}
+            disabled={!!user.smokingInfo && !user.smokingInfo.isQuiting}
             onPress={() => navigation.navigate("Health")}
             android_ripple={{ color: "#c39351" }}
             style={[
               styles.innerContainerBox,
               {
                 opacity:
-                  !!user.smokingInfo && user.smokingInfo.isQuiting ? 1 : 0.3,
+                  !!user.smokingInfo &&
+                  !!user.smokingInfo.isQuiting &&
+                  user.smokingInfo.isQuiting
+                    ? 1
+                    : 0.3,
               },
             ]}
           >
@@ -275,7 +275,9 @@ const UserScreen = ({ navigation }) => {
           </Pressable>
         </View>
         <View style={styles.innerContainer}>
-          {!!user.smokingInfo && user.smokingInfo.isQuiting ? (
+          {!!user.smokingInfo &&
+          !!user.smokingInfo.isQuiting &&
+          user.smokingInfo.isQuiting ? (
             <Pressable
               onPress={() => navigation.navigate("Slow")}
               android_ripple={{ color: "#c39351" }}

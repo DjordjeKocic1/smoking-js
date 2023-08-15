@@ -37,24 +37,10 @@ export const Info = ({ text, user }) => {
       style={[styles.container, { transform: [{ translateX: animatedMove }] }]}
     >
       <View style={styles.innerContainer}>
-        <Text
-          style={{
-            fontFamily: "HammersmithOne-Bold",
-            fontSize: 17,
-          }}
-        >
-          {text}
-        </Text>
+        <Text style={styles.infoText}>{text}</Text>
       </View>
       <View>
-        <Text
-          style={{
-            textAlign: "center",
-            fontFamily: "HammersmithOne-Bold",
-            fontSize: 20,
-            color: "green",
-          }}
-        >
+        <Text style={styles.infoText2}>
           +{!!user && calcAvoidedSavings.toFixed(1)} $
         </Text>
       </View>
@@ -83,5 +69,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
+  },
+  infoText: {
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: 17,
+    textAlign: "center",
+  },
+  infoText2: {
+    textAlign: "center",
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: 20,
+    color: "green",
+    marginTop:10
   },
 });

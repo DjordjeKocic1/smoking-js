@@ -14,9 +14,9 @@ export const backButtonHandler = (navigation, path) => {
   return () => backHandler.remove();
 };
 
-export const backButtonHandlerAlert = (alertMsg, alertQuestion) => {
+export const backButtonHandlerAlert = () => {
   const backAction = () => {
-    Alert.alert(alertMsg, alertQuestion, [
+    Alert.alert("Hold on!", "Are you sure you want to exit the app?", [
       {
         text: "Cancel",
         onPress: () => null,
@@ -40,5 +40,5 @@ export const costOfCigarette = (packCost, cigInPack) => {
 };
 
 export const isObjEmpty = (obj) => {
-  return JSON.stringify(obj) == "{}"
-}
+  return JSON.stringify(obj) == "{}";
+};

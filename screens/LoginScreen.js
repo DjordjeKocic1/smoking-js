@@ -18,7 +18,6 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
-import { backButtonHandlerAlert } from "../helper/helpers";
 import { useRef } from "react";
 
 const { UIManager } = NativeModules;
@@ -28,16 +27,11 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 
 WebBrowser.maybeCompleteAuthSession();
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const movingAnim = useRef(new Animated.Value(-10)).current;
   const { isLoading, user } = useSelector(selectUser);
   const [submitClick, setSubmitClick] = useState(true);
-
-  useEffect(() => {
-    backButtonHandlerAlert("Hold on!", "Are you sure you want to exit app?");
-    return () => {};
-  }, []);
 
   useEffect(() => {
     AsyncStorage.getItem("@user").then((data) => {
@@ -122,7 +116,7 @@ const LoginScreen = ({ navigation }) => {
         </View>
         <SubmitButton disabled={submitClick} onPress={() => opetAuthGoogle()}>
           {!submitClick ? (
-            "SIGN IN WITH A GOOGLE"
+            "SIGN IN WITH GOOGLE"
           ) : (
             <View style={styles.loadingContainer}>
               <Text style={styles.googleLoginText}>Auto Login</Text>

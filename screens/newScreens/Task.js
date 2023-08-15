@@ -23,7 +23,6 @@ export const Task = ({ navigation }) => {
   }, [dispatch]);
 
   const onTaskStatusHandler = (status, id, userId) => {
-    console.log(status);
     Alert.alert(
       "Task",
       `Are you sure ${

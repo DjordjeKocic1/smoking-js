@@ -31,8 +31,10 @@ const userSlice = createSlice({
       };
       state.isLoading = false;
     },
-    removeUserMentors:(state,action) => {
-      let removedMentors = state.user.mentors.filter(v => v.mentorId !== action.payload.mentorId)
+    removeUserMentors: (state, action) => {
+      let removedMentors = state.user.mentors.filter(
+        (v) => v.mentorId !== action.payload.mentorId
+      );
       state.user.mentors = removedMentors;
       state.isLoading = false;
     },
@@ -113,13 +115,16 @@ export const updateUserNotificationToken = (data, id) => {
   };
 };
 
-export const updateUserCosts = (data, id) => {
+export const updateUserCosts = (data, id, navigation, where) => {
   return (dispatch) => {
     dispatch(fetchStart());
     http
       .updateUserCosts(data, id)
       .then((response) => {
         dispatch(fetchSuccess(response.data.user));
+        if (!!navigation) {
+          navigation.replace(where);
+        }
       })
       .catch(() => {
         dispatch(fetchError());
@@ -158,13 +163,31 @@ export const userHealthMentore = (data, id) => {
   };
 };
 
-export const deleteUserMentors = (mentorId,userId) => {
+export const deleteUserMentors = (mentorId, userId) => {
   return (dispatch) => {
     dispatch(fetchStart());
     http
-      .deleteMentor(mentorId,userId)
+      .deleteMentor(mentorId, userId)
       .then((response) => {
-        dispatch(removeUserMentors({mentorId}))
+        dispatch(removeUserMentors({ mentorId }));
+      })
+      .catch((e) => {
+        dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
+      });
+  };
+};
+
+export const deleteUser = (id, navigation) => {
+  return (dispatch) => {
+    dispatch(fetchStart());
+    http
+      .deleteUser(id)
+      .then((response) => {
+        if (!!navigation) {
+          dispatch(fetchSuccess(null));
+          navigation.navigate("login");
+        }
       })
       .catch((e) => {
         dispatch(fetchError());

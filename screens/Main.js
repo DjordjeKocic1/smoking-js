@@ -10,13 +10,20 @@ import { MentorViewScreen } from "./MentorViewScreen";
 import { SmokingScreen } from "./SmokingScreen";
 import VerifyScreen from "./VerifyScreen";
 import { View } from "react-native";
+import { backButtonHandlerAlert } from "../helper/helpers";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { selectError } from "../store/errorReducer";
+import { useEffect } from "react";
 
 const Stack = createNativeStackNavigator();
 
 export const Main = () => {
   const { msg, isVisibleError } = useSelector(selectError);
+
+  useEffect(() => {
+    backButtonHandlerAlert();
+  }, []);
+
   return (
     <View style={{ flex: 1, backgroundColor: "#e1d5c9" }}>
       {isVisibleError && msg && <ErrorModal message={msg} />}
@@ -30,13 +37,8 @@ export const Main = () => {
           <Stack.Screen name="login" component={LoginScreen} />
           <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
           <Stack.Screen
-            name="Smoke Calculator"
+            name="SmokeCalculator"
             component={CigaretteCostScreen}
-            options={{
-              headerStyle: {
-                backgroundColor: "#e1d5c9",
-              },
-            }}
           />
           <Stack.Screen name="SmokingScreen" component={SmokingScreen} />
           <Stack.Screen name="Categories" component={CategorieScreen} />

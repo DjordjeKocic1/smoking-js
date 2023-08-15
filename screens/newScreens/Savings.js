@@ -58,15 +58,18 @@ export const Savings = ({ navigation }) => {
   ).current;
 
   useEffect(() => {
-    !!user && !!user.savedInfo && !!user.savedInfo.cigarettesDay
-      ? setCounter(user.savedInfo.cigarettesDay)
-      : setCounter(user.consumptionInfo.cigarettesDay);
-    !!user && !!user.savedInfo && !!user.savedInfo.packCigarettesPrice
-      ? setAmount(user.savedInfo.packCigarettesPrice)
-      : setAmount(user.consumptionInfo.packCigarettesPrice);
-    !!user && !!user.savedInfo && !!user.savedInfo.cigarettesInPack
-      ? setCigarettesInPack(user.savedInfo.cigarettesInPack)
-      : setCigarettesInPack(user.consumptionInfo.cigarettesInPack);
+    !!user &&
+      !!user.consumptionInfo &&
+      !!user.consumptionInfo.cigarettesDay &&
+      setCounter(user.consumptionInfo.cigarettesDay);
+    !!user &&
+      !!user.consumptionInfo &&
+      !!user.consumptionInfo.packCigarettesPrice &&
+      setAmount(user.consumptionInfo.packCigarettesPrice);
+    !!user &&
+      !!user.consumptionInfo &&
+      !!user.consumptionInfo.cigarettesInPack &&
+      setCigarettesInPack(user.consumptionInfo.cigarettesInPack);
 
     return () => {};
   }, [user]);
@@ -123,14 +126,14 @@ export const Savings = ({ navigation }) => {
 
   const submitNewconsumptionInfoHanlder = () => {
     let dataToSend = {
-      savedInfo: {
+      consumptionInfo: {
         cigarettesDay: cigarettesDay,
         packCigarettesPrice: packCigarettesPrice,
         cigarettesInPack: cigarettesInPack,
         cigarettesAvoided:
-          !!user.savedInfo && !!user.savedInfo.cigarettesAvoided
-            ? user.savedInfo.cigarettesAvoided
-            : 0,
+          !!user.consumptionInfo &&
+          !!user.consumptionInfo.cigarettesAvoided &&
+          user.consumptionInfo.cigarettesAvoided,
       },
     };
     dispatch(updateUserCosts(dataToSend, user._id));
@@ -164,7 +167,6 @@ export const Savings = ({ navigation }) => {
   if (isLoading) {
     return <Loading />;
   }
-
   return (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -192,10 +194,10 @@ export const Savings = ({ navigation }) => {
           <Text style={[styles.savingText]}>Avoided</Text>
           <Text style={[styles.savingText, { color: "green" }]}>
             +
-            {!!user.savedInfo && !!user.savedInfo.cigarettesAvoidedCost
-              ? user.savedInfo.cigarettesAvoidedCost +
-                !!user.consumptionInfo.cigarettesAvoidedCost
-              : user.consumptionInfo.cigarettesAvoidedCost}
+            {!!user.consumptionInfo &&
+            !!user.consumptionInfo.cigarettesAvoidedCost
+              ? user.consumptionInfo.cigarettesAvoidedCost
+              : 0}
             $
           </Text>
           {savingBox1Enable && (
@@ -206,9 +208,8 @@ export const Savings = ({ navigation }) => {
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   $
-                  {!!user.savedInfo
-                    ? user.savedInfo.packCigarettesPrice
-                    : user.consumptionInfo.packCigarettesPrice}
+                  {!!user.consumptionInfo &&
+                    user.consumptionInfo.packCigarettesPrice}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -216,9 +217,8 @@ export const Savings = ({ navigation }) => {
                   Cigarette/Pack
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  {!!user.savedInfo
-                    ? user.savedInfo.cigarettesInPack
-                    : user.consumptionInfo.cigarettesInPack}
+                  {!!user.consumptionInfo &&
+                    user.consumptionInfo.cigarettesInPack}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -226,9 +226,8 @@ export const Savings = ({ navigation }) => {
                   Burnt cigarettes
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  {!!user.savedInfo
-                    ? user.savedInfo.cigarettesAvoided
-                    : user.consumptionInfo.cigarettesAvoided}
+                  {!!user.consumptionInfo &&
+                    user.consumptionInfo.cigarettesAvoided}
                 </Text>
               </View>
             </View>
@@ -262,9 +261,9 @@ export const Savings = ({ navigation }) => {
             ]}
           >
             {!!user.smokingInfo && user.smokingInfo.isQuiting ? "+" : "-"}
-            {!!user.savedInfo && user.savedInfo.cigarettesDailyCost
-              ? user.savedInfo.cigarettesDailyCost
-              : user.consumptionInfo.cigarettesDailyCost}
+            {!!user.consumptionInfo &&
+              user.consumptionInfo.cigarettesDailyCost &&
+              user.consumptionInfo.cigarettesDailyCost}
             $
           </Text>
           {savingBox2Enable && (
@@ -275,9 +274,8 @@ export const Savings = ({ navigation }) => {
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   $
-                  {!!user.savedInfo
-                    ? user.savedInfo.packCigarettesPrice
-                    : user.consumptionInfo.packCigarettesPrice}
+                  {!!user.consumptionInfo &&
+                    user.consumptionInfo.packCigarettesPrice}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -286,9 +284,8 @@ export const Savings = ({ navigation }) => {
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   $
-                  {!!user.savedInfo
-                    ? user.savedInfo.cigarettesInPack
-                    : user.consumptionInfo.cigarettesInPack}
+                  {!!user.consumptionInfo &&
+                    user.consumptionInfo.cigarettesInPack}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -296,9 +293,7 @@ export const Savings = ({ navigation }) => {
                   Cigarette/day
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  {!!user.savedInfo
-                    ? user.savedInfo.cigarettesDay
-                    : user.consumptionInfo.cigarettesDay}
+                  {!!user.consumptionInfo && user.consumptionInfo.cigarettesDay}
                 </Text>
               </View>
             </View>
@@ -332,9 +327,9 @@ export const Savings = ({ navigation }) => {
             ]}
           >
             {!!user.smokingInfo && user.smokingInfo.isQuiting ? "+" : "-"}
-            {!!user.savedInfo && !!user.savedInfo.cigarettesMontlyCost
-              ? user.savedInfo.cigarettesMontlyCost
-              : user.consumptionInfo.cigarettesMontlyCost}
+            {!!user.consumptionInfo &&
+              !!user.consumptionInfo.cigarettesMontlyCost &&
+              user.consumptionInfo.cigarettesMontlyCost}
             $
           </Text>
           {savingBox3Enable && (
@@ -345,9 +340,8 @@ export const Savings = ({ navigation }) => {
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   $
-                  {!!user.savedInfo
-                    ? user.savedInfo.packCigarettesPrice
-                    : user.consumptionInfo.packCigarettesPrice}
+                  {!!user.consumptionInfo &&
+                    user.consumptionInfo.packCigarettesPrice}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -355,9 +349,8 @@ export const Savings = ({ navigation }) => {
                   Cigarette/Pack
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  {!!user.savedInfo
-                    ? user.savedInfo.cigarettesInPack
-                    : user.consumptionInfo.cigarettesInPack}
+                  {!!user.consumptionInfo &&
+                    user.consumptionInfo.cigarettesInPack}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -365,9 +358,7 @@ export const Savings = ({ navigation }) => {
                   Cigarette/day
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  {!!user.savedInfo
-                    ? user.savedInfo.cigarettesDay
-                    : user.consumptionInfo.cigarettesDay}
+                  {!!user.consumptionInfo && user.consumptionInfo.cigarettesDay}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -409,9 +400,9 @@ export const Savings = ({ navigation }) => {
             ]}
           >
             {!!user.smokingInfo && user.smokingInfo.isQuiting ? "+" : "-"}
-            {!!user.savedInfo && !!user.savedInfo.cigarettesYearlyCost
-              ? user.savedInfo.cigarettesYearlyCost
-              : user.consumptionInfo.cigarettesYearlyCost}
+            {!!user.consumptionInfo &&
+              !!user.consumptionInfo.cigarettesYearlyCost &&
+              user.consumptionInfo.cigarettesYearlyCost}
             $
           </Text>
           {savingBox4Enable && (
@@ -422,9 +413,8 @@ export const Savings = ({ navigation }) => {
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   $
-                  {!!user.savedInfo
-                    ? user.savedInfo.packCigarettesPrice
-                    : user.consumptionInfo.packCigarettesPrice}
+                  {!!user.consumptionInfo &&
+                    user.consumptionInfo.packCigarettesPrice}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -432,9 +422,8 @@ export const Savings = ({ navigation }) => {
                   Cigarette/Pack
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  {!!user.savedInfo
-                    ? user.savedInfo.cigarettesInPack
-                    : user.consumptionInfo.cigarettesInPack}
+                  {!!user.consumptionInfo &&
+                    user.consumptionInfo.cigarettesInPack}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -442,9 +431,7 @@ export const Savings = ({ navigation }) => {
                   Cigarette/day
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  {!!user.savedInfo
-                    ? user.savedInfo.cigarettesDay
-                    : user.consumptionInfo.cigarettesDay}
+                  {!!user.consumptionInfo && user.consumptionInfo.cigarettesDay}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -486,9 +473,9 @@ export const Savings = ({ navigation }) => {
             ]}
           >
             {!!user.smokingInfo && user.smokingInfo.isQuiting ? "+" : "-"}
-            {!!user.savedInfo && !!user.savedInfo.cigarettes5YearCost
-              ? user.savedInfo.cigarettes5YearCost
-              : user.consumptionInfo.cigarettes5YearCost}
+            {!!user.consumptionInfo &&
+              !!user.consumptionInfo.cigarettes5YearCost &&
+              user.consumptionInfo.cigarettes5YearCost}
             $
           </Text>
           {savingBox5Enable && (
@@ -499,9 +486,8 @@ export const Savings = ({ navigation }) => {
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   $
-                  {!!user.savedInfo
-                    ? user.savedInfo.packCigarettesPrice
-                    : user.consumptionInfo.packCigarettesPrice}
+                  {!!user.consumptionInfo &&
+                    user.consumptionInfo.packCigarettesPrice}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -509,9 +495,8 @@ export const Savings = ({ navigation }) => {
                   Cigarette/Pack
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  {!!user.savedInfo
-                    ? user.savedInfo.cigarettesInPack
-                    : user.consumptionInfo.cigarettesInPack}
+                  {!!user.consumptionInfo &&
+                    user.consumptionInfo.cigarettesInPack}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -519,9 +504,7 @@ export const Savings = ({ navigation }) => {
                   Cigarette/day
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  {!!user.savedInfo
-                    ? user.savedInfo.cigarettesDay
-                    : user.consumptionInfo.cigarettesDay}
+                  {!!user.consumptionInfo && user.consumptionInfo.cigarettesDay}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -563,9 +546,9 @@ export const Savings = ({ navigation }) => {
             ]}
           >
             {!!user.smokingInfo && user.smokingInfo.isQuiting ? "+" : "-"}
-            {!!user.savedInfo && !!user.savedInfo.cigarettes10YearCost
-              ? user.savedInfo.cigarettes10YearCost
-              : user.consumptionInfo.cigarettes10YearCost}
+            {!!user.consumptionInfo &&
+              !!user.consumptionInfo.cigarettes10YearCost &&
+              user.consumptionInfo.cigarettes10YearCost}
             $
           </Text>
           {savingBox6Enable && (
@@ -576,9 +559,8 @@ export const Savings = ({ navigation }) => {
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   $
-                  {!!user.savedInfo
-                    ? user.savedInfo.packCigarettesPrice
-                    : user.consumptionInfo.packCigarettesPrice}
+                  {!!user.consumptionInfo &&
+                    user.consumptionInfo.packCigarettesPrice}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -586,9 +568,8 @@ export const Savings = ({ navigation }) => {
                   Cigarette/Pack
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  {!!user.savedInfo
-                    ? user.savedInfo.cigarettesInPack
-                    : user.consumptionInfo.cigarettesInPack}
+                  {!!user.consumptionInfo &&
+                    user.consumptionInfo.cigarettesInPack}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -596,9 +577,7 @@ export const Savings = ({ navigation }) => {
                   Cigarette/day
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  {!!user.savedInfo
-                    ? user.savedInfo.cigarettesDay
-                    : user.consumptionInfo.cigarettesDay}
+                  {!!user.consumptionInfo && user.consumptionInfo.cigarettesDay}
                 </Text>
               </View>
               <View style={styles.extraContainer}>
@@ -753,10 +732,7 @@ export const Savings = ({ navigation }) => {
             <Text style={styles.isQuitingContainerInnerText}>
               {!!user &&
                 !!user.consumptionInfo &&
-                (
-                  user.consumptionInfo.cigarettesDailyCost *
-                  user.smokingInfo.noSmokingDays
-                ).toFixed(1)}
+                user.consumptionInfo.cigarettesAvoidedCost}
               $
             </Text>
           </View>
@@ -765,8 +741,7 @@ export const Savings = ({ navigation }) => {
             <Text style={styles.didSmokeContainerText}>
               {!!user &&
                 !!user.consumptionInfo &&
-                user.consumptionInfo.cigarettesDay *
-                  user.smokingInfo.noSmokingDays}
+                user.consumptionInfo.cigarettesAvoided}
             </Text>
             <Image
               source={require("../../assets/images/games/cigAnim/cigDidnt.png")}

@@ -71,24 +71,12 @@ export const CigAnimation = ({ onCigFinishHandler }) => {
       }).start(({ finished }) => {
         if (!!finished) {
           setOnFinAnim(true);
-          let dataToUpdate;
-          if (user.savedInfo) {
-            dataToUpdate = {
-              savedInfo: {
-                ...user.savedInfo,
-                cigarettesAvoided:
-                  user.consumptionInfo.cigarettesAvoided +
-                  user.savedInfo.cigarettesAvoided,
-              },
-            };
-          } else {
-            dataToUpdate = {
+          let dataToUpdate = {
               consumptionInfo: {
                 ...user.consumptionInfo,
                 cigarettesAvoided: user.consumptionInfo.cigarettesAvoided + 1,
               },
             };
-          }
 
           dispatch(updateUserCosts(dataToUpdate, user._id));
         }
