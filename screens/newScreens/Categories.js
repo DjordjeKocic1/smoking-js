@@ -128,7 +128,7 @@ export const Categories = ({ navigation }) => {
       <Pressable
         android_ripple={{ color: "#c39351" }}
         style={styles.navigatePressable}
-        onPress={() => navigation.replace("Profile")}
+        onPress={() => navigation.navigate("Profile")}
       >
         <Text style={styles.navigatePressableText}>
           Ok <FontAwesome name="chevron-right" color="white" />
