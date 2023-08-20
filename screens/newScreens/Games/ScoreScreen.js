@@ -1,13 +1,16 @@
-import { Text, View } from "react-native";
+import {
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { getUsers, selectUser } from "../../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { BackButton } from "../../../components/BackButton";
 import { Loading } from "../../../components/Loading";
-import { RefreshControl } from "react-native";
-import { ScrollView } from "react-native";
-import { StyleSheet } from "react-native";
 
 export const ScoreScreen = ({ navigation }) => {
   const dispatch = useDispatch();

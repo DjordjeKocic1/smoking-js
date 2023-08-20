@@ -2,7 +2,6 @@ import {
   Alert,
   Dimensions,
   Image,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,

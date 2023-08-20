@@ -8,7 +8,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 import { BackButton } from "../../components/BackButton";
-import { Ionicons } from "@expo/vector-icons";
 import { Loading } from "../../components/Loading";
 import { selectUser } from "../../store/userReducer";
 import { useEffect } from "react";

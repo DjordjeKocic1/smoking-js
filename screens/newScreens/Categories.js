@@ -1,15 +1,20 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { getCategories, selectCategories } from "../../store/categorieReducer";
 import { selectUser, updateUser, userHealth } from "../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { FontAwesome } from "@expo/vector-icons";
-import { Loading } from "../../components/Loading";
-import { RefreshControl } from "react-native";
 
 export const Categories = ({ navigation }) => {
-  const { user, isLoading } = useSelector(selectUser);
+  const { user } = useSelector(selectUser);
   const { categories } = useSelector(selectCategories);
   const [selectedCats, setSelectedCats] = useState([]);
   const [refreshing, setRefreshing] = useState(false);

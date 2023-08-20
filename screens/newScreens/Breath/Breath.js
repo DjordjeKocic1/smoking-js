@@ -9,23 +9,19 @@ import {
   Text,
   View,
 } from "react-native";
-import CircularProgress, {
-  ProgressRef,
-} from "react-native-circular-progress-indicator";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { selectUser, updateUser, userHealth } from "../../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
-import { AntDesign } from "@expo/vector-icons";
 import { BackButton } from "../../../components/BackButton";
 import { BreathFinModal } from "./BreathFinModal";
 import { BreathInfo } from "./BreathInfo";
-import { FontAwesome } from "@expo/vector-icons";
-import { Loading } from "../../../components/Loading";
+import CircularProgress from "react-native-circular-progress-indicator";
 
 export const Breath = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { user, isLoading } = useSelector(selectUser);
+  const { user } = useSelector(selectUser);
   const [timer, setTimer] = useState(1);
   const [running, setIsRunning] = useState(false);
   const [readisOpen, setReadisOpen] = useState(false);

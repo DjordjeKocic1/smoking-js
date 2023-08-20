@@ -1,21 +1,18 @@
 import {
   Animated,
   Image,
+  ImageBackground,
   Pressable,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import { Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { selectUser, updateUser } from "../../../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 import { BackButton } from "../../../../components/BackButton";
-import { Entypo } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
-import { ImageBackground } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useEffect } from "react";
-import { useState } from "react";
 
 export const TwoSameLevel2 = ({ navigation }) => {
   const dispatch = useDispatch();

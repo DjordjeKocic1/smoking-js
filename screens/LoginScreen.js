@@ -13,12 +13,11 @@ import {
 } from "react-native";
 import { createUser, selectUser } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
-import { useRef } from "react";
 
 const { UIManager } = NativeModules;
 

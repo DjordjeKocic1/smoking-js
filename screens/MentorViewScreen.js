@@ -10,6 +10,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { FontAwesome, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { createTask, getTasks, selectTask } from "../store/taskReducer";
 import { getMentor, selectMentor } from "../store/mentorReducer";
 import { selectUser, userHealthMentore } from "../store/userReducer";
@@ -17,11 +18,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
 import { Easing } from "react-native-reanimated";
-import { FontAwesome } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Loading } from "../components/Loading";
-import { MaterialIcons } from "@expo/vector-icons";
 
 export const MentorViewScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();

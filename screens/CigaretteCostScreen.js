@@ -8,11 +8,10 @@ import {
   Text,
   View,
 } from "react-native";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { selectUser, updateUserCosts } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 
-import { FontAwesome } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
 import { useState } from "react";

@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { selectUser, userHealth } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Loading } from "../components/Loading";
 import { MaterialIcons } from "@expo/vector-icons";

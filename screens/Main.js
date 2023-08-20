@@ -1,5 +1,3 @@
-import { useDispatch, useSelector } from "react-redux";
-
 import CategorieScreen from "./CategorieScreen";
 import CigaretteCostScreen from "./CigaretteCostScreen";
 import { ErrorModal } from "../components/errorModal";
@@ -14,6 +12,7 @@ import { backButtonHandlerAlert } from "../helper/helpers";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { selectError } from "../store/errorReducer";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const Stack = createNativeStackNavigator();
 

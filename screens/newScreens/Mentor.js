@@ -11,6 +11,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { AntDesign, Entypo, FontAwesome } from "@expo/vector-icons";
 import {
   createMentor,
   deleteMentor,
@@ -32,10 +33,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { AlertPayment } from "../../components/AlertPayment";
-import { AntDesign } from "@expo/vector-icons";
 import { BackButton } from "../../components/BackButton";
-import { Entypo } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
 import { Loading } from "../../components/Loading";
 import { Payment } from "../../components/Payment";
 

@@ -1,18 +1,13 @@
-import { Animated, Image, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import {
   deleteNotification,
   selectNotification,
-  updateNotification,
 } from "../../store/notificationReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 import { BackButton } from "../../components/BackButton";
-import { Easing } from "react-native-reanimated";
 import { Feather } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
 import { Loading } from "../../components/Loading";
-import { useEffect } from "react";
-import { useRef } from "react";
 
 export const Notification = ({ navigation }) => {
   const { notification } = useSelector(selectNotification);
