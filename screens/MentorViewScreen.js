@@ -130,8 +130,8 @@ export const MentorViewScreen = ({ navigation, route }) => {
 
   const onAssignTaskHandler = () => {
     let dataToSend = {
-      toDo: taskValue,
-      comment: taskCommentValue,
+      toDo: taskValue.trim(),
+      comment: taskCommentValue.trim(),
       userId: mentorUser._id,
       mentorId: mentor.mentorId,
     };

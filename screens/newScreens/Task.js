@@ -72,98 +72,89 @@ export const Task = ({ navigation }) => {
       <Text style={styles.text}>Tasks</Text>
       <View style={styles.taskContainer}>
         {!!task && !!task.length ? (
-          task
-            .map((t) => {
-              return (
+          task.map((t) => {
+            return (
+              <View
+                style={[
+                  styles.taskContainerInner,
+                  {
+                    opacity: t.status == "done" ? 0.3 : 1,
+                  },
+                ]}
+                key={t._id}
+              >
+                <View>
+                  <Text
+                    style={[styles.taskText, { marginBottom: 5, fontSize: 10 }]}
+                  >
+                    Status:{" "}
+                    {t.status == "accept"
+                      ? "accepted"
+                      : t.status == "done"
+                      ? "done"
+                      : "pending"}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.taskText,
+                      { textDecorationLine: "underline", marginBottom: 5 },
+                    ]}
+                  >
+                    {t.toDo}
+                  </Text>
+                  <Text style={[styles.taskText, { fontSize: 12 }]}>
+                    {t.comment}
+                  </Text>
+                </View>
                 <View
-                  style={[
-                    styles.taskContainerInner,
-                    {
-                      opacity: t.status == "done" ? 0.3 : 1,
-                    },
-                  ]}
-                  key={t._id}
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
                 >
-                  <View>
-                    <Text
-                      style={[
-                        styles.taskText,
-                        { marginBottom: 5, fontSize: 10 },
-                      ]}
-                    >
-                      Status:{" "}
-                      {t.status == "accept"
-                        ? "accepted"
-                        : t.status == "done"
-                        ? "done"
-                        : "pending"}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.taskText,
-                        { textDecorationLine: "underline", marginBottom: 5 },
-                      ]}
-                    >
-                      {t.toDo}
-                    </Text>
-                    <Text style={[styles.taskText, { fontSize: 12 }]}>
-                      {t.comment}
+                  <View
+                    onTouchStart={() =>
+                      onTaskStatusHandler(
+                        t.status == "accept"
+                          ? "done"
+                          : t.status == "" && "accept",
+                        t._id
+                      )
+                    }
+                    style={[
+                      styles.pressableCont,
+                      {
+                        backgroundColor: "green",
+                      },
+                    ]}
+                  >
+                    <Text style={styles.pressableContText}>
+                      {t.status == "accept" ? (
+                        "done"
+                      ) : t.status == "done" ? (
+                        <Text>completed</Text>
+                      ) : (
+                        t.status == "" && "accept"
+                      )}
                     </Text>
                   </View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
+                  {t.status != "done" && (
                     <View
-                      onTouchStart={() =>
-                        onTaskStatusHandler(
-                          t.status == "accept"
-                            ? "done"
-                            : t.status == "" && "accept",
-                          t._id
-                        )
-                      }
+                      onTouchStart={() => onTaskDeleteStatusHandler(t._id)}
                       style={[
                         styles.pressableCont,
                         {
-                          backgroundColor: "green",
+                          backgroundColor: "red",
                         },
                       ]}
                     >
-                      <Text style={styles.pressableContText}>
-                        {t.status == "accept" ? (
-                          "done"
-                        ) : t.status == "done" ? (
-                          <Ionicons
-                            name="checkmark-done-outline"
-                            size={24}
-                            color="black"
-                          />
-                        ) : (
-                          t.status == "" && "accept"
-                        )}
-                      </Text>
+                      <Text style={styles.pressableContText}>decline</Text>
                     </View>
-                    {t.status != "done" && (
-                      <View
-                        onTouchStart={() => onTaskDeleteStatusHandler(t._id)}
-                        style={[
-                          styles.pressableCont,
-                          {
-                            backgroundColor: "red",
-                          },
-                        ]}
-                      >
-                        <Text style={styles.pressableContText}>decline</Text>
-                      </View>
-                    )}
-                  </View>
+                  )}
                 </View>
-              );
-            })
-            .sort((d) => d.status == "done")
+              </View>
+            );
+          })
         ) : (
           <Text style={[styles.text, { fontSize: 14, color: "gray" }]}>
             No tasks assigned

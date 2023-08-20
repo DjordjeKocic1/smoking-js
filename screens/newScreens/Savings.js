@@ -288,14 +288,6 @@ export const Savings = ({ navigation }) => {
                     user.consumptionInfo.cigarettesInPack}
                 </Text>
               </View>
-              <View style={styles.extraContainer}>
-                <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  Cigarette/day
-                </Text>
-                <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  {!!user.consumptionInfo && user.consumptionInfo.cigarettesDay}
-                </Text>
-              </View>
             </View>
           )}
         </Animated.View>
@@ -359,14 +351,6 @@ export const Savings = ({ navigation }) => {
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   {!!user.consumptionInfo && user.consumptionInfo.cigarettesDay}
-                </Text>
-              </View>
-              <View style={styles.extraContainer}>
-                <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  Avg. Month days
-                </Text>
-                <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  30
                 </Text>
               </View>
             </View>
@@ -434,14 +418,6 @@ export const Savings = ({ navigation }) => {
                   {!!user.consumptionInfo && user.consumptionInfo.cigarettesDay}
                 </Text>
               </View>
-              <View style={styles.extraContainer}>
-                <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  Days
-                </Text>
-                <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  365
-                </Text>
-              </View>
             </View>
           )}
         </Animated.View>
@@ -507,14 +483,6 @@ export const Savings = ({ navigation }) => {
                   {!!user.consumptionInfo && user.consumptionInfo.cigarettesDay}
                 </Text>
               </View>
-              <View style={styles.extraContainer}>
-                <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  Year
-                </Text>
-                <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  5
-                </Text>
-              </View>
             </View>
           )}
         </Animated.View>
@@ -578,14 +546,6 @@ export const Savings = ({ navigation }) => {
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
                   {!!user.consumptionInfo && user.consumptionInfo.cigarettesDay}
-                </Text>
-              </View>
-              <View style={styles.extraContainer}>
-                <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  Year
-                </Text>
-                <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  10
                 </Text>
               </View>
             </View>
