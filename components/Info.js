@@ -52,11 +52,11 @@ const styles = StyleSheet.create({
   container: {
     position: "absolute",
     left: 0,
-    bottom: 0,
+    top: "50%",
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "#ffffffeb",
     zIndex: 9999,
     paddingHorizontal: 20,
     paddingVertical: 10,
@@ -80,6 +80,6 @@ const styles = StyleSheet.create({
     fontFamily: "HammersmithOne-Bold",
     fontSize: 20,
     color: "green",
-    marginTop:10
+    marginTop: 10,
   },
 });

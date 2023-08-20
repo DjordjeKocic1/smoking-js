@@ -222,12 +222,18 @@ export const TwoSameLevel3 = ({ navigation }) => {
                   {
                     zIndex: 2,
                     overflow: "hidden",
-                    alignItems:'center',
-                    justifyContent:'center',
-                    backgroundColor: img.active ? "transparent" : "orange",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: img.active ? "transparent" : "#c39351",
                   },
                 ]}
-              ><Text style={{fontFamily: "HammersmithOne-Bold",}}>{img.active ? "" : "Click"}</Text></View>
+              >
+                <Text
+                  style={{ fontFamily: "HammersmithOne-Bold", color: "white" }}
+                >
+                  {img.active ? "" : "Click"}
+                </Text>
+              </View>
               <Image source={img["src"]} style={styles.image} />
             </Pressable>
           );
@@ -235,7 +241,7 @@ export const TwoSameLevel3 = ({ navigation }) => {
       </View>
       {images.length == 0 && (
         <View style={styles.nextLevel}>
-          <BackButton navigation={navigation} where={"UserScreen"}/>
+          <BackButton navigation={navigation} where={"UserScreen"} />
           <ImageBackground
             onLoad={() =>
               dispatch(
@@ -243,7 +249,9 @@ export const TwoSameLevel3 = ({ navigation }) => {
                   {
                     gameScore:
                       (!!user && !!user.gameScore ? user.gameScore : 0) + 15,
-                      latestScore:(!!user && !!user.latestScore ? user.latestScore : 0) + 15
+                    latestScore:
+                      (!!user && !!user.latestScore ? user.latestScore : 0) +
+                      15,
                   },
                   user._id
                 )

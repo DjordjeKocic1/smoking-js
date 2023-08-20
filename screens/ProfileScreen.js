@@ -1,5 +1,6 @@
 import {
   Alert,
+  Dimensions,
   Image,
   Pressable,
   ScrollView,
@@ -14,6 +15,7 @@ import { useEffect, useState } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BackButton } from "../components/BackButton";
+import { FontAwesome } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
 
@@ -65,6 +67,15 @@ export const ProfileScreen = ({ navigation }) => {
     });
   };
 
+  const onUserTypeChangeHandler = () => {
+    let userType = user.type;
+    if (userType == "mentor") {
+      dispatch(updateUser({ type: "user" }, user._id));
+    } else {
+      dispatch(updateUser({ type: "mentor" }, user._id));
+    }
+  };
+
   const submittionHandler = () => {
     const dataTosend = {
       email: userProfile.email,
@@ -78,7 +89,7 @@ export const ProfileScreen = ({ navigation }) => {
   };
 
   const onRemoveAccount = () => {
-    Alert.alert("Are you sure?", "Your are about to remove your account", [
+    Alert.alert("Remove Account", "Your are about to remove your account", [
       {
         text: "No",
         onPress: () => null,
@@ -141,9 +152,34 @@ export const ProfileScreen = ({ navigation }) => {
               Last updated:{" "}
               {!!user && new Date(user.updatedAt).toLocaleDateString()}
             </Text>
-            <Text style={[styles.regText, { fontSize: 15 }]}>
-              type: {!!user && !!user.type ? user.type : "user"}
-            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={[styles.regText, { fontSize: 15 }]}>
+                type: {!!user && !!user.type ? user.type : "user"}
+              </Text>
+              <Text
+                onPress={onUserTypeChangeHandler}
+                style={[
+                  styles.regText,
+                  {
+                    fontSize: 13,
+                    marginLeft: 5,
+                    backgroundColor: "#222325",
+                    color: "white",
+                    borderRadius: 5,
+                    padding: 2,
+                    fontStyle: "normal",
+                  },
+                ]}
+              >
+                change
+              </Text>
+            </View>
           </View>
           <View style={styles.inputsContent}>
             <Text>Full Name</Text>
@@ -181,13 +217,24 @@ export const ProfileScreen = ({ navigation }) => {
               style={styles.input}
             />
           </View>
+          <View style={styles.lifestylecategoriesContainer}>
+            <Text style={styles.lifestylecategoriesContainerText}>
+              What you like?
+            </Text>
+            <Text
+              onPress={() => navigation.replace("CategoriesMy")}
+              style={styles.lifestylecategoriesContainerSubText}
+            >
+              view
+            </Text>
+          </View>
         </View>
         <SubmitButton onPress={submittionHandler}>Save Changes</SubmitButton>
-        <View style={styles.removeAccContainer}>
+        {/* <View style={styles.removeAccContainer}>
           <Pressable onPress={onRemoveAccount} style={styles.removeAcc}>
-            <Text style={styles.removeAccText}>Remove account</Text>
+            <Text style={styles.removeAccText}><FontAwesome name="remove" color="black" />Remove account</Text>
           </Pressable>
-        </View>
+        </View> */}
       </View>
     </ScrollView>
   );
@@ -204,9 +251,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   removeAcc: {
-    borderBottomWidth: 1,
-    borderColor: "gray",
     padding: 3,
+    borderBottomWidth: 0.5,
+    borderColor: "gray",
   },
   removeAccText: { fontSize: 15, fontFamily: "HammersmithOne-Bold" },
   innerContainer: {
@@ -284,5 +331,21 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontStyle: "italic",
     marginTop: 5,
+  },
+  lifestylecategoriesContainer: {
+    flexDirection: "row",
+    marginTop: 20,
+  },
+  lifestylecategoriesContainerText: {
+    fontSize: 16,
+  },
+  lifestylecategoriesContainerSubText: {
+    fontFamily: "HammersmithOne-Bold",
+    backgroundColor: "#222325",
+    color: "white",
+    borderRadius: 5,
+    marginLeft: 5,
+    padding: Dimensions.get("screen").width > 600 ? 5 : 2,
+    fontSize: Dimensions.get("screen").width > 600 ? 17 : 15,
   },
 });

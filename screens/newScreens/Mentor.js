@@ -340,81 +340,84 @@ export const Mentor = ({ navigation }) => {
           </Text>
         )}
       </View>
-      <View style={styles.mentoring}>
-        <Text style={styles.mentoringHeader}>Mentor(s)</Text>
-        {!!user && !!user.mentors && !!user.mentors.length ? (
-          user.mentors.map((v) => {
-            return (
-              <View
-                key={v._id}
-                style={[styles.mentorView, { marginBottom: 5 }]}
-              >
-                <View>
-                  <Text style={styles.mentorViewText}>{v.name}</Text>
-                  <Text
-                    style={[
-                      styles.mentorViewText,
-                      {
-                        textTransform: "lowercase",
-                        fontSize:
-                          Dimensions.get("screen").width > 600 ? 15 : 10,
-                        color: "gray",
-                      },
-                    ]}
-                  >
-                    {v.email}
-                  </Text>
-                </View>
-                <View>
-                  <Text style={styles.statusText}>
-                    Status:{" "}
+      {!!user && user.type != "mentor" && (
+        <View style={styles.mentoring}>
+          <Text style={styles.mentoringHeader}>Mentor(s)</Text>
+          {!!user && !!user.mentors && !!user.mentors.length ? (
+            user.mentors.map((v) => {
+              return (
+                <View
+                  key={v._id}
+                  style={[styles.mentorView, { marginBottom: 5 }]}
+                >
+                  <View>
+                    <Text style={styles.mentorViewText}>{v.name}</Text>
                     <Text
-                      style={{
-                        color: v.accepted ? "green" : "gray",
-                      }}
+                      style={[
+                        styles.mentorViewText,
+                        {
+                          textTransform: "lowercase",
+                          fontSize:
+                            Dimensions.get("screen").width > 600 ? 15 : 10,
+                          color: "gray",
+                        },
+                      ]}
                     >
-                      {v.accepted ? "Active" : "Pending"}
+                      {v.email}
                     </Text>
-                  </Text>
+                  </View>
+                  <View>
+                    <Text style={styles.statusText}>
+                      Status:{" "}
+                      <Text
+                        style={{
+                          color: v.accepted ? "green" : "gray",
+                        }}
+                      >
+                        {v.accepted ? "Active" : "Pending"}
+                      </Text>
+                    </Text>
+                  </View>
+                  <View>
+                    <Pressable
+                      onPress={() =>
+                        deleteUserMentorHandler(v.mentorId, user._id)
+                      }
+                      style={styles.mentorViewPressable}
+                    >
+                      <AntDesign name="close" size={15} color="white" />
+                    </Pressable>
+                  </View>
                 </View>
-                <View>
-                  <Pressable
-                    onPress={() =>
-                      deleteUserMentorHandler(v.mentorId, user._id)
-                    }
-                    style={styles.mentorViewPressable}
-                  >
-                    <AntDesign name="close" size={15} color="white" />
-                  </Pressable>
-                </View>
-              </View>
-            );
-          })
-        ) : (
-          <Text style={styles.mentoringInfo}>You dont have a mentor</Text>
-        )}
-        <Pressable
-          android_ripple={{ color: "#6A7152" }}
-          onPress={askForHelpHanlder}
-          style={styles.pressableContainer}
-        >
-          <Text style={styles.pressableContainerText}>Ask for help</Text>
-        </Pressable>
-        {!!user && !!user.subscribeDate && (
-          <Text
-            style={{
-              fontStyle: "italic",
-              marginTop: 10,
-              fontFamily: "HammersmithOne-Bold",
-              fontSize: 10,
-            }}
+              );
+            })
+          ) : (
+            <Text style={styles.mentoringInfo}>You dont have a mentor</Text>
+          )}
+          <Pressable
+            android_ripple={{ color: "#6A7152" }}
+            onPress={askForHelpHanlder}
+            style={styles.pressableContainer}
           >
-            <AntDesign name="star" size={12} color="#c39351" /> subscribed from{" "}
-            {user.subscribeDate}{" "}
-            <AntDesign name="star" size={12} color="#c39351" />
-          </Text>
-        )}
-      </View>
+            <Text style={styles.pressableContainerText}>Ask for help</Text>
+          </Pressable>
+          {!!user && !!user.subscribeDate && (
+            <Text
+              style={{
+                fontStyle: "italic",
+                marginTop: 10,
+                fontFamily: "HammersmithOne-Bold",
+                fontSize: 10,
+              }}
+            >
+              <AntDesign name="star" size={12} color="#c39351" /> subscribed
+              from {user.subscribeDate}{" "}
+              <AntDesign name="star" size={12} color="#c39351" />
+            </Text>
+          )}
+        </View>
+      )}
+
       {isModalVisible && <Payment />}
       {isVisible && <AlertPayment />}
     </ScrollView>

@@ -159,11 +159,13 @@ export const TwoSame = ({ navigation }) => {
                     overflow: "hidden",
                     alignItems: "center",
                     justifyContent: "center",
-                    backgroundColor: img.active ? "transparent" : "orange",
+                    backgroundColor: img.active ? "transparent" : "#c39351",
                   },
                 ]}
               >
-                <Text style={{ fontFamily: "HammersmithOne-Bold" }}>
+                <Text
+                  style={{ fontFamily: "HammersmithOne-Bold", color: "white" }}
+                >
                   {img.active ? "" : "Click"}
                 </Text>
               </View>
@@ -174,7 +176,7 @@ export const TwoSame = ({ navigation }) => {
       </View>
       {images.length == 0 && (
         <View style={styles.nextLevel}>
-          <BackButton navigation={navigation} where={"UserScreen"}/>
+          <BackButton navigation={navigation} where={"UserScreen"} />
           <ImageBackground
             source={require("../../../../assets/images/twoSameImgs/nextlvl.png")}
             resizeMode="contain"

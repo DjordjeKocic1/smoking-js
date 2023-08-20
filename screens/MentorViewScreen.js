@@ -55,8 +55,8 @@ export const MentorViewScreen = ({ navigation, route }) => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-      dispatch(userHealthMentore({}, route.params.user_id));
-      dispatch(getTasks(route.params.user_id));
+      dispatch(userHealthMentore({}, user_idParam));
+      dispatch(getTasks(user_idParam));
     }, 2000);
   };
 
@@ -74,8 +74,8 @@ export const MentorViewScreen = ({ navigation, route }) => {
           easing: Easing.ease,
           useNativeDriver: true,
         }).start();
-        dispatch(userHealthMentore({}, route.params.user_id));
-        dispatch(getTasks(route.params.user_id));
+        dispatch(userHealthMentore({}, user_idParam));
+        dispatch(getTasks(user_idParam));
       }
     });
   };
@@ -608,12 +608,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#c39351",
     borderRadius: 30,
-    width:Dimensions.get("screen").width > 600 ? 200 : 130,
-    height:Dimensions.get("screen").width > 600 ? 180 : 100,
+    width: Dimensions.get("screen").width > 600 ? 200 : 130,
+    height: Dimensions.get("screen").width > 600 ? 180 : 100,
     overflow: "hidden",
   },
   innerboxContainerText: {
-    fontSize:Dimensions.get("screen").width > 600 ? 18 : 12,
+    fontSize: Dimensions.get("screen").width > 600 ? 18 : 12,
     fontFamily: "HammersmithOne-Bold",
     marginBottom: 15,
     color: "black",
@@ -621,7 +621,7 @@ const styles = StyleSheet.create({
   },
   innerboxContainerText2: {
     fontFamily: "HammersmithOne-Bold",
-    fontSize:Dimensions.get("screen").width > 600 ? 25 : 20,
+    fontSize: Dimensions.get("screen").width > 600 ? 25 : 20,
     color: "black",
   },
   taskList: {
@@ -694,11 +694,11 @@ const styles = StyleSheet.create({
   cigaretteInfoCostsInnerText: {
     fontFamily: "HammersmithOne-Bold",
     color: "white",
-    fontSize:Dimensions.get("screen").width > 600 ? 20 : 15
+    fontSize: Dimensions.get("screen").width > 600 ? 20 : 15,
   },
   userhTextInfo: {
     fontFamily: "HammersmithOne-Bold",
     marginTop: 10,
-    fontSize:Dimensions.get("screen").width > 600 ? 15 : 12,
+    fontSize: Dimensions.get("screen").width > 600 ? 15 : 12,
   },
 });

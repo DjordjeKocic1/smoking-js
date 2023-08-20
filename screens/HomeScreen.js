@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Achievements } from "./newScreens/Achievement/Achievements";
 import { Breath } from "./newScreens/Breath/Breath";
+import { Categories } from "./newScreens/Categories";
 import { CigAnimation } from "../components/CigAnimation";
 import { Health } from "./newScreens/Health";
 import { Info } from "../components/Info";
@@ -63,6 +64,7 @@ const HomeScreen = () => {
           <Stack.Screen name="Task" component={Task} />
           <Stack.Screen name="Achievements" component={Achievements} />
           <Stack.Screen name="Mentor" component={Mentor} />
+          <Stack.Screen name="CategoriesMy" component={Categories} />
           <Stack.Screen name="TwoSame" component={TwoSame} />
           <Stack.Screen name="TwoSameLevel2" component={TwoSameLevel2} />
           <Stack.Screen name="TwoSameLevel3" component={TwoSameLevel3} />
