@@ -1,72 +1,139 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { getCategories, selectCategories } from "../../store/categorieReducer";
+import { selectUser, updateUser, userHealth } from "../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { FontAwesome } from "@expo/vector-icons";
 import { Loading } from "../../components/Loading";
-import { selectUser } from "../../store/userReducer";
+import { RefreshControl } from "react-native";
 
-export const Categories = () => {
+export const Categories = ({ navigation }) => {
   const { user, isLoading } = useSelector(selectUser);
   const { categories } = useSelector(selectCategories);
   const [selectedCats, setSelectedCats] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getCategories());
   }, [dispatch]);
 
-  if (isLoading) {
-    return <Loading />;
-  }
-  console.log(selectedCats);
+  useEffect(() => {
+    setSelectedCats(
+      categories.map((cat) => {
+        let userCats = user.categories.find((v) => v.name == cat.name);
+        if (userCats) {
+          return {
+            ...cat,
+            have: true,
+          };
+        } else {
+          return {
+            ...cat,
+            have: false,
+          };
+        }
+      })
+    );
+  }, [categories, user.categories]);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+      dispatch(userHealth({}, user._id));
+      dispatch(getCategories());
+    }, 2000);
+  };
+
+  const onSelectCategorie = (cat) => {
+    let userCats = [...user.categories];
+    let dataToSend = {
+      categories: [...userCats, cat],
+    };
+    dispatch(updateUser(dataToSend, user._id));
+  };
+
+  const onRemoveUserCategorie = (id) => {
+    let userCatsRemoved = user.categories.filter((v) => v._id != id);
+    let dataToSend = {
+      categories: userCatsRemoved,
+    };
+    dispatch(updateUser(dataToSend, user._id));
+  };
+
   return (
     <ScrollView
       contentContainerStyle={styles.container}
       showsHorizontalScrollIndicator={false}
       endFillColor="#000"
       overScrollMode="never"
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
       <Text style={styles.lifeStyleText}>Your lifestyle categories</Text>
       <View style={[styles.lifeStyle, { marginBottom: 50 }]}>
-        {!!user && !!user.categories ? (
-          user.categories.map((v) => {
-            return (
-              <View
-                style={[
-                  styles.lifeStyleBox,
-                  { backgroundColor: "#c39351", position: "relative" },
-                ]}
-                key={v._id}
-              >
-                <FontAwesome
-                  name="remove"
-                  size={15}
-                  color="white"
-                  style={styles.removeIcon}
-                />
-                <Text style={[styles.lifeStyleBoxText, { color: "white" }]}>
-                  {v.name}
-                </Text>
-              </View>
-            );
+        {!!user && !!user.categories.length && !!selectedCats.length ? (
+          selectedCats.map((v) => {
+            if (v.have) {
+              return (
+                <View
+                  style={[
+                    styles.lifeStyleBox,
+                    { backgroundColor: "#c39351", position: "relative" },
+                  ]}
+                  key={v._id}
+                >
+                  <FontAwesome
+                    name="remove"
+                    size={15}
+                    color="white"
+                    style={styles.removeIcon}
+                    onPress={() => onRemoveUserCategorie(v._id)}
+                  />
+                  <Text style={[styles.lifeStyleBoxText, { color: "white" }]}>
+                    {v.name}
+                  </Text>
+                </View>
+              );
+            }
           })
         ) : (
-          <Text>You didn't select any lifestyle categorie</Text>
+          <Text style={styles.noCategoriesText}>
+            You didn't select any lifestyle categorie
+          </Text>
         )}
       </View>
       <Text style={styles.lifeStyleText}>Unselected categories</Text>
       <View style={styles.lifeStyle}>
-        {!!categories &&
-          categories.map((v) => {
-            return (
-              <View style={styles.lifeStyleBox} key={v._id}>
-                <Text style={styles.lifeStyleBoxText}>{v.name}</Text>
-              </View>
-            );
+        {!!selectedCats &&
+          !!selectedCats.length &&
+          selectedCats.map((v) => {
+            if (!v.have) {
+              return (
+                <Pressable
+                  android_ripple={{ color: "#c39351" }}
+                  onPress={() => onSelectCategorie(v)}
+                  style={styles.lifeStyleBox}
+                  key={v._id}
+                >
+                  <Text style={styles.lifeStyleBoxText}>{v.name}</Text>
+                </Pressable>
+              );
+            }
           })}
       </View>
+      <Pressable
+        android_ripple={{ color: "#c39351" }}
+        style={styles.navigatePressable}
+        onPress={() => navigation.replace("Profile")}
+      >
+        <Text style={styles.navigatePressableText}>
+          Ok <FontAwesome name="chevron-right" color="white" />
+        </Text>
+      </Pressable>
     </ScrollView>
   );
 };
@@ -75,6 +142,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: "#e1d5c9",
+    alignItems: "center",
   },
   lifeStyleText: {
     fontSize: 20,
@@ -105,5 +173,21 @@ const styles = StyleSheet.create({
     top: -7,
     padding: 2,
     borderRadius: 5,
+  },
+  noCategoriesText: {
+    fontSize: 12,
+    fontFamily: "HammersmithOne-Bold",
+    color: "gray",
+  },
+  navigatePressable: {
+    backgroundColor: "#222325",
+    padding: 10,
+    borderRadius: 3,
+    marginTop: 20,
+  },
+  navigatePressableText: {
+    fontSize: 18,
+    fontFamily: "HammersmithOne-Bold",
+    color: "white",
   },
 });

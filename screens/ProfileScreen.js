@@ -162,23 +162,20 @@ export const ProfileScreen = ({ navigation }) => {
               <Text style={[styles.regText, { fontSize: 15 }]}>
                 type: {!!user && !!user.type ? user.type : "user"}
               </Text>
-              <Text
+              <FontAwesome
                 onPress={onUserTypeChangeHandler}
-                style={[
-                  styles.regText,
-                  {
-                    fontSize: 13,
-                    marginLeft: 5,
-                    backgroundColor: "#222325",
-                    color: "white",
-                    borderRadius: 5,
-                    padding: 2,
-                    fontStyle: "normal",
-                  },
-                ]}
-              >
-                change
-              </Text>
+                name="refresh"
+                style={{
+                  marginLeft: 5,
+                  marginTop: 5,
+                  backgroundColor: "#222325",
+                  color: "white",
+                  padding: 5,
+                  borderRadius: 5,
+                }}
+                size={15}
+                color="black"
+              />
             </View>
           </View>
           <View style={styles.inputsContent}>
