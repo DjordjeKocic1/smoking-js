@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 export const Loading = () => {
   return (

@@ -21,14 +21,10 @@ export const Task = ({ navigation }) => {
     dispatch(getTasks(user._id));
   }, [dispatch]);
 
-  const onTaskStatusHandler = (status, id, userId) => {
+  const onTaskStatusHandler = (status, id) => {
     Alert.alert(
       "Task",
-      `Are you sure ${
-        status == "accept"
-          ? "you wont to accept task?"
-          : status == "done" && "you completed the task?"
-      }`,
+      `Are you sure ${status == "accept" && "you wont to accept task?"}`,
       [
         {
           text: "No",
@@ -111,32 +107,22 @@ export const Task = ({ navigation }) => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <View
-                    onTouchStart={() =>
-                      onTaskStatusHandler(
-                        t.status == "accept"
-                          ? "done"
-                          : t.status == "" && "accept",
-                        t._id
-                      )
-                    }
-                    style={[
-                      styles.pressableCont,
-                      {
-                        backgroundColor: "green",
-                      },
-                    ]}
-                  >
-                    <Text style={styles.pressableContText}>
-                      {t.status == "accept" ? (
-                        "done"
-                      ) : t.status == "done" ? (
-                        <Text>completed</Text>
-                      ) : (
-                        t.status == "" && "accept"
-                      )}
-                    </Text>
-                  </View>
+                  {t.status == "" && (
+                    <View
+                      onTouchStart={() =>
+                        onTaskStatusHandler(t.status == "" && "accept", t._id)
+                      }
+                      style={[
+                        styles.pressableCont,
+                        {
+                          backgroundColor: "green",
+                        },
+                      ]}
+                    >
+                      <Text style={styles.pressableContText}>accept</Text>
+                    </View>
+                  )}
+
                   {t.status != "done" && (
                     <View
                       onTouchStart={() => onTaskDeleteStatusHandler(t._id)}

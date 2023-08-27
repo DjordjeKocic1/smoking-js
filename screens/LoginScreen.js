@@ -26,7 +26,7 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 
 WebBrowser.maybeCompleteAuthSession();
 
-const LoginScreen = ({ navigation, route }) => {
+const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const movingAnim = useRef(new Animated.Value(-10)).current;
   const { isLoading, user } = useSelector(selectUser);
@@ -34,7 +34,7 @@ const LoginScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     AsyncStorage.getItem("@user").then((data) => {
-      if (!!data) {
+      if (data) {
         setSubmitClick(true);
         dispatch(createUser({ email: data }));
       } else {

@@ -85,7 +85,7 @@ export const Savings = ({ navigation }) => {
         duration: 100,
         useNativeDriver: false,
       }).start(({ finished }) => {
-        if (!!finished) {
+        if (finished) {
           Animated.timing(moveAnime, {
             toValue: 0,
             duration: 100,
@@ -99,7 +99,7 @@ export const Savings = ({ navigation }) => {
         duration: 100,
         useNativeDriver: false,
       }).start(({ finished }) => {
-        if (!!finished) {
+        if (finished) {
           Animated.timing(moveAnime1, {
             toValue: 0,
             duration: 100,
@@ -113,7 +113,7 @@ export const Savings = ({ navigation }) => {
         duration: 100,
         useNativeDriver: false,
       }).start(({ finished }) => {
-        if (!!finished) {
+        if (finished) {
           Animated.timing(moveAnime2, {
             toValue: 0,
             duration: 100,
@@ -696,7 +696,7 @@ export const Savings = ({ navigation }) => {
               $
             </Text>
           </View>
-          <Text style={styles.didSmokeText}>You didn't smoke</Text>
+          <Text style={styles.didSmokeText}>{"You didn't smoke"}</Text>
           <View style={styles.didSmokeContainer}>
             <Text style={styles.didSmokeContainerText}>
               {!!user &&

@@ -96,7 +96,7 @@ export const updateUser = (data, id) => {
       .then((response) => {
         dispatch(fetchSuccess(response.data.user));
       })
-      .catch((err) => {
+      .catch((e) => {
         dispatch(fetchError());
         dispatch(setError(e.response.data.error));
       });
@@ -104,10 +104,10 @@ export const updateUser = (data, id) => {
 };
 
 export const updateUserNotificationToken = (data, id) => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     http
       .updateUser(data, id)
-      .then((response) => {})
+      .then(() => {})
       .catch((e) => {
         dispatch(fetchError());
         dispatch(setError(e.response.data.error));
@@ -122,11 +122,11 @@ export const updateUserCosts = (data, id, navigation, where) => {
       .updateUserCosts(data, id)
       .then((response) => {
         dispatch(fetchSuccess(response.data.user));
-        if (!!navigation) {
+        if (navigation) {
           navigation.replace(where);
         }
       })
-      .catch(() => {
+      .catch((e) => {
         dispatch(fetchError());
         dispatch(setError(e.response.data.error));
       });
@@ -141,7 +141,7 @@ export const userHealth = (data, id) => {
       .then((response) => {
         dispatch(fetchSuccess(response.data.user));
       })
-      .catch(() => {
+      .catch((e) => {
         dispatch(fetchError());
         dispatch(setError(e.response.data.error));
       });
@@ -156,7 +156,7 @@ export const userHealthMentore = (data, id) => {
       .then((response) => {
         dispatch(updateMentorUser(response.data.user));
       })
-      .catch(() => {
+      .catch((e) => {
         dispatch(fetchError());
         dispatch(setError(e.response.data.error));
       });
@@ -168,7 +168,7 @@ export const deleteUserMentors = (mentorId, userId) => {
     dispatch(fetchStart());
     http
       .deleteMentor(mentorId, userId)
-      .then((response) => {
+      .then(() => {
         dispatch(removeUserMentors({ mentorId }));
       })
       .catch((e) => {
@@ -183,8 +183,8 @@ export const deleteUser = (id, navigation) => {
     dispatch(fetchStart());
     http
       .deleteUser(id)
-      .then((response) => {
-        if (!!navigation) {
+      .then(() => {
+        if (navigation) {
           dispatch(fetchSuccess(null));
           navigation.navigate("login");
         }

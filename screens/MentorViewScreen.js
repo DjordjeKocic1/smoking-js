@@ -10,8 +10,13 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { FontAwesome, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
-import { createTask, getTasks, selectTask } from "../store/taskReducer";
+import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import {
+  createTask,
+  getTasksByMentor,
+  selectTask,
+  updateTask,
+} from "../store/taskReducer";
 import { getMentor, selectMentor } from "../store/mentorReducer";
 import { selectUser, userHealthMentore } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
@@ -42,8 +47,14 @@ export const MentorViewScreen = ({ navigation, route }) => {
   }, [dispatch, user_idParam]);
 
   useEffect(() => {
-    dispatch(getTasks(user_idParam));
+    dispatch(getTasksByMentor(user_idParam, mentorParam.mentorId));
   }, [dispatch, user_idParam]);
+
+  useEffect(() => {
+    if (task) {
+      setTaskValue(task && task.length ? `Task ${task.length + 1}` : "Task 1");
+    }
+  }, [task]);
 
   useEffect(() => {
     dispatch(getMentor(mentorParam.mentorId));
@@ -54,7 +65,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
     setTimeout(() => {
       setRefreshing(false);
       dispatch(userHealthMentore({}, user_idParam));
-      dispatch(getTasks(user_idParam));
+      dispatch(getTasksByMentor(user_idParam, mentorParam.mentorId));
     }, 2000);
   };
 
@@ -65,7 +76,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
       easing: Easing.ease,
       useNativeDriver: true,
     }).start(({ finished }) => {
-      if (!!finished) {
+      if (finished) {
         Animated.timing(cogAnim, {
           toValue: 0,
           duration: 1000,
@@ -73,7 +84,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
           useNativeDriver: true,
         }).start();
         dispatch(userHealthMentore({}, user_idParam));
-        dispatch(getTasks(user_idParam));
+        dispatch(getTasksByMentor(user_idParam, mentorParam.mentorId));
       }
     });
   };
@@ -118,9 +129,8 @@ export const MentorViewScreen = ({ navigation, route }) => {
       useNativeDriver: false,
       easing: Easing.ease,
     }).start(({ finished }) => {
-      if (!!finished) {
+      if (finished) {
         setTaskPopupShow(false);
-        setTaskValue("");
         setTaskCommentValue("");
       }
     });
@@ -135,8 +145,11 @@ export const MentorViewScreen = ({ navigation, route }) => {
     };
     dispatch(createTask(dataToSend));
     setTaskPopupShow(false);
-    setTaskValue("");
     setTaskCommentValue("");
+  };
+
+  const onCompleteTask = (id) => {
+    dispatch(updateTask({ status: "done" }, id));
   };
 
   const spin = cogAnim.interpolate({
@@ -254,6 +267,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
   const cigInfo = [
     {
       name: "Cigarette Avoided",
+      color: "white",
       dinamicInfo:
         !!mentorUser &&
         !!mentorUser.consumptionInfo &&
@@ -262,6 +276,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
     },
     {
       name: "Cigarette in a Pack",
+      color: "white",
       dinamicInfo:
         !!mentorUser &&
         !!mentorUser.consumptionInfo &&
@@ -270,6 +285,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
     },
     {
       name: "Cigarette Daily Cost",
+      color: "white",
       dinamicInfo:
         !!mentorUser &&
         !!mentorUser.consumptionInfo &&
@@ -278,10 +294,20 @@ export const MentorViewScreen = ({ navigation, route }) => {
     },
     {
       name: "Pack of Cigarette Cost",
+      color: "white",
       dinamicInfo:
         !!mentorUser &&
         !!mentorUser.consumptionInfo &&
         mentorUser.consumptionInfo.packCigarettesPrice,
+      prefix: "$",
+    },
+    {
+      name: "Saved",
+      color: "green",
+      dinamicInfo:
+        !!mentorUser &&
+        !!mentorUser.consumptionInfo &&
+        mentorUser.consumptionInfo.cigarettesAvoidedCost,
       prefix: "$",
     },
   ];
@@ -304,7 +330,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
         onTouchEnd={onCogClickHanlder}
         style={[styles.cogs, { transform: [{ rotate: spin }] }]}
       >
-        <FontAwesome name="refresh" size={50} color="black" />
+        <FontAwesome name="refresh" size={50} color="#5bbaea" />
       </Animated.View>
       <FontAwesome5
         name="screwdriver"
@@ -420,11 +446,21 @@ export const MentorViewScreen = ({ navigation, route }) => {
           !!cigInfo.length &&
           cigInfo.map((cigI) => {
             return (
-              <View key={cigI.name} style={styles.cigaretteInfoCostsInner}>
-                <Text style={styles.cigaretteInfoCostsInnerText}>
+              <View
+                key={cigI.name}
+                style={[
+                  styles.cigaretteInfoCostsInner,
+                  {
+                    borderTopWidth: cigI.color == "green" ? 1 : 0,
+                    borderColor: "white",
+                    paddingTop: cigI.color == "green" ? 10 : 0,
+                  },
+                ]}
+              >
+                <Text style={[styles.cigaretteInfoCostsInnerText]}>
                   {cigI.name}
                 </Text>
-                <Text style={styles.cigaretteInfoCostsInnerText}>
+                <Text style={[styles.cigaretteInfoCostsInnerText]}>
                   {cigI.prefix}
                   {cigI.dinamicInfo}
                 </Text>
@@ -453,7 +489,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
               style={styles.input}
             />
             <TextInput
-              placeholder="comment here"
+              placeholder="hit the task"
               selectionColor="#c39351"
               multiline={true}
               numberOfLines={10}
@@ -482,14 +518,17 @@ export const MentorViewScreen = ({ navigation, route }) => {
           </Animated.View>
         )}
         {isLoadingTask && <Loading />}
-        {!!task ? (
+        {task ? (
           task.map((t) => {
             return (
-              <View
+              <Animated.View
                 key={t._id}
                 style={[
                   styles.taskList,
-                  { opacity: t.status == "done" ? 0.3 : 1 },
+                  {
+                    opacity: t.status == "done" ? 0.3 : 1,
+                    position: "relative",
+                  },
                 ]}
               >
                 <View style={{ width: "70%" }}>
@@ -501,17 +540,39 @@ export const MentorViewScreen = ({ navigation, route }) => {
                   >
                     {t.toDo}
                   </Text>
+                  <Text
+                    style={{
+                      fontFamily: "HammersmithOne-Bold",
+                      marginTop: 5,
+                      fontSize: 12,
+                    }}
+                  >
+                    {t.comment}
+                  </Text>
                 </View>
-                {t.status == "done" ? (
-                  <Text style={styles.taskCompleted}>completed</Text>
+                {t.status == "accept" ? (
+                  <Pressable
+                    onPress={() => onCompleteTask(t._id)}
+                    android_ripple={{ color: "white" }}
+                    style={styles.completeTask}
+                  >
+                    <Text
+                      style={[
+                        styles.taskCompleted,
+                        { color: "white", fontSize: 13 },
+                      ]}
+                    >
+                      complete it!
+                    </Text>
+                  </Pressable>
+                ) : t.status == "done" ? (
+                  <FontAwesome name="check-square-o" size={24} color="black" />
                 ) : (
-                  <MaterialIcons
-                    name="pending-actions"
-                    size={24}
-                    color="black"
-                  />
+                  <Text style={[styles.taskCompleted, { color: "black" }]}>
+                    not accepted
+                  </Text>
                 )}
-              </View>
+              </Animated.View>
             );
           })
         ) : (
@@ -626,7 +687,7 @@ const styles = StyleSheet.create({
     borderColor: "#c39351",
     backgroundColor: "white",
     borderWidth: 1,
-    width: "80%",
+    width: "90%",
     margin: 5,
     padding: 10,
     borderRadius: 5,
@@ -639,7 +700,6 @@ const styles = StyleSheet.create({
     left: 20,
     top: 50,
     zIndex: -1,
-    opacity: 0.2,
   },
   screw: {
     position: "absolute",
@@ -698,5 +758,11 @@ const styles = StyleSheet.create({
     fontFamily: "HammersmithOne-Bold",
     marginTop: 10,
     fontSize: Dimensions.get("screen").width > 600 ? 15 : 12,
+  },
+  completeTask: {
+    backgroundColor: "green",
+    borderRadius: 5,
+    padding: 5,
+    alignSelf: "flex-start",
   },
 });

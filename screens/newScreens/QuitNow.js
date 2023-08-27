@@ -65,7 +65,7 @@ export const QuitNow = ({ navigation }) => {
       </Text>
       <View style={styles.tipsContainer}>
         <Text style={styles.tipsContainerText}>
-          1. Don't set yourself up for a smoking relapse. If you usually smoked
+          1. Do not set yourself up for a smoking relapse. If you usually smoked
           while you talked on the phone, for instance,{" "}
           <Text style={{ color: "#c39351" }}>keep a pen and paper nearby</Text>{" "}
           to keep busy with doodling rather than smoking..
@@ -73,7 +73,7 @@ export const QuitNow = ({ navigation }) => {
       </View>
       <View style={styles.tipsContainer}>
         <Text style={styles.tipsContainerText}>
-          2. If you feel like you're going to give in to your tobacco craving,
+          2. If you feel like you are going to give in to your tobacco craving,
           tell yourself that you must first{" "}
           <Text style={{ color: "#c39351" }}>wait 10 more minutes</Text>. Then
           do something to distract yourself during that time. Try going to a
@@ -93,9 +93,9 @@ export const QuitNow = ({ navigation }) => {
         <Text style={styles.tipsContainerText}>
           4. You might be tempted to have just one cigarette to satisfy a
           tobacco craving.{" "}
-          <Text style={{ color: "#c39351" }}>But don't fool yourself</Text> into
-          thinking that you can stop there. More often than not, having just one
-          leads to one more. And you may end up using tobacco again.
+          <Text style={{ color: "#c39351" }}>But do not fool yourself</Text>{" "}
+          into thinking that you can stop there. More often than not, having
+          just one leads to one more. And you may end up using tobacco again.
         </Text>
       </View>
       <View style={styles.tipsContainer}>

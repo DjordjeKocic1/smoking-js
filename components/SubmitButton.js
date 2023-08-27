@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export const SubmitButton = (props) => {

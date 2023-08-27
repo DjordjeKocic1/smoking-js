@@ -9,14 +9,14 @@ const categoriesSlice = createSlice({
     isLoading: false,
   },
   reducers: {
-    fetchStart: (state, action) => {
+    fetchStart: (state) => {
       state.isLoading = true;
     },
     fetchSuccess: (state, action) => {
       state.categories = action.payload;
       state.isLoading = false;
     },
-    fetchError: (state, action) => {
+    fetchError: (state) => {
       state.isLoading = false;
     },
   },
@@ -31,7 +31,7 @@ export const getCategories = () => (dispatch) => {
     .then((response) => {
       dispatch(fetchSuccess(response.data.categories));
     })
-    .catch((err) => {
+    .catch((e) => {
       dispatch(fetchError());
       dispatch(setError(e.response.data.error));
     });

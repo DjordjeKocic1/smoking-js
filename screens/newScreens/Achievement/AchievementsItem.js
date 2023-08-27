@@ -1,6 +1,7 @@
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
+import PropTypes from "prop-types";
 import { memo } from "react";
 
 const AchievementsItem = ({ item }) => {
@@ -39,6 +40,10 @@ const AchievementsItem = ({ item }) => {
 };
 
 export default memo(AchievementsItem);
+
+AchievementsItem.propTypes = {
+  item: PropTypes.object,
+};
 
 const styles = StyleSheet.create({
   outerAch: {

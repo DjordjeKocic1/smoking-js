@@ -1,6 +1,7 @@
 import * as Notifications from "expo-notifications";
 
 import {
+  Alert,
   Dimensions,
   Image,
   Pressable,
@@ -16,6 +17,7 @@ import { useEffect, useState } from "react";
 
 import { Loading } from "../components/Loading";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Platform } from "react-native";
 import { getNotification } from "../store/notificationReducer";
 
 Notifications.setNotificationHandler({
@@ -262,6 +264,17 @@ const UserScreen = ({ navigation }) => {
           </Pressable>
         </View>
         <View style={styles.innerContainer}>
+          <Image
+            source={require("../assets/images/premium1.png")}
+            resizeMode="contain"
+            style={{
+              width: 30,
+              height: 30,
+              position: "absolute",
+              top: 8,
+              right: 8,
+            }}
+          />
           <Pressable
             onPress={() => navigation.navigate("Mentor")}
             android_ripple={{ color: "#c39351" }}
@@ -410,6 +423,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get("screen").width > 600 ? 250 : 130,
     height: Dimensions.get("screen").width > 600 ? 250 : 130,
     overflow: "hidden",
+    position: "relative",
   },
   innerContainerImg: {
     width: Dimensions.get("screen").width > 600 ? 200 : 100,

@@ -107,7 +107,7 @@ export const Categories = ({ navigation }) => {
           })
         ) : (
           <Text style={styles.noCategoriesText}>
-            You didn't select any lifestyle categorie
+            {"You didn't select any lifestyle categorie"}
           </Text>
         )}
       </View>
@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: "#e1d5c9",
     alignItems: "center",
+    paddingTop: 20,
   },
   lifeStyleText: {
     fontSize: 20,

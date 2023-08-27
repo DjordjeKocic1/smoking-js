@@ -39,6 +39,21 @@ export const getTasks = (id) => {
   };
 };
 
+export const getTasksByMentor = (userId, mentorId) => {
+  return (dispatch) => {
+    dispatch(fetchStart());
+    http
+      .getTasksMentor(userId, mentorId)
+      .then((response) => {
+        dispatch(fetchSuccess(response.data.task));
+      })
+      .catch((e) => {
+        dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
+      });
+  };
+};
+
 export const createTask = (data) => {
   return (dispatch, getState) => {
     dispatch(fetchStart());

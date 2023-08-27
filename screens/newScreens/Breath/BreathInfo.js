@@ -1,5 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
+import PropTypes from "prop-types";
+
 export const BreathInfo = ({ onReadChangeHandler }) => {
   return (
     <View style={styles.readContainerPopup}>
@@ -42,6 +44,10 @@ export const BreathInfo = ({ onReadChangeHandler }) => {
       </View>
     </View>
   );
+};
+
+BreathInfo.propTypes = {
+  onReadChangeHandler: PropTypes.func,
 };
 
 const styles = StyleSheet.create({

@@ -77,6 +77,10 @@ const getTasks = (id) => {
   return axios.get(url + `/get-task/${id}`);
 };
 
+const getTasksMentor = (userId, mentorId) => {
+  return axios.get(url + `/get-task/${userId}/${mentorId}`);
+};
+
 const createTask = (data) => {
   return axios.post(url + `/create-task`, data);
 };
@@ -101,6 +105,10 @@ const paypalPay = (data) => {
   return axios.post(url + "/paypal-pay", data);
 };
 
+const createEmail = (data) => {
+  return axios.post(url + "/email/create-email", data);
+};
+
 export const http = {
   getUsers,
   createUser,
@@ -120,10 +128,12 @@ export const http = {
   deleteNotification,
   deleteAllNotification,
   getTasks,
+  getTasksMentor,
   createTask,
   updateTask,
   deleteTask,
   stripeKey,
   paymentSheet,
   paypalPay,
+  createEmail,
 };

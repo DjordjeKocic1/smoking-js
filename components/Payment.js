@@ -12,24 +12,23 @@ import {
 } from "react-native";
 import { StripeProvider, usePaymentSheet } from "@stripe/stripe-react-native";
 import {
-  cancelPayment,
   paymentLoading,
   paymentModalShow,
-  selectAlert,
-  successPayment,
-} from "../store/common/alertPaymentReducer";
+  selectPayment,
+} from "../store/PaymentReducer";
 import { selectUser, updateUser } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { AntDesign } from "@expo/vector-icons";
 import { http } from "../utils/http";
+import { show } from "../store/infoReducer";
 
 export const Payment = () => {
   const dispatch = useDispatch();
-  const { initPaymentSheet, presentPaymentSheet, loading } = usePaymentSheet();
+  const { initPaymentSheet, presentPaymentSheet } = usePaymentSheet();
   const { user } = useSelector(selectUser);
-  const { isLoading } = useSelector(selectAlert);
+  const { isLoading } = useSelector(selectPayment);
   const [publishableKey, setPublishableKey] = useState("");
 
   useEffect(() => {
@@ -59,17 +58,22 @@ export const Payment = () => {
           user._id
         )
       );
-      dispatch(successPayment());
+      dispatch(show("Payment was successfuly"));
+      dispatch(paymentModalShow(false));
     } else {
-      dispatch(cancelPayment());
+      dispatch(show("Payment was cancelled"));
     }
     dispatch(paymentModalShow(false));
   };
 
   const paypalHandler = async () => {
+    const cigPrice =
+      !!user &&
+      !!user.consumptionInfo &&
+      user.consumptionInfo.packCigarettesPrice;
     dispatch(paymentLoading(true));
     try {
-      const r = await http.paypalPay();
+      const r = await http.paypalPay({ price: cigPrice });
       addLinkingListener();
       await WebBrowser.openBrowserAsync(r.data.link);
       dispatch(paymentLoading(false));
@@ -82,23 +86,32 @@ export const Payment = () => {
     dispatch(paymentLoading(true));
     const { error } = await presentPaymentSheet();
     if (error) {
-      dispatch(cancelPayment());
       dispatch(paymentLoading(false));
+      dispatch(show("Payment was cancelled"));
     } else {
       dispatch(
         updateUser(
-          { subscriber: true, subscribeDate: new Date().toDateString() },
+          {
+            subscriber: true,
+            subscribeDate: new Date().toDateString(),
+            subscribeLasts: 30,
+          },
           user._id
         )
       );
-      dispatch(successPayment());
+      dispatch(show("Payment was successfuly"));
+      dispatch(paymentModalShow(false));
       dispatch(paymentLoading(false));
     }
   };
 
   const fetchPaymentSheetsParams = async () => {
-    let userData = !!user && !!user.email && user.email;
-    const response = await http.paymentSheet({ email: userData });
+    let userEmail = !!user && !!user.email && user.email;
+    let price =
+      !!user &&
+      !!user.consumptionInfo &&
+      user.consumptionInfo.packCigarettesPrice + "00";
+    const response = await http.paymentSheet({ email: userEmail, price });
     const { paymentIntent, ephemeralKey, customer } = await response.data;
     return {
       paymentIntent,
@@ -111,7 +124,7 @@ export const Payment = () => {
     const { paymentIntent, ephemeralKey, customer } =
       await fetchPaymentSheetsParams();
     try {
-      const paymentResponseSheet = await initPaymentSheet({
+      await initPaymentSheet({
         customerId: customer,
         customerEphemeralKeySecret: ephemeralKey,
         paymentIntentClientSecret: paymentIntent,
@@ -135,9 +148,15 @@ export const Payment = () => {
           Invite your best friend to become your mentor and help you quit
           smoking
         </Text>
-        <Text style={[styles.paymentText, { marginBottom: 20, fontSize: 12 }]}>
-          Try the new mentoring system for only{" "}
-          <Text style={{ color: "blue" }}>$5</Text> a month!
+        <Text style={[styles.paymentText, { marginBottom: 20, fontSize: 13 }]}>
+          Try the new mentoring system for 30 days for only{" "}
+          <Text style={{ color: "blue" }}>
+            $
+            {!!user &&
+              !!user.consumptionInfo &&
+              user.consumptionInfo.packCigarettesPrice}
+            .
+          </Text>
         </Text>
         <Pressable onPress={paypalHandler} style={styles.paymentPay}>
           {isLoading ? (
@@ -173,7 +192,18 @@ export const Payment = () => {
               />
             ) : (
               <>
-                <Text style={[styles.paymentText, { fontSize: 15,borderWidth:0.3,borderRadius:5,width:'100%',padding:10 }]}>
+                <Text
+                  style={[
+                    styles.paymentText,
+                    {
+                      fontSize: 15,
+                      borderWidth: 0.3,
+                      borderRadius: 5,
+                      width: "100%",
+                      padding: 10,
+                    },
+                  ]}
+                >
                   Credit Card
                 </Text>
               </>

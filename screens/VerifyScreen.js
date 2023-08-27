@@ -24,14 +24,14 @@ const VerifyScreen = ({ navigation }) => {
       useNativeDriver: true,
       easing: Easing.linear,
     }).start(({ finished }) => {
-      if (!!finished) {
+      if (finished) {
         Animated.timing(opText2, {
           toValue: 1,
           duration: 1000,
           useNativeDriver: true,
           easing: Easing.linear,
         }).start(({ finished }) => {
-          if (!!finished) {
+          if (finished) {
             Animated.parallel([
               Animated.timing(opText, {
                 toValue: 0,
@@ -48,7 +48,7 @@ const VerifyScreen = ({ navigation }) => {
                 easing: Easing.linear,
               }),
             ]).start(({ finished }) => {
-              if (!!finished) {
+              if (finished) {
                 setSpinning(false);
                 setverifiedIconVis("flex");
                 Animated.timing(opText3, {
@@ -58,7 +58,7 @@ const VerifyScreen = ({ navigation }) => {
                   useNativeDriver: true,
                   easing: Easing.linear,
                 }).start(({ finished }) => {
-                  if (!!finished) {
+                  if (finished) {
                     navigation.replace("HomeScreen");
                   }
                 });

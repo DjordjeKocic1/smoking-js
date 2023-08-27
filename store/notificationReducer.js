@@ -56,7 +56,7 @@ export const createNotification = (data) => {
 };
 
 export const updateNotification = (data, id) => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch(fetchStart());
     http
       .updateNotification(data, id)
@@ -75,7 +75,7 @@ export const deleteNotification = (userId, isTask, isMentoring) => {
     dispatch(fetchStart());
     http
       .deleteNotification(userId, isTask, isMentoring)
-      .then((response) => {
+      .then(() => {
         let notificaitons = getState().notification.notification;
         let updatedNotifcation = notificaitons.filter((v) => {
           if (userId != v.userId) {
@@ -99,7 +99,7 @@ export const deleteAllNotification = (id) => {
     dispatch(fetchStart());
     http
       .deleteAllNotification(id)
-      .then((response) => {
+      .then(() => {
         let notificaitons = getState().notification.notification;
         let updatedNotifcation = notificaitons.filter(
           (nots) => nots.userId != id

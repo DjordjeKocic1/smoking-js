@@ -25,15 +25,13 @@ import {
   selectUser,
   userHealth,
 } from "../../store/userReducer";
-import {
-  paymentModalShow,
-  selectAlert,
-} from "../../store/common/alertPaymentReducer";
+import { fetchEmailData, selectEmail } from "../../store/emailReducer";
+import { paymentModalShow, selectPayment } from "../../store/PaymentReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
-import { AlertPayment } from "../../components/AlertPayment";
 import { BackButton } from "../../components/BackButton";
+import { EmailModal } from "../../components/EmailModal";
 import { Loading } from "../../components/Loading";
 import { Payment } from "../../components/Payment";
 
@@ -42,8 +40,9 @@ WebBrowser.maybeCompleteAuthSession();
 export const Mentor = ({ navigation }) => {
   const dispatch = useDispatch();
   const { mentor, isMentorLoading } = useSelector(selectMentor);
-  const { isVisible, isModalVisible } = useSelector(selectAlert);
+  const { isPaymentModalVisible } = useSelector(selectPayment);
   const { user, isLoading } = useSelector(selectUser);
+  const { isEmailModalVisible } = useSelector(selectEmail);
   const [mentorEmailValue, setMentorEmailValue] = useState("");
   const [mentorNameValue, setMentorNameValue] = useState("");
   const [mentorInvForm, setMentorInvForm] = useState(false);
@@ -162,6 +161,9 @@ export const Mentor = ({ navigation }) => {
         _id: user._id,
       },
     };
+    dispatch(
+      fetchEmailData({ name: dataToSend.name, email: dataToSend.email })
+    );
     setMentorEmailValue("");
     setMentorNameValue("");
 
@@ -218,7 +220,7 @@ export const Mentor = ({ navigation }) => {
                 fontSize: Dimensions.get("screen").width > 600 ? 25 : 18,
               }}
             >
-              "MENTORING"
+              {"'MENTORING'"}
             </Text>{" "}
             is there so that someone close to you can help you achieve your
             goals by assigning tasks and monitoring your progress.
@@ -399,7 +401,7 @@ export const Mentor = ({ navigation }) => {
           >
             <Text style={styles.pressableContainerText}>Ask for help</Text>
           </Pressable>
-          {!!user && !!user.subscribeDate && (
+          {!!user && !!user.subscribeLasts && user.subscriber && (
             <Text
               style={{
                 fontStyle: "italic",
@@ -408,16 +410,15 @@ export const Mentor = ({ navigation }) => {
                 fontSize: 10,
               }}
             >
-              <AntDesign name="star" size={12} color="#c39351" /> subscribed
-              from {user.subscribeDate}{" "}
+              <AntDesign name="star" size={12} color="#c39351" /> Subscription
+              lasts for another {user.subscribeLasts} day(s)
               <AntDesign name="star" size={12} color="#c39351" />
             </Text>
           )}
         </View>
       )}
-
-      {isModalVisible && <Payment />}
-      {isVisible && <AlertPayment />}
+      {isPaymentModalVisible && <Payment />}
+      {isEmailModalVisible && <EmailModal />}
     </ScrollView>
   );
 };
@@ -489,7 +490,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 999999999999,
   },
   errorContainer: {
     position: "absolute",

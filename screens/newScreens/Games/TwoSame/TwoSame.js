@@ -69,7 +69,7 @@ export const TwoSame = ({ navigation }) => {
     );
   };
 
-  const onImagePressHandler = ({ id, anim }) => {
+  const onImagePressHandler = ({ id }) => {
     let imagesCopy = [...images];
     let imgIndex = images.findIndex((v) => v.id == id);
     imagesCopy[imgIndex].active = true;

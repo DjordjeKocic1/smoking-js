@@ -1,8 +1,10 @@
+import PaymentReducer from "./PaymentReducer";
 import achievementReducer from "./achievementReducer";
-import alertPaymentReducer from "./common/alertPaymentReducer";
 import categorieReducer from "./categorieReducer";
 import { configureStore } from "@reduxjs/toolkit";
+import emailReducer from "./emailReducer";
 import errorReducer from "./errorReducer";
+import infoReducer from "./infoReducer";
 import mentorReducer from "./mentorReducer";
 import notificationReducer from "./notificationReducer";
 import taskReducer from "./taskReducer";
@@ -17,7 +19,9 @@ export const store = configureStore({
     task: taskReducer,
     achievements: achievementReducer,
     error: errorReducer,
-    alertPayment: alertPaymentReducer,
+    payment: PaymentReducer,
+    email: emailReducer,
+    info: infoReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

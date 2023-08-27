@@ -81,7 +81,7 @@ export const Breath = ({ navigation }) => {
       useNativeDriver: false,
       easing: Easing.ease,
     }).start(({ finished }) => {
-      if (!!finished) {
+      if (finished) {
         let newExerciesArr = [...exerciesArr];
         let currentExerciesIndex = newExerciesArr.findIndex(
           (v) => v.seconds == exercies.seconds
@@ -148,7 +148,7 @@ export const Breath = ({ navigation }) => {
       </Text>
       {!running ? (
         <View style={styles.container}>
-          {exerciesArr.map((v, i) => {
+          {exerciesArr.map((v) => {
             return (
               <Animated.View
                 key={v.seconds}
@@ -181,7 +181,7 @@ export const Breath = ({ navigation }) => {
                       },
                     ]}
                   >
-                    Take a deep breath and press 'START'
+                    {"Take a deep breath and press 'START'"}
                   </Text>
                   <Pressable
                     android_ripple={{ color: "gray" }}

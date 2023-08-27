@@ -235,7 +235,7 @@ const CigaretteCostScreen = ({ navigation }) => {
             style={styles.pressebleContentMentor}
           >
             <Text style={styles.pressebleContentMentorText}>
-              I'm joining as a mentor
+              {"I'm joining as a mentor"}
             </Text>
             <FontAwesome
               name="hand-pointer-o"

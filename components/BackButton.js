@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { useEffect, useState } from "react";
 
 import { Ionicons } from "@expo/vector-icons";
+import PropTypes from "prop-types";
 
 export const BackButton = ({ navigation, where }) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -33,6 +34,10 @@ export const BackButton = ({ navigation, where }) => {
       </Pressable>
     </View>
   );
+};
+
+BackButton.propTypes = {
+  where: PropTypes.string,
 };
 
 const styles = StyleSheet.create({

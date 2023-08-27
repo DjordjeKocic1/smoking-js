@@ -1,22 +1,36 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { hide, selectAlert } from "../store/common/alertPaymentReducer";
+import { hide, selectInfo } from "../store/infoReducer";
 import { useDispatch, useSelector } from "react-redux";
 
+import { Animated } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import { Easing } from "react-native";
+import { useEffect } from "react";
 
-export const AlertPayment = () => {
+export const InfoModal = () => {
   const dispatch = useDispatch();
-  const { alertMsg, isSuccessPayment } = useSelector(selectAlert);
+  const { message, isModalVisible } = useSelector(selectInfo);
+
+  const anim = new Animated.Value(-10);
+
+  useEffect(() => {
+    if (isModalVisible) {
+      Animated.timing(anim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: false,
+        easing: Easing.bounce,
+      }).start();
+    }
+  }, [isModalVisible]);
+
   return (
     <View style={styles.alertOverLay}>
-      <View style={styles.alertInner}>
+      <Animated.View
+        style={[styles.alertInner, { transform: [{ translateY: anim }] }]}
+      >
         <Text style={styles.alertText}>
-          {isSuccessPayment ? (
-            <AntDesign name="checkcircle" size={20} color="green" />
-          ) : (
-            <AntDesign name="closecircle" size={20} color="red" />
-          )}{" "}
-          {alertMsg}
+          <AntDesign name="infocirlce" size={20} color="orange" /> {message}
         </Text>
         <Pressable
           style={{
@@ -35,7 +49,7 @@ export const AlertPayment = () => {
             Ok
           </Text>
         </Pressable>
-      </View>
+      </Animated.View>
     </View>
   );
 };

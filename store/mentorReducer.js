@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { http } from "../utils/http";
+import { isModalVisible } from "./emailReducer";
 import { setError } from "./errorReducer";
 import { updateUserMentors } from "./userReducer";
 
@@ -17,11 +18,13 @@ const mentorSlice = createSlice({
       state.mentor = action.payload;
       state.isMentorLoading = false;
     },
-    createMentorSuccess:(state,action) => {
+    createMentorSuccess: (state) => {
       state.isMentorLoading = false;
     },
-    removeMentoringUser:(state,action) => {
-      let removedMentoringUser = state.mentor.mentoringUser.filter(v => v.userId !== action.payload.userId)
+    removeMentoringUser: (state, action) => {
+      let removedMentoringUser = state.mentor.mentoringUser.filter(
+        (v) => v.userId !== action.payload.userId
+      );
       state.mentor.mentoringUser = removedMentoringUser;
       state.isMentorLoading = false;
     },
@@ -31,7 +34,13 @@ const mentorSlice = createSlice({
   },
 });
 
-export const { fetchStart, fetchSuccess, fetchError,removeMentoringUser,createMentorSuccess } = mentorSlice.actions;
+export const {
+  fetchStart,
+  fetchSuccess,
+  fetchError,
+  removeMentoringUser,
+  createMentorSuccess,
+} = mentorSlice.actions;
 
 export const getMentor = (id) => {
   return (dispatch) => {
@@ -54,6 +63,10 @@ export const createMentor = (data) => {
     http
       .createMentor(data)
       .then((response) => {
+        if (response.data == "EXISTSFALSE") {
+          dispatch(isModalVisible(true));
+          return;
+        }
         const responseData = response.data.mentor;
         dispatch(
           updateUserMentors({
@@ -64,7 +77,7 @@ export const createMentor = (data) => {
             mentorId: responseData.mentorId,
           })
         );
-        dispatch(createMentorSuccess())
+        dispatch(createMentorSuccess());
       })
       .catch((e) => {
         dispatch(fetchError());
@@ -88,13 +101,13 @@ export const updateMentor = (data, id) => {
   };
 };
 
-export const deleteMentor = (mentorId,userId) => {
+export const deleteMentor = (mentorId, userId) => {
   return (dispatch) => {
     dispatch(fetchStart());
     http
-      .deleteMentor(mentorId,userId)
-      .then((response) => {
-        dispatch(removeMentoringUser({userId}))
+      .deleteMentor(mentorId, userId)
+      .then(() => {
+        dispatch(removeMentoringUser({ userId }));
       })
       .catch((e) => {
         dispatch(fetchError());

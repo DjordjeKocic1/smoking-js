@@ -1,7 +1,5 @@
-import * as Font from "expo-font";
-
 import { Animated, Easing, StyleSheet, Text, View } from "react-native";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import { selectUser } from "../store/userReducer";
 import { useSelector } from "react-redux";
@@ -48,7 +46,7 @@ const LoadingScreen = ({ navigation }) => {
         iterations: 1,
       }
     ).start(({ finished }) => {
-      if (!!finished) {
+      if (finished) {
         !!user && !!user.userVerified
           ? navigation.replace("HomeScreen")
           : navigation.replace("SmokeCalculator");

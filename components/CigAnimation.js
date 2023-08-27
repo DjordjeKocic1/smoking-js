@@ -12,6 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
 import { FontAwesome } from "@expo/vector-icons";
+import { Pressable } from "react-native";
+import PropTypes from "prop-types";
 import { selectNotification } from "../store/notificationReducer";
 import { useNavigation } from "@react-navigation/native";
 
@@ -28,6 +30,7 @@ const Images = {
   cig9: require("../assets/images/games/cigAnim/cig9.jpg"),
   cig10: require("../assets/images/games/cigAnim/cig10.jpg"),
   cig11: require("../assets/images/games/cigAnim/cig11.jpg"),
+  cig12: require("../assets/images/games/cigAnim/cigBeg.png"),
   cigSmoke: require("../assets/images/games/cigAnim/cigSmoke.png"),
 };
 export const CigAnimation = ({ onCigFinishHandler }) => {
@@ -38,6 +41,7 @@ export const CigAnimation = ({ onCigFinishHandler }) => {
   const [onFinAnimation, setOnFinAnim] = useState(false);
   const cigImageW = useRef(new Animated.Value(100)).current;
   const bellAnim = new Animated.Value(0);
+  const [cigIsLight, setCigIsLight] = useState(false);
 
   useEffect(() => {
     if (onFinAnimation) {
@@ -61,27 +65,7 @@ export const CigAnimation = ({ onCigFinishHandler }) => {
   }, [bellAnim, notification]);
 
   useEffect(() => {
-    if (!onFinAnimation) {
-      Animated.timing(cigImageW, {
-        toValue: 0,
-        delay: 2000,
-        duration: 300000,
-        useNativeDriver: false,
-        easing: Easing.linear,
-      }).start(({ finished }) => {
-        if (!!finished) {
-          setOnFinAnim(true);
-          let dataToUpdate = {
-            consumptionInfo: {
-              ...user.consumptionInfo,
-              cigarettesAvoided: user.consumptionInfo.cigarettesAvoided + 1,
-            },
-          };
-
-          dispatch(updateUserCosts(dataToUpdate, user._id));
-        }
-      });
-    } else {
+    if (onFinAnimation) {
       Animated.timing(cigImageW, {
         toValue: 100,
         duration: 100,
@@ -93,15 +77,41 @@ export const CigAnimation = ({ onCigFinishHandler }) => {
         }
       });
     }
-
     return () => {};
   }, [user, onFinAnimation]);
+
+  const cigaretteLightHandler = () => {
+    setCigIsLight(true);
+    if (cigIsLight) {
+      return;
+    }
+    Animated.timing(cigImageW, {
+      toValue: 0,
+      delay: 2000,
+      duration: 300000,
+      useNativeDriver: false,
+      easing: Easing.linear,
+    }).start(({ finished }) => {
+      if (finished) {
+        setOnFinAnim(true);
+        setCigIsLight(false);
+        let dataToUpdate = {
+          consumptionInfo: {
+            ...user.consumptionInfo,
+            cigarettesAvoided: user.consumptionInfo.cigarettesAvoided + 1,
+          },
+        };
+
+        dispatch(updateUserCosts(dataToUpdate, user._id));
+      }
+    });
+  };
 
   const onShareHandler = async () => {
     let url =
       "https://play.google.com/store/apps/details?id=com.istop.quitsmoking&hl=en-US&ah=cYxTqLi55y9Ru3OKo3yiN2YnYWc";
     try {
-      const result = await Share.share({
+      await Share.share({
         title: "The most detailed application to stop smoking",
         message: url,
       });
@@ -137,25 +147,53 @@ export const CigAnimation = ({ onCigFinishHandler }) => {
             style={styles.cigImg2}
           />
         </Animated.View>
-        <View
-          style={{
-            position: "relative",
-            flexDirection: "row",
-          }}
-        >
-          <Image
-            source={Images.cigSmoke}
-            style={styles.cigSmoke}
-            resizeMode="contain"
-          />
-          <View style={styles.overLay}></View>
-          <View style={styles.overLay2}></View>
+        {cigIsLight ? (
+          <View
+            style={{
+              position: "relative",
+              flexDirection: "row",
+            }}
+          >
+            <Image
+              source={Images.cigSmoke}
+              style={styles.cigSmoke}
+              resizeMode="contain"
+            />
+            <View style={styles.overLay}></View>
+            <View style={styles.overLay2}></View>
 
-          <Image
-            resizeMode="stretch"
-            source={Images.cig3}
-            style={styles.cigImg3}
-          />
+            <Image
+              resizeMode="stretch"
+              source={Images.cig3}
+              style={styles.cigImg3}
+            />
+          </View>
+        ) : (
+          <>
+            <View style={styles.overLayNoSmok}></View>
+            <View style={styles.overLayNoSmok2}></View>
+          </>
+        )}
+        <View style={styles.cigLighterContainer}>
+          {cigIsLight ? (
+            <View>
+              <Image
+                resizeMode="contain"
+                source={require("../assets/images/lighter2.png")}
+                style={{ width: 60, height: 50 }}
+              />
+              <Text style={styles.cigLightText}>Burning!</Text>
+            </View>
+          ) : (
+            <Pressable onPress={cigaretteLightHandler}>
+              <Image
+                resizeMode="contain"
+                source={require("../assets/images/lighter1.png")}
+                style={{ width: 60, height: 50 }}
+              />
+              <Text style={styles.cigLightText}>Light it!</Text>
+            </Pressable>
+          )}
         </View>
       </View>
       <View
@@ -177,7 +215,7 @@ export const CigAnimation = ({ onCigFinishHandler }) => {
       </View>
       <View
         onTouchStart={onShareHandler}
-        style={[styles.notificationContainer, { right: 65 }]}
+        style={[styles.notificationContainer, { left: 65 }]}
       >
         <View style={styles.shareContainer}>
           <FontAwesome name="share-alt" size={24} color="black" />
@@ -187,10 +225,14 @@ export const CigAnimation = ({ onCigFinishHandler }) => {
   );
 };
 
+CigAnimation.propTypes = {
+  onCigFinishHandler: PropTypes.func,
+};
+
 const styles = StyleSheet.create({
   container: {
     paddingTop: 50,
-    paddingBottom: 55,
+    paddingBottom: 50,
     justifyContent: "flex-end",
     backgroundColor: "#e1d5c9",
   },
@@ -214,7 +256,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
     position: "absolute",
-    right: 30,
+    left: 30,
     bottom: 0,
     zIndex: 99999,
     paddingBottom: 10,
@@ -256,5 +298,30 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 3,
     borderBottomRightRadius: 3,
     opacity: 0.7,
+  },
+  overLayNoSmok: {
+    width: 2,
+    height: 21,
+    backgroundColor: "white",
+    opacity: 0.7,
+  },
+  overLayNoSmok2: {
+    width: 5,
+    height: 21,
+    backgroundColor: "#B75C12",
+    borderWidth: 0.5,
+    borderTopRightRadius: 3,
+    borderBottomRightRadius: 3,
+    opacity: 0.7,
+  },
+  cigLightText: {
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: 11,
+    textAlign: "center",
+  },
+  cigLighterContainer: {
+    position: "absolute",
+    right: 20,
+    top: 5,
   },
 });

@@ -226,7 +226,7 @@ export const Health = ({ navigation }) => {
         <Text style={styles.smokingContainerText2}>
           <Text style={styles.boldText}>9 MONTHS</Text> - after stopping
           smoking, the secretion in the lungs disappears, thus the cough and the
-          characteristic "whistling"
+          characteristic whistling
         </Text>
         <Text style={styles.smokingContainerText2}>
           <Text style={styles.boldText}>1 YEAR</Text> - heart attack risk is

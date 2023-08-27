@@ -14,7 +14,7 @@ export const Tips = ({ navigation }) => {
       <Text style={styles.tipsHeaderText2}>Tips</Text>
       <View>
         <Text style={[styles.tipsHeaderText]}>
-          1. Prepare before you go 'Cold Turkey'.
+          {"1. Prepare before you go 'Cold Turkey'."}
         </Text>
         <Text style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}>
           There’s more to it than just tossing your cigarettes out. Smoking is
@@ -42,7 +42,7 @@ export const Tips = ({ navigation }) => {
           3. Avoid triggers.
         </Text>
         <Text style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}>
-          Don't set yourself up for a smoking relapse. If you usually smoked
+          Do not set yourself up for a smoking relapse. If you usually smoked
           while you talked on the phone, for instance, keep a pen and paper
           nearby to keep busy with doodling rather than smoking..
         </Text>
@@ -50,9 +50,9 @@ export const Tips = ({ navigation }) => {
       <View style={{ marginTop: 20 }}>
         <Text style={styles.tipsHeaderText}>4. Delay.</Text>
         <Text style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}>
-          If you feel like you're going to give in to your tobacco craving, tell
-          yourself that you must first wait 10 more minutes. Then do something
-          to distract yourself during that time. Try going to a public
+          If you feel like you are going to give in to your tobacco craving,
+          tell yourself that you must first wait 10 more minutes. Then do
+          something to distract yourself during that time. Try going to a public
           smoke-free zone. These simple tricks may be enough to move you past
           your tobacco craving.
         </Text>
@@ -66,10 +66,10 @@ export const Tips = ({ navigation }) => {
         </Text>
       </View>
       <View style={{ marginTop: 20 }}>
-        <Text style={styles.tipsHeaderText}>6. Don't have 'just one'.</Text>
+        <Text style={styles.tipsHeaderText}>6. Do not have just one.</Text>
         <Text style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}>
           You might be tempted to have just one cigarette to satisfy a tobacco
-          craving. But don't fool yourself into thinking that you can stop
+          craving. But do not fool yourself into thinking that you can stop
           there. More often than not, having just one leads to one more. And you
           may end up using tobacco again.
         </Text>

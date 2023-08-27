@@ -27,6 +27,8 @@ export default function App() {
 
   const catchResourses = async () => {
     let images = [
+      require("./assets/images/lighter1.png"),
+      require("./assets/images/lighter2.png"),
       require("./assets/images/i_stop-logo.png"),
       require("./assets/images/games/heart.png"),
       require("./assets/images/games/money.png"),

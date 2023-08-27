@@ -86,7 +86,7 @@ export const Slow = ({ navigation }) => {
       <View style={styles.tipsContainer}>
         <Text style={styles.tipsContainerText}>
           4. After <Text style={{ color: "#c39351" }}>every meal</Text>, I know
-          you want to smoke a cigar, but try to resist and don't light it right
+          you want to smoke a cigar, but try to resist and do not light it right
           away.
         </Text>
       </View>

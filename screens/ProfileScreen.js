@@ -1,7 +1,7 @@
 import {
-  Alert,
   Dimensions,
   Image,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,6 +12,7 @@ import { deleteUser, selectUser, updateUser } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
+import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BackButton } from "../components/BackButton";
 import { FontAwesome } from "@expo/vector-icons";
@@ -66,13 +67,8 @@ export const ProfileScreen = ({ navigation }) => {
     });
   };
 
-  const onUserTypeChangeHandler = () => {
-    let userType = user.type;
-    if (userType == "mentor") {
-      dispatch(updateUser({ type: "user" }, user._id));
-    } else {
-      dispatch(updateUser({ type: "mentor" }, user._id));
-    }
+  const onUserTypeChangeHandler = (type) => {
+    dispatch(updateUser({ type }, user._id));
   };
 
   const submittionHandler = () => {
@@ -97,7 +93,7 @@ export const ProfileScreen = ({ navigation }) => {
       {
         text: "Yes",
         onPress: () => {
-          AsyncStorage.removeItem("@user").then((r) => {
+          AsyncStorage.removeItem("@user").then(() => {
             dispatch(deleteUser(user._id, navigation));
           });
         },
@@ -106,10 +102,10 @@ export const ProfileScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (!!user) {
+    if (user) {
       setUserProfile({
-        email: !!user.email ? user.email : "",
-        name: !!user.name ? user.name : "",
+        email: user.email ? user.email : "",
+        name: user.name ? user.name : "",
         address:
           !!user.userBasicInfo && !!user.userBasicInfo.address
             ? user.userBasicInfo.address
@@ -145,6 +141,19 @@ export const ProfileScreen = ({ navigation }) => {
                 style={{ width: "100%", height: "100%" }}
                 source={require("../assets/images/user.png")}
               />
+              {!!user && user.subscriber && (
+                <Image
+                  style={{
+                    width: 40,
+                    height: 40,
+                    position: "absolute",
+                    bottom: -5,
+                    right: -5,
+                  }}
+                  resizeMode="contain"
+                  source={require("../assets/images/seal.png")}
+                />
+              )}
             </View>
             <Text style={styles.regText}>{!!user && user.name}</Text>
             <Text style={styles.regText}>
@@ -158,23 +167,65 @@ export const ProfileScreen = ({ navigation }) => {
                 alignItems: "center",
               }}
             >
-              <Text style={[styles.regText, { fontSize: 15 }]}>
-                type: {!!user && !!user.type ? user.type : "user"}
+              <Text style={[styles.regText, { fontSize: 12 }]}>
+                change type:{" "}
               </Text>
-              <FontAwesome
-                onPress={onUserTypeChangeHandler}
-                name="refresh"
+              <Pressable
+                onPress={() => onUserTypeChangeHandler("user")}
+                android_ripple={{ color: "#6A7152" }}
                 style={{
-                  marginLeft: 5,
-                  marginTop: 5,
-                  backgroundColor: "#222325",
-                  color: "white",
+                  marginLeft: 3,
+                  marginTop: 10,
+                  backgroundColor:
+                    !!user && !!user.type && user.type == "user"
+                      ? "#222325"
+                      : "transparent",
+                  borderWidth: 1,
                   padding: 5,
                   borderRadius: 5,
                 }}
-                size={15}
-                color="black"
-              />
+              >
+                <Text
+                  style={{
+                    color:
+                      !!user && !!user.type && user.type == "user"
+                        ? "white"
+                        : "black",
+                    fontFamily: "HammersmithOne-Bold",
+                    fontSize: 12,
+                  }}
+                >
+                  user
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => onUserTypeChangeHandler("mentor")}
+                android_ripple={{ color: "#6A7152" }}
+                style={{
+                  marginLeft: 3,
+                  marginTop: 10,
+                  backgroundColor:
+                    !!user && !!user.type && user.type == "mentor"
+                      ? "#222325"
+                      : "transparent",
+                  borderWidth: 1,
+                  padding: 5,
+                  borderRadius: 5,
+                }}
+              >
+                <Text
+                  style={{
+                    color:
+                      !!user && !!user.type && user.type == "mentor"
+                        ? "white"
+                        : "black",
+                    fontFamily: "HammersmithOne-Bold",
+                    fontSize: 12,
+                  }}
+                >
+                  mentor
+                </Text>
+              </Pressable>
             </View>
           </View>
           <View style={styles.inputsContent}>
@@ -215,7 +266,7 @@ export const ProfileScreen = ({ navigation }) => {
           </View>
           <View style={styles.lifestylecategoriesContainer}>
             <Text style={styles.lifestylecategoriesContainerText}>
-              What you like?
+              Favorite categories
             </Text>
             <Text
               onPress={() => navigation.replace("CategoriesMy")}
@@ -226,11 +277,14 @@ export const ProfileScreen = ({ navigation }) => {
           </View>
         </View>
         <SubmitButton onPress={submittionHandler}>Save Changes</SubmitButton>
-        {/* <View style={styles.removeAccContainer}>
+        <View style={styles.removeAccContainer}>
           <Pressable onPress={onRemoveAccount} style={styles.removeAcc}>
-            <Text style={styles.removeAccText}><FontAwesome name="remove" color="black" />Remove account</Text>
+            <Text style={styles.removeAccText}>
+              <FontAwesome name="remove" color="black" />
+              Remove account
+            </Text>
           </Pressable>
-        </View> */}
+        </View>
       </View>
     </ScrollView>
   );
@@ -297,7 +351,9 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 100,
-    overflow: "hidden",
+    position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
   },
   loadingContainer: {
     flex: 1,
@@ -334,6 +390,7 @@ const styles = StyleSheet.create({
   },
   lifestylecategoriesContainerText: {
     fontSize: 16,
+    fontFamily: "HammersmithOne-Bold",
   },
   lifestylecategoriesContainerSubText: {
     fontFamily: "HammersmithOne-Bold",

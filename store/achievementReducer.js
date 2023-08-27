@@ -9,14 +9,14 @@ const achievementsSlice = createSlice({
     isLoading: false,
   },
   reducers: {
-    fetchStart: (state, action) => {
+    fetchStart: (state) => {
       state.isLoading = true;
     },
     fetchSuccess: (state, action) => {
       state.achievements = action.payload;
       state.isLoading = false;
     },
-    fetchError: (state, action) => {
+    fetchError: (state) => {
       state.isLoading = false;
     },
   },
@@ -32,7 +32,7 @@ export const getAchievements = (id) => (dispatch) => {
     .then((response) => {
       dispatch(fetchSuccess(response.data.achievements));
     })
-    .catch((err) => {
+    .catch((e) => {
       dispatch(fetchError());
       dispatch(setError(e.response.data.error));
     });

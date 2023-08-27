@@ -85,7 +85,7 @@ export const ScoreScreen = ({ navigation }) => {
                   },
                 ]}
               >
-                {!!v.gameScore ? v.gameScore : 0}
+                {v.gameScore ? v.gameScore : 0}
               </Text>
             </View>
           );
@@ -93,7 +93,7 @@ export const ScoreScreen = ({ navigation }) => {
       <Text style={styles.latestScore}>Latest Rounds</Text>
       <View style={{ width: "70%", marginBottom: 10 }}>
         {!!userLatestScoreArr &&
-          userLatestScoreArr.map((v, i, row) => {
+          userLatestScoreArr.map((v, i) => {
             return (
               <View
                 key={i}

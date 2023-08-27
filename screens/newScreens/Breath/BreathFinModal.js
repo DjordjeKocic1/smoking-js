@@ -1,5 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
+import PropTypes from "prop-types";
+
 export const BreathFinModal = ({ onSuccessHandler }) => {
   return (
     <View style={styles.successContainerOverLay}>
@@ -27,6 +29,10 @@ export const BreathFinModal = ({ onSuccessHandler }) => {
       </View>
     </View>
   );
+};
+
+BreathFinModal.propTypes = {
+  onSuccessHandler: PropTypes.func,
 };
 
 const styles = StyleSheet.create({

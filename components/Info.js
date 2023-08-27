@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 
+import PropTypes from "prop-types";
 import { costOfCigarette } from "../helper/helpers";
 import { useEffect } from "react";
 import { useRef } from "react";
@@ -46,6 +47,11 @@ export const Info = ({ text, user }) => {
       </View>
     </Animated.View>
   );
+};
+
+Info.propTypes = {
+  text: PropTypes.string,
+  user: PropTypes.object,
 };
 
 const styles = StyleSheet.create({

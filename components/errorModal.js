@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { AntDesign } from "@expo/vector-icons";
+import PropTypes from "prop-types";
 import { hideError } from "../store/errorReducer";
 import { useDispatch } from "react-redux";
 
@@ -31,6 +32,10 @@ export const ErrorModal = ({ message }) => {
   );
 };
 
+ErrorModal.propTypes = {
+  message: PropTypes.string,
+};
+
 const styles = StyleSheet.create({
   errorOverlay: {
     position: "absolute",
@@ -49,7 +54,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
-    margin:1
+    margin: 1,
   },
   errorText: { fontSize: 17, fontFamily: "HammersmithOne-Bold" },
   errorPressable: {
