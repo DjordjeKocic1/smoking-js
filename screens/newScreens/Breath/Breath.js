@@ -18,6 +18,7 @@ import { BackButton } from "../../../components/BackButton";
 import { BreathFinModal } from "./BreathFinModal";
 import { BreathInfo } from "./BreathInfo";
 import CircularProgress from "react-native-circular-progress-indicator";
+import { Image } from "react-native";
 
 export const Breath = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -76,7 +77,7 @@ export const Breath = ({ navigation }) => {
 
   const onExerciseChange = (exercies) => {
     Animated.timing(exercies.anim, {
-      toValue: Dimensions.get("screen").width > 600 ? 150 : 120,
+      toValue: Dimensions.get("screen").width > 600 ? 150 : 130,
       duration: 500,
       useNativeDriver: false,
       easing: Easing.ease,
@@ -160,6 +161,14 @@ export const Breath = ({ navigation }) => {
                   },
                 ]}
               >
+                {!!user &&
+                  !!user.breathExercies &&
+                  user.breathExercies == v.seconds && (
+                    <Image
+                      source={require("../../../assets/images/fff.png")}
+                      style={styles.completeImg}
+                    />
+                  )}
                 <Pressable
                   style={styles.pressebleContainerUpper}
                   onPress={() => onExerciseChange(v)}
@@ -282,6 +291,7 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 5,
     overflow: "hidden",
+    position: "relative",
   },
   pressebleContainerText: {
     fontFamily: "HammersmithOne-Bold",
@@ -323,5 +333,12 @@ const styles = StyleSheet.create({
     fontFamily: "HammersmithOne-Bold",
     color: "white",
     fontSize: 17,
+  },
+  completeImg: {
+    width: 80,
+    height: 80,
+    position: "absolute",
+    top: -20,
+    right: -15,
   },
 });

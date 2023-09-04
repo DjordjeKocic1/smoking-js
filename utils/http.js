@@ -26,6 +26,10 @@ const deleteUser = (id) => {
   return axios.delete(url + `/delete-user/${id}`);
 };
 
+const pokeUser = (data) => {
+  return axios.post(url + "/poke-user", data);
+};
+
 const categoriesGet = () => {
   return axios.get(url + "/categories");
 };
@@ -116,6 +120,7 @@ export const http = {
   updateUserCosts,
   userHealthGet,
   deleteUser,
+  pokeUser,
   categoriesGet,
   achievementGet,
   createMentor,

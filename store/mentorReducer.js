@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { http } from "../utils/http";
 import { isModalVisible } from "./emailReducer";
 import { setError } from "./errorReducer";
+import { show } from "./infoReducer";
 import { updateUserMentors } from "./userReducer";
 
 const mentorSlice = createSlice({
@@ -78,6 +79,7 @@ export const createMentor = (data) => {
           })
         );
         dispatch(createMentorSuccess());
+        dispatch(show("Request has beed sent"));
       })
       .catch((e) => {
         dispatch(fetchError());

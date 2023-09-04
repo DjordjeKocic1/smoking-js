@@ -11,7 +11,7 @@ export const InfoModal = () => {
   const dispatch = useDispatch();
   const { message, isModalVisible } = useSelector(selectInfo);
 
-  const anim = new Animated.Value(-10);
+  const anim = new Animated.Value(-20);
 
   useEffect(() => {
     if (isModalVisible) {
@@ -19,7 +19,7 @@ export const InfoModal = () => {
         toValue: 0,
         duration: 500,
         useNativeDriver: false,
-        easing: Easing.bounce,
+        easing: Easing.linear,
       }).start();
     }
   }, [isModalVisible]);

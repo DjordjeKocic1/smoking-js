@@ -130,7 +130,7 @@ export const Payment = () => {
         paymentIntentClientSecret: paymentIntent,
         merchantDisplayName: "IStop Inc.",
         allowsDelayedPaymentMethods: true,
-        returnURL: "exp://192.168.0.11:19000",
+        returnURL: "exp+istop://1doounm.djole232.8081.exp.direct",
         googlePay: {
           merchantCountryCode: "US",
           currencyCode: "usd",
@@ -211,8 +211,10 @@ export const Payment = () => {
           </Pressable>
         </StripeProvider>
         <View
-          pointerEvents={isLoading ? "none" : "auto"}
-          onTouchEnd={() => dispatch(paymentModalShow(false))}
+          onTouchEnd={() => {
+            dispatch(paymentModalShow(false));
+            dispatch(paymentLoading(false));
+          }}
           style={styles.paymentCancel}
         >
           <Text

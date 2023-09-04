@@ -11,12 +11,13 @@ import {
   Text,
   View,
 } from "react-native";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { getTasks, selectTask } from "../store/taskReducer";
 import { selectUser, userHealth } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { Loading } from "../components/Loading";
-import { MaterialIcons } from "@expo/vector-icons";
 import { Platform } from "react-native";
 import { getNotification } from "../store/notificationReducer";
 
@@ -31,9 +32,13 @@ Notifications.setNotificationHandler({
 });
 
 const UserScreen = ({ navigation }) => {
-  const { user, isLoading } = useSelector(selectUser);
   const dispatch = useDispatch();
+  const { user, isLoading } = useSelector(selectUser);
+  const { task } = useSelector(selectTask);
   const [refreshing, setRefreshing] = useState(false);
+
+  const tasknoStatus =
+    !!task && !!task.length && task.filter((v) => v.status != "done");
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -41,6 +46,7 @@ const UserScreen = ({ navigation }) => {
       setRefreshing(false);
       dispatch(userHealth({}, user._id));
       dispatch(getNotification(user._id));
+      dispatch(getTasks(user._id));
     }, 2000);
   };
 
@@ -88,7 +94,8 @@ const UserScreen = ({ navigation }) => {
 
   useEffect(() => {
     dispatch(getNotification(user._id));
-  }, [user._id]);
+    dispatch(getTasks(user._id));
+  }, [dispatch, user._id]);
 
   if (isLoading) {
     return <Loading />;
@@ -251,10 +258,15 @@ const UserScreen = ({ navigation }) => {
           </Pressable>
         </View>
         <View style={styles.innerContainer}>
+          {!!tasknoStatus && !!tasknoStatus.length && (
+            <View style={styles.taskslength}>
+              <Text style={styles.taskslengthText}>{tasknoStatus.length}</Text>
+            </View>
+          )}
           <Pressable
             onPress={() => navigation.navigate("Task")}
             android_ripple={{ color: "#c39351" }}
-            style={[styles.innerContainerBox, { position: "relative" }]}
+            style={[styles.innerContainerBox]}
           >
             <Text style={styles.innerText}>Tasks</Text>
             <Image
@@ -264,15 +276,14 @@ const UserScreen = ({ navigation }) => {
           </Pressable>
         </View>
         <View style={styles.innerContainer}>
-          <Image
-            source={require("../assets/images/premium1.png")}
-            resizeMode="contain"
+          <AntDesign
+            name="star"
+            size={15}
+            color="orange"
             style={{
-              width: 30,
-              height: 30,
               position: "absolute",
-              top: 8,
-              right: 8,
+              top: 10,
+              right: 10,
             }}
           />
           <Pressable
@@ -442,6 +453,19 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     paddingTop: 20,
     paddingBottom: 10,
+  },
+  taskslength: {
+    backgroundColor: "orange",
+    position: "absolute",
+    top: 10,
+    right: 10,
+    borderRadius: 5,
+    padding: 5,
+  },
+  taskslengthText: {
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: 15,
+    color: "white",
   },
 });
 

@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { http } from "../utils/http";
 import { setError } from "./errorReducer";
+import { show } from "./infoReducer";
 
 const userSlice = createSlice({
   name: "users",
@@ -191,6 +192,21 @@ export const deleteUser = (id, navigation) => {
       })
       .catch((e) => {
         dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
+      });
+  };
+};
+
+export const pokeUser = (data) => {
+  return (dispatch) => {
+    http
+      .pokeUser(data)
+      .then(() => {
+        dispatch(show("You just poked the user!"));
+      })
+      .catch((e) => {
+        dispatch(fetchError());
+        dispatch(show("Poking failed :("));
         dispatch(setError(e.response.data.error));
       });
   };

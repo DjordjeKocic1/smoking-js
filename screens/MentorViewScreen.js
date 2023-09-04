@@ -18,7 +18,7 @@ import {
   updateTask,
 } from "../store/taskReducer";
 import { getMentor, selectMentor } from "../store/mentorReducer";
-import { selectUser, userHealthMentore } from "../store/userReducer";
+import { pokeUser, selectUser, userHealthMentore } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
@@ -35,8 +35,9 @@ export const MentorViewScreen = ({ navigation, route }) => {
   const [taskValue, setTaskValue] = useState("");
   const [taskCommentValue, setTaskCommentValue] = useState("");
   const [taskPopupShow, setTaskPopupShow] = useState(false);
-  const popUpAnim = useRef(new Animated.Value(0)).current;
+  const popUpAnim = useRef(new Animated.Value(-20)).current;
   const cogAnim = new Animated.Value(0);
+  const handAnim = new Animated.Value(0);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -47,8 +48,8 @@ export const MentorViewScreen = ({ navigation, route }) => {
   }, [dispatch, user_idParam]);
 
   useEffect(() => {
-    dispatch(getTasksByMentor(user_idParam, mentorParam.mentorId));
-  }, [dispatch, user_idParam]);
+    dispatch(getTasksByMentor(user_idParam, mentorParam._id));
+  }, [dispatch, user_idParam, mentorParam]);
 
   useEffect(() => {
     if (task) {
@@ -57,15 +58,15 @@ export const MentorViewScreen = ({ navigation, route }) => {
   }, [task]);
 
   useEffect(() => {
-    dispatch(getMentor(mentorParam.mentorId));
-  }, [dispatch, mentorParam.mentorId]);
+    dispatch(getMentor(mentorParam.userId));
+  }, [dispatch, mentorParam.userId]);
 
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
       dispatch(userHealthMentore({}, user_idParam));
-      dispatch(getTasksByMentor(user_idParam, mentorParam.mentorId));
+      dispatch(getTasksByMentor(user_idParam, mentorParam._id));
     }, 2000);
   };
 
@@ -84,7 +85,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
           useNativeDriver: true,
         }).start();
         dispatch(userHealthMentore({}, user_idParam));
-        dispatch(getTasksByMentor(user_idParam, mentorParam.mentorId));
+        dispatch(getTasksByMentor(user_idParam, mentorParam._id));
       }
     });
   };
@@ -99,7 +100,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
       {
         text: "Yes",
         onPress: () => {
-          navigation.navigate("HomeScreen", { screen: "Mentor" });
+          navigation.replace("HomeScreen", { screen: "Mentor" });
         },
       },
     ]);
@@ -114,17 +115,17 @@ export const MentorViewScreen = ({ navigation, route }) => {
 
   const onPopupShowHandler = () => {
     Animated.timing(popUpAnim, {
-      toValue: 1,
+      toValue: 0,
       duration: 500,
       useNativeDriver: false,
-      easing: Easing.ease,
+      easing: Easing.linear,
     }).start();
     setTaskPopupShow(true);
   };
 
   const onPopupHideHandler = () => {
     Animated.timing(popUpAnim, {
-      toValue: 0,
+      toValue: -10,
       duration: 500,
       useNativeDriver: false,
       easing: Easing.ease,
@@ -141,7 +142,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
       toDo: taskValue.trim(),
       comment: taskCommentValue.trim(),
       userId: mentorUser._id,
-      mentorId: mentor.mentorId,
+      mentorId: mentor._id,
     };
     dispatch(createTask(dataToSend));
     setTaskPopupShow(false);
@@ -150,6 +151,24 @@ export const MentorViewScreen = ({ navigation, route }) => {
 
   const onCompleteTask = (id) => {
     dispatch(updateTask({ status: "done" }, id));
+  };
+
+  const onPokeHandler = () => {
+    Animated.timing(handAnim, {
+      toValue: -2,
+      duration: 500,
+      useNativeDriver: false,
+      easing: Easing.bounce,
+    }).start(({ finished }) => {
+      if (finished) {
+        dispatch(
+          pokeUser({
+            notificationToken: mentorUser.notificationToken,
+            name: mentor.name,
+          })
+        );
+      }
+    });
   };
 
   const spin = cogAnim.interpolate({
@@ -386,6 +405,28 @@ export const MentorViewScreen = ({ navigation, route }) => {
                 Quiting Date: {mentorUser.smokingInfo.dateOfQuiting}
               </Text>
             )}
+          <View style={styles.lastSeenContainer}>
+            <Text style={[styles.basicText, { color: "gray" }]}>
+              last seen:{" "}
+              {!!mentorUser &&
+                !!mentorUser.updatedAt &&
+                new Date(mentorUser.updatedAt).toLocaleDateString()}
+            </Text>
+            <Pressable
+              android_ripple={{ color: "white" }}
+              style={styles.pokeContainer}
+              onPress={onPokeHandler}
+            >
+              <Animated.Text
+                style={[
+                  styles.pokeContainerText,
+                  { transform: [{ translateX: handAnim }] },
+                ]}
+              >
+                <FontAwesome name="hand-o-left" color="white" /> poke
+              </Animated.Text>
+            </Pressable>
+          </View>
         </View>
         <View style={styles.likeInfo}>
           <Text
@@ -471,7 +512,12 @@ export const MentorViewScreen = ({ navigation, route }) => {
       <View style={[styles.taskContainer, { width: "100%" }]}>
         <Text style={styles.taskContainerHeader}>Assigned tasks</Text>
         {taskPopupShow && (
-          <Animated.View style={[styles.taskPopup, { opacity: popUpAnim }]}>
+          <Animated.View
+            style={[
+              styles.taskPopup,
+              { transform: [{ translateY: popUpAnim }] },
+            ]}
+          >
             <Pressable
               onPress={onPopupHideHandler}
               style={{ position: "absolute", right: 10, top: 10 }}
@@ -764,5 +810,20 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 5,
     alignSelf: "flex-start",
+  },
+  lastSeenContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  pokeContainer: {
+    backgroundColor: "black",
+    padding: 5,
+    marginLeft: 5,
+    borderRadius: 5,
+  },
+  pokeContainerText: {
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: 12,
+    color: "white",
   },
 });

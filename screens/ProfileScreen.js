@@ -75,10 +75,8 @@ export const ProfileScreen = ({ navigation }) => {
     const dataTosend = {
       email: userProfile.email,
       name: userProfile.name,
-      userBasicInfo: {
-        address: userProfile.address,
-        city: userProfile.city,
-      },
+      address: userProfile.address,
+      city: userProfile.city,
     };
     dispatch(updateUser(dataTosend, user._id));
   };
@@ -106,14 +104,8 @@ export const ProfileScreen = ({ navigation }) => {
       setUserProfile({
         email: user.email ? user.email : "",
         name: user.name ? user.name : "",
-        address:
-          !!user.userBasicInfo && !!user.userBasicInfo.address
-            ? user.userBasicInfo.address
-            : "",
-        city:
-          !!user.userBasicInfo && !!user.userBasicInfo.city
-            ? user.userBasicInfo.city
-            : "",
+        address: !!user && !!user.address ? user.address : "",
+        city: !!user && !!user.city ? user.city : "",
         image: require("../assets/images/user.png"),
       });
     }
@@ -151,7 +143,7 @@ export const ProfileScreen = ({ navigation }) => {
                     right: -5,
                   }}
                   resizeMode="contain"
-                  source={require("../assets/images/seal.png")}
+                  source={require("../assets/images/goldB.png")}
                 />
               )}
             </View>
@@ -280,8 +272,7 @@ export const ProfileScreen = ({ navigation }) => {
         <View style={styles.removeAccContainer}>
           <Pressable onPress={onRemoveAccount} style={styles.removeAcc}>
             <Text style={styles.removeAccText}>
-              <FontAwesome name="remove" color="black" />
-              Remove account
+              <FontAwesome name="remove" color="grey" /> Remove account
             </Text>
           </Pressable>
         </View>
@@ -305,7 +296,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderColor: "gray",
   },
-  removeAccText: { fontSize: 15, fontFamily: "HammersmithOne-Bold" },
+  removeAccText: {
+    fontSize: 12,
+    fontFamily: "HammersmithOne-Bold",
+    color: "grey",
+  },
   innerContainer: {
     flexDirection: "column",
     justifyContent: "center",

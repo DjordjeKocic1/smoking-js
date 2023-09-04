@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { hideModal, selectEmail, sendEmail } from "../store/emailReducer";
+import { isModalVisible, selectEmail, sendEmail } from "../store/emailReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Animated } from "react-native";
@@ -55,7 +55,7 @@ export const EmailModal = () => {
             <Text style={styles.alertText}>Yes, send an email</Text>
           </Pressable>
           <Pressable
-            onPress={() => dispatch(hideModal())}
+            onPress={() => dispatch(isModalVisible(false))}
             android_ripple={{ color: "white" }}
             style={[styles.emailPressable, { backgroundColor: "red" }]}
           >

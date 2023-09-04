@@ -1,4 +1,4 @@
-import { Alert, Dimensions, StyleSheet, Text, View } from "react-native";
+import { Alert, Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
 import {
   deleteTask,
   getTasks,
@@ -17,9 +17,13 @@ export const Task = ({ navigation }) => {
   const { task } = useSelector(selectTask);
   const { user } = useSelector(selectUser);
   const isLoading = useSelector((state) => state.task.isLoading);
+
+  const taskCompleted = !!task && !!task.length && task.filter(v => v.status == "done")
+  const taskNotFin = !!task && !!task.length && task.filter(v => v.status != "done")
+
   useEffect(() => {
     dispatch(getTasks(user._id));
-  }, [dispatch]);
+  }, [dispatch,user._id]);
 
   const onTaskStatusHandler = (status, id) => {
     Alert.alert(
@@ -62,83 +66,85 @@ export const Task = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.mainContainer}>
+    <ScrollView showsHorizontalScrollIndicator={false}
+    endFillColor="#000"
+    overScrollMode="never" contentContainerStyle={styles.mainContainer}>
       <BackButton navigation={navigation} where={"UserScreen"} />
       <Text style={styles.text}>Tasks</Text>
       <View style={styles.taskContainer}>
-        {!!task && !!task.length ? (
-          task.map((t) => {
-            return (
-              <View
-                style={[
-                  styles.taskContainerInner,
-                  {
-                    opacity: t.status == "done" ? 0.3 : 1,
-                  },
-                ]}
-                key={t._id}
-              >
-                <View>
-                  <Text
-                    style={[styles.taskText, { marginBottom: 5, fontSize: 10 }]}
-                  >
-                    Status:{" "}
-                    {t.status == "accept"
-                      ? "accepted"
-                      : t.status == "done"
-                      ? "done"
-                      : "pending"}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.taskText,
-                      { textDecorationLine: "underline", marginBottom: 5 },
-                    ]}
-                  >
-                    {t.toDo}
-                  </Text>
-                  <Text style={[styles.taskText, { fontSize: 12 }]}>
-                    {t.comment}
-                  </Text>
-                </View>
+        {!!taskNotFin && !!taskNotFin.length ? (
+          taskNotFin.map((t) => {
+              return (
                 <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
+                  style={[
+                    styles.taskContainerInner,
+                    {
+                      opacity: t.status == "done" ? 0.3 : 1,
+                    },
+                  ]}
+                  key={t._id}
                 >
-                  {t.status == "" && (
-                    <View
-                      onTouchStart={() =>
-                        onTaskStatusHandler(t.status == "" && "accept", t._id)
-                      }
+                  <View>
+                    <Text
+                      style={[styles.taskText, { marginBottom: 5, fontSize: 10 }]}
+                    >
+                      Status:{" "}
+                      {t.status == "accept"
+                        ? "accepted"
+                        : t.status == "done"
+                        ? "done"
+                        : "pending"}
+                    </Text>
+                    <Text
                       style={[
-                        styles.pressableCont,
-                        {
-                          backgroundColor: "green",
-                        },
+                        styles.taskText,
+                        { textDecorationLine: "underline", marginBottom: 5 },
                       ]}
                     >
-                      <Text style={styles.pressableContText}>accept</Text>
-                    </View>
-                  )}
-
-                  {t.status != "done" && (
-                    <View
-                      onTouchStart={() => onTaskDeleteStatusHandler(t._id)}
-                      style={[
-                        styles.pressableCont,
-                        {
-                          backgroundColor: "red",
-                        },
-                      ]}
-                    >
-                      <Text style={styles.pressableContText}>decline</Text>
-                    </View>
-                  )}
+                      {t.toDo}
+                    </Text>
+                    <Text style={[styles.taskText, { fontSize: 12 }]}>
+                      {t.comment}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    {t.status == "" && (
+                      <View
+                        onTouchStart={() =>
+                          onTaskStatusHandler(t.status == "" && "accept", t._id)
+                        }
+                        style={[
+                          styles.pressableCont,
+                          {
+                            backgroundColor: "green",
+                          },
+                        ]}
+                      >
+                        <Text style={styles.pressableContText}>accept</Text>
+                      </View>
+                    )}
+  
+                    {t.status != "done" && (
+                      <View
+                        onTouchStart={() => onTaskDeleteStatusHandler(t._id)}
+                        style={[
+                          styles.pressableCont,
+                          {
+                            backgroundColor: "red",
+                          },
+                        ]}
+                      >
+                        <Text style={styles.pressableContText}>decline</Text>
+                      </View>
+                    )}
+                  </View>
                 </View>
-              </View>
-            );
+              );
           })
         ) : (
           <Text style={[styles.text, { fontSize: 14, color: "gray" }]}>
@@ -146,13 +152,95 @@ export const Task = ({ navigation }) => {
           </Text>
         )}
       </View>
-    </View>
+      <Text style={[styles.text,{marginTop:20}]}>Completed</Text>
+      <View style={styles.taskContainer}>
+        {!!taskCompleted && !!taskCompleted.length ? (
+          taskCompleted.map((t) => {
+              return (
+                <View
+                  style={[
+                    styles.taskContainerInner,
+                    {
+                      opacity: t.status == "done" ? 0.3 : 1,
+                    },
+                  ]}
+                  key={t._id}
+                >
+                  <View>
+                    <Text
+                      style={[styles.taskText, { marginBottom: 5, fontSize: 10 }]}
+                    >
+                      Status:{" "}
+                      {t.status == "accept"
+                        ? "accepted"
+                        : t.status == "done"
+                        ? "done"
+                        : "pending"}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.taskText,
+                        { textDecorationLine: "underline", marginBottom: 5 },
+                      ]}
+                    >
+                      {t.toDo}
+                    </Text>
+                    <Text style={[styles.taskText, { fontSize: 12 }]}>
+                      {t.comment}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    {t.status == "" && (
+                      <View
+                        onTouchStart={() =>
+                          onTaskStatusHandler(t.status == "" && "accept", t._id)
+                        }
+                        style={[
+                          styles.pressableCont,
+                          {
+                            backgroundColor: "green",
+                          },
+                        ]}
+                      >
+                        <Text style={styles.pressableContText}>accept</Text>
+                      </View>
+                    )}
+  
+                    {t.status != "done" && (
+                      <View
+                        onTouchStart={() => onTaskDeleteStatusHandler(t._id)}
+                        style={[
+                          styles.pressableCont,
+                          {
+                            backgroundColor: "red",
+                          },
+                        ]}
+                      >
+                        <Text style={styles.pressableContText}>decline</Text>
+                      </View>
+                    )}
+                  </View>
+                </View>
+              );
+          })
+        ) : (
+          <Text style={[styles.text, { fontSize: 14, color: "gray" }]}>
+            No completed tasks
+          </Text>
+        )}
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: "#e1d5c9",
     flexDirection: "column",
     alignItems: "center",

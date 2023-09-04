@@ -2,6 +2,7 @@ import * as WebBrowser from "expo-web-browser";
 
 import {
   Alert,
+  Animated,
   Dimensions,
   Pressable,
   RefreshControl,
@@ -28,9 +29,10 @@ import {
 import { fetchEmailData, selectEmail } from "../../store/emailReducer";
 import { paymentModalShow, selectPayment } from "../../store/PaymentReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { BackButton } from "../../components/BackButton";
+import { Easing } from "react-native";
 import { EmailModal } from "../../components/EmailModal";
 import { Loading } from "../../components/Loading";
 import { Payment } from "../../components/Payment";
@@ -47,6 +49,7 @@ export const Mentor = ({ navigation }) => {
   const [mentorNameValue, setMentorNameValue] = useState("");
   const [mentorInvForm, setMentorInvForm] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const formAnim = useRef(new Animated.Value(-20)).current;
 
   useEffect(() => {
     dispatch(getMentor(user._id));
@@ -85,7 +88,7 @@ export const Mentor = ({ navigation }) => {
             const dataToSend = {
               name: mentor.name,
               user: {
-                userId: userValue.userId,
+                userId: userValue._id,
                 accepted: true,
                 name: userValue.name,
               },
@@ -109,7 +112,7 @@ export const Mentor = ({ navigation }) => {
         text: "Yes",
         onPress: () => {
           navigation.replace("MentorViewScreen", {
-            user_idParam: userValue.userId,
+            user_idParam: userValue._id,
             mentorParam: mentor,
           });
         },
@@ -177,9 +180,28 @@ export const Mentor = ({ navigation }) => {
   const askForHelpHanlder = () => {
     if (!!user && !!user.subscriber) {
       setMentorInvForm(true);
+      Animated.timing(formAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: false,
+        easing: Easing.linear,
+      }).start();
       return;
     }
     dispatch(paymentModalShow(true));
+  };
+
+  const onCloseFormHandler = () => {
+    Animated.timing(formAnim, {
+      toValue: -20,
+      duration: 500,
+      useNativeDriver: false,
+      easing: Easing.linear,
+    }).start(({ finished }) => {
+      if (finished) {
+        setMentorInvForm(false);
+      }
+    });
   };
 
   if (isMentorLoading && isLoading) {
@@ -228,10 +250,15 @@ export const Mentor = ({ navigation }) => {
         </View>
       </View>
       {mentorInvForm && (
-        <View style={styles.mentorInvContainer}>
+        <Animated.View
+          style={[
+            styles.mentorInvContainer,
+            { transform: [{ translateY: formAnim }] },
+          ]}
+        >
           <View style={[styles.mentorInvInnerContainer]}>
             <Pressable
-              onPress={() => setMentorInvForm(false)}
+              onPress={onCloseFormHandler}
               style={styles.mentorInvCloseBtn}
               android_ripple={{ color: "#c39351" }}
             >
@@ -264,7 +291,7 @@ export const Mentor = ({ navigation }) => {
               </Text>
             </Pressable>
           </View>
-        </View>
+        </Animated.View>
       )}
       <BackButton navigation={navigation} where={"UserScreen"} />
       <View style={[styles.mentoring, { marginTop: 40 }]}>
@@ -380,9 +407,7 @@ export const Mentor = ({ navigation }) => {
                   </View>
                   <View>
                     <Pressable
-                      onPress={() =>
-                        deleteUserMentorHandler(v.mentorId, user._id)
-                      }
+                      onPress={() => deleteUserMentorHandler(v._id, user._id)}
                       style={styles.mentorViewPressable}
                     >
                       <AntDesign name="close" size={15} color="white" />
