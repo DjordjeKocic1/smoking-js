@@ -24,7 +24,7 @@ const mentorSlice = createSlice({
     },
     removeMentoringUser: (state, action) => {
       let removedMentoringUser = state.mentor.mentoringUser.filter(
-        (v) => v.userId !== action.payload.userId
+        (v) => v._id !== action.payload.userId
       );
       state.mentor.mentoringUser = removedMentoringUser;
       state.isMentorLoading = false;
@@ -79,7 +79,7 @@ export const createMentor = (data) => {
           })
         );
         dispatch(createMentorSuccess());
-        dispatch(show("Request has beed sent"));
+        dispatch(show("Request has been sent"));
       })
       .catch((e) => {
         dispatch(fetchError());

@@ -351,7 +351,7 @@ export const Mentor = ({ navigation }) => {
                 <View>
                   <Pressable
                     onPress={() =>
-                      deleteMentorHandler(mentor.mentorId, v.userId)
+                      deleteMentorHandler(mentor._id, v._id)
                     }
                     style={styles.mentorViewPressable}
                   >

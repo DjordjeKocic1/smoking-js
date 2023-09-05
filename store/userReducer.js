@@ -34,7 +34,7 @@ const userSlice = createSlice({
     },
     removeUserMentors: (state, action) => {
       let removedMentors = state.user.mentors.filter(
-        (v) => v.mentorId !== action.payload.mentorId
+        (v) => v._id !== action.payload.mentorId
       );
       state.user.mentors = removedMentors;
       state.isLoading = false;
