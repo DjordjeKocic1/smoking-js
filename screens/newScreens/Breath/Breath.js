@@ -163,7 +163,7 @@ export const Breath = ({ navigation }) => {
               >
                 {!!user &&
                   !!user.breathExercies &&
-                  user.breathExercies == v.seconds && (
+                  user.breathExercies >= v.seconds && (
                     <Image
                       source={require("../../../assets/images/fff.png")}
                       style={styles.completeImg}
