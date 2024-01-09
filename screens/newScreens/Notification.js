@@ -10,8 +10,7 @@ import { Feather } from "@expo/vector-icons";
 import { Loading } from "../../components/Loading";
 
 export const Notification = ({ navigation }) => {
-  const { notification } = useSelector(selectNotification);
-  const isLoading = useSelector((state) => state.notification.isLoading);
+  const { notification, isLoading } = useSelector(selectNotification);
   const dispatch = useDispatch();
 
   if (isLoading) {

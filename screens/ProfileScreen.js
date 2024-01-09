@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { deleteUser, selectUser, updateUser } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
 
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -18,17 +17,18 @@ import { BackButton } from "../components/BackButton";
 import { FontAwesome } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
 import { SubmitButton } from "../components/SubmitButton";
+import { useState } from "react";
 
 export const ProfileScreen = ({ navigation }) => {
   const { user, isLoading } = useSelector(selectUser);
   const dispatch = useDispatch();
 
   const [userProfile, setUserProfile] = useState({
-    name: "",
-    email: "",
-    address: "",
-    city: "",
-    image: "",
+    name: !!user && user.name ? user.name : "",
+    email: !!user && user.email ? user.email : "",
+    address: !!user && user.address ? user.address : "",
+    city: !!user && user.city ? user.city : "",
+    image: !!user && user.image ? user.image : "",
   });
 
   const onNameChangeHandler = (enteredValue) => {
@@ -99,20 +99,6 @@ export const ProfileScreen = ({ navigation }) => {
     ]);
   };
 
-  useEffect(() => {
-    if (user) {
-      setUserProfile({
-        email: user.email ? user.email : "",
-        name: user.name ? user.name : "",
-        address: !!user && !!user.address ? user.address : "",
-        city: !!user && !!user.city ? user.city : "",
-        image: require("../assets/images/user.png"),
-      });
-    }
-
-    return () => {};
-  }, [user]);
-
   if (isLoading) {
     return <Loading />;
   }
@@ -133,19 +119,21 @@ export const ProfileScreen = ({ navigation }) => {
                 style={{ width: "100%", height: "100%" }}
                 source={require("../assets/images/user.png")}
               />
-              {!!user && user.subscriber && (
-                <Image
-                  style={{
-                    width: 40,
-                    height: 40,
-                    position: "absolute",
-                    bottom: -5,
-                    right: -5,
-                  }}
-                  resizeMode="contain"
-                  source={require("../assets/images/goldB.png")}
-                />
-              )}
+              {!!user &&
+                !!user.subscription &&
+                user.subscription.subscriber && (
+                  <Image
+                    style={{
+                      width: 40,
+                      height: 40,
+                      position: "absolute",
+                      bottom: -5,
+                      right: -5,
+                    }}
+                    resizeMode="contain"
+                    source={require("../assets/images/goldB.png")}
+                  />
+                )}
             </View>
             <Text style={styles.regText}>{!!user && user.name}</Text>
             <Text style={styles.regText}>
@@ -382,6 +370,7 @@ const styles = StyleSheet.create({
   lifestylecategoriesContainer: {
     flexDirection: "row",
     marginTop: 20,
+    alignItems: "center",
   },
   lifestylecategoriesContainerText: {
     fontSize: 16,

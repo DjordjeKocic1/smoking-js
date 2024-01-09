@@ -178,7 +178,7 @@ export const Mentor = ({ navigation }) => {
   };
 
   const askForHelpHanlder = () => {
-    if (!!user && !!user.subscriber) {
+    if (!!user && !!user.subscription && !!user.subscription.subscriber) {
       setMentorInvForm(true);
       Animated.timing(formAnim, {
         toValue: 0,
@@ -210,10 +210,10 @@ export const Mentor = ({ navigation }) => {
 
   return (
     <ScrollView
-      contentContainerStyle={styles.mainContainer}
       showsHorizontalScrollIndicator={false}
       endFillColor="#000"
       overScrollMode="never"
+      contentContainerStyle={styles.mainContainer}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
@@ -424,7 +424,10 @@ export const Mentor = ({ navigation }) => {
           >
             <Text style={styles.pressableContainerText}>Ask for help</Text>
           </Pressable>
-          {!!user && !!user.subscribeLasts && user.subscriber ? (
+          {!!user &&
+          !!user.subscription &&
+          !!user.subscription.subscribeLasts &&
+          user.subscription.subscriber ? (
             <Text
               style={{
                 fontStyle: "italic",
@@ -434,7 +437,7 @@ export const Mentor = ({ navigation }) => {
               }}
             >
               <AntDesign name="star" size={12} color="#c39351" /> Subscription
-              lasts for another {user.subscribeLasts} day(s)
+              lasts for another {user.subscription.subscribeLasts} day(s)
               <AntDesign name="star" size={12} color="#c39351" />
             </Text>
           ) : (
@@ -446,7 +449,7 @@ export const Mentor = ({ navigation }) => {
                 fontSize: 10,
               }}
             >
-              Subscription expired
+              No Subscription added
             </Text>
           )}
         </View>

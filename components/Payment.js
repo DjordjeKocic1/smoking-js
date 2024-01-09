@@ -52,12 +52,14 @@ export const Payment = () => {
     if (!event) return;
     let data = Linking.parse(event.url);
     if (!!data && !!data.queryParams && !!data.queryParams.paymentId) {
-      dispatch(
-        updateUser(
-          { subscriber: true, subscribeDate: new Date().toDateString() },
-          user._id
-        )
-      );
+      let dataToSend = {
+        subscription: {
+          subscriber: true,
+          subscribeDate: new Date().toDateString(),
+          subscribeLasts: 30,
+        },
+      };
+      dispatch(updateUser(dataToSend, user._id));
       dispatch(show("Payment was successfuly"));
       dispatch(paymentModalShow(false));
     } else {
@@ -89,16 +91,14 @@ export const Payment = () => {
       dispatch(paymentLoading(false));
       dispatch(show("Payment was cancelled"));
     } else {
-      dispatch(
-        updateUser(
-          {
-            subscriber: true,
-            subscribeDate: new Date().toDateString(),
-            subscribeLasts: 30,
-          },
-          user._id
-        )
-      );
+      let dataToSend = {
+        subscription: {
+          subscriber: true,
+          subscribeDate: new Date().toDateString(),
+          subscribeLasts: 30,
+        },
+      };
+      dispatch(updateUser(dataToSend, user._id));
       dispatch(show("Payment was successfuly"));
       dispatch(paymentModalShow(false));
       dispatch(paymentLoading(false));

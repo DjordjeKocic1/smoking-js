@@ -51,6 +51,11 @@ const UserScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
+    dispatch(getNotification(user._id));
+    dispatch(getTasks(user._id));
+  }, [dispatch, user._id]);
+
+  useEffect(() => {
     const confPushNotification = async () => {
       const { status } = await Notifications.getPermissionsAsync();
       let finalStatus = status;
@@ -91,11 +96,6 @@ const UserScreen = ({ navigation }) => {
     };
     confPushNotification();
   }, [user._id]);
-
-  useEffect(() => {
-    dispatch(getNotification(user._id));
-    dispatch(getTasks(user._id));
-  }, [dispatch, user._id]);
 
   if (isLoading) {
     return <Loading />;
