@@ -350,9 +350,7 @@ export const Mentor = ({ navigation }) => {
                 </View>
                 <View>
                   <Pressable
-                    onPress={() =>
-                      deleteMentorHandler(mentor._id, v._id)
-                    }
+                    onPress={() => deleteMentorHandler(mentor._id, v._id)}
                     style={styles.mentorViewPressable}
                   >
                     <AntDesign name="close" size={15} color="white" />
@@ -426,7 +424,7 @@ export const Mentor = ({ navigation }) => {
           >
             <Text style={styles.pressableContainerText}>Ask for help</Text>
           </Pressable>
-          {!!user && !!user.subscribeLasts && user.subscriber && (
+          {!!user && !!user.subscribeLasts && user.subscriber ? (
             <Text
               style={{
                 fontStyle: "italic",
@@ -438,6 +436,17 @@ export const Mentor = ({ navigation }) => {
               <AntDesign name="star" size={12} color="#c39351" /> Subscription
               lasts for another {user.subscribeLasts} day(s)
               <AntDesign name="star" size={12} color="#c39351" />
+            </Text>
+          ) : (
+            <Text
+              style={{
+                fontStyle: "italic",
+                marginTop: 10,
+                fontFamily: "HammersmithOne-Bold",
+                fontSize: 10,
+              }}
+            >
+              Subscription expired
             </Text>
           )}
         </View>
