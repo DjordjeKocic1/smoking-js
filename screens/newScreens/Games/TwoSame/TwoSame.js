@@ -59,6 +59,7 @@ export const TwoSame = ({ navigation }) => {
 
   const { user } = useSelector(selectUser);
   const [isVisible, setVisible] = useState(false);
+  const [isCollected, setIsCollected] = useState(false);
 
   const shuffle = () => {
     setImages(
@@ -101,6 +102,20 @@ export const TwoSame = ({ navigation }) => {
       }, 1000);
     }
     setImages(imagesCopy);
+  };
+
+  const onImgLoad = () => {
+    if (isCollected) return;
+    dispatch(
+      updateUser(
+        {
+          gameScore: (!!user && !!user.gameScore ? user.gameScore : 0) + 5,
+          latestScore: 5,
+        },
+        user._id
+      )
+    );
+    setIsCollected(true);
   };
 
   useEffect(() => {
@@ -183,18 +198,7 @@ export const TwoSame = ({ navigation }) => {
           <ImageBackground
             source={require("../../../../assets/images/twoSameImgs/nextlvl.png")}
             resizeMode="contain"
-            onLoad={() =>
-              dispatch(
-                updateUser(
-                  {
-                    gameScore:
-                      (!!user && !!user.gameScore ? user.gameScore : 0) + 5,
-                    latestScore: 5,
-                  },
-                  user._id
-                )
-              )
-            }
+            onLoad={onImgLoad}
             style={styles.nextLevelImgBG}
           ></ImageBackground>
           <View style={styles.imageNextContainer}>

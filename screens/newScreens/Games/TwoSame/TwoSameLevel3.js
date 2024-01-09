@@ -117,6 +117,7 @@ export const TwoSameLevel3 = ({ navigation }) => {
   ]);
   const { user } = useSelector(selectUser);
   const [isVisible, setVisible] = useState(false);
+  const { isCollected, setIsCollected } = useState(false);
 
   const shuffle = () => {
     setImages(
@@ -159,6 +160,22 @@ export const TwoSameLevel3 = ({ navigation }) => {
       }, 1000);
     }
     setImages(imagesCopy);
+  };
+
+  const onImgLoad = () => {
+    if (isCollected) return;
+
+    dispatch(
+      updateUser(
+        {
+          gameScore: (!!user && !!user.gameScore ? user.gameScore : 0) + 15,
+          latestScore:
+            (!!user && !!user.latestScore ? user.latestScore : 0) + 15,
+        },
+        user._id
+      )
+    );
+    setIsCollected(true);
   };
 
   useEffect(() => {
@@ -240,20 +257,7 @@ export const TwoSameLevel3 = ({ navigation }) => {
         <View style={styles.nextLevel}>
           <BackButton navigation={navigation} where={"UserScreen"} />
           <ImageBackground
-            onLoad={() =>
-              dispatch(
-                updateUser(
-                  {
-                    gameScore:
-                      (!!user && !!user.gameScore ? user.gameScore : 0) + 15,
-                    latestScore:
-                      (!!user && !!user.latestScore ? user.latestScore : 0) +
-                      15,
-                  },
-                  user._id
-                )
-              )
-            }
+            onLoad={onImgLoad}
             source={require("../../../../assets/images/twoSameImgs/ranklist.png")}
             resizeMode="contain"
             style={styles.nextLevelImgBG}

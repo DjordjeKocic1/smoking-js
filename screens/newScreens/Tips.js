@@ -38,7 +38,7 @@ export const Tips = ({ navigation }) => {
         </Text>
       </View>
       <View style={{ marginTop: 20 }}>
-        <Text style={[styles.tipsHeaderText, { textAlign: "left" }]}>
+        <Text style={styles.tipsHeaderText}>
           3. Avoid triggers.
         </Text>
         <Text style={[styles.tipsHeaderText, { fontSize: 12, marginTop: 10 }]}>
@@ -104,15 +104,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#e1d5c9",
     position: "relative",
     paddingVertical: 20,
-    paddingHorizontal: Dimensions.get("screen").width > 600 ? 30 : 10,
+    paddingHorizontal: Dimensions.get("screen").width > 600 ? 30 : 20,
   },
   innerContainer: {
     flexDirection: "column",
   },
   tipsHeaderText: {
     fontFamily: "HammersmithOne-Bold",
-    fontSize: 18,
-    textAlign: "left",
+    fontSize: 17,
+    textAlign: "center",
   },
   tipsHeaderText2: {
     fontFamily: "HammersmithOne-Bold",
