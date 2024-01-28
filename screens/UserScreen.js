@@ -12,7 +12,6 @@ import {
   View,
 } from "react-native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
-import { getTasks, selectTask } from "../store/taskReducer";
 import { selectUser, userHealth } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -20,6 +19,7 @@ import { useEffect, useState } from "react";
 import { Loading } from "../components/Loading";
 import { Platform } from "react-native";
 import { getNotification } from "../store/notificationReducer";
+import { getTasks } from "../store/taskReducer";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => {
@@ -34,11 +34,11 @@ Notifications.setNotificationHandler({
 const UserScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { user, isLoading } = useSelector(selectUser);
-  const { task } = useSelector(selectTask);
+  //const { task } = useSelector(selectTask);
   const [refreshing, setRefreshing] = useState(false);
 
-  const tasknoStatus =
-    !!task && !!task.length && task.filter((v) => v.status != "done");
+  // const tasknoStatus =
+  //   !!task && !!task.length && task.filter((v) => v.status != "done");
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -257,7 +257,7 @@ const UserScreen = ({ navigation }) => {
             />
           </Pressable>
         </View>
-        <View style={styles.innerContainer}>
+        {/* <View style={styles.innerContainer}>
           {!!tasknoStatus && !!tasknoStatus.length && (
             <View style={styles.taskslength}>
               <Text style={styles.taskslengthText}>{tasknoStatus.length}</Text>
@@ -274,7 +274,7 @@ const UserScreen = ({ navigation }) => {
               style={styles.innerContainerImg}
             />
           </Pressable>
-        </View>
+        </View> */}
         <View style={styles.innerContainer}>
           <AntDesign
             name="star"
@@ -340,7 +340,7 @@ const UserScreen = ({ navigation }) => {
             />
           </Pressable>
         </View>
-        <View style={styles.innerContainer}>
+        {/* <View style={styles.innerContainer}>
           <Pressable
             onPress={() => navigation.navigate("Achievements")}
             android_ripple={{ color: "#c39351" }}
@@ -352,14 +352,14 @@ const UserScreen = ({ navigation }) => {
               style={styles.innerContainerImg}
             />
           </Pressable>
-        </View>
+        </View> */}
         <View style={styles.innerContainer}>
           <Pressable
             onPress={() => navigation.navigate("Profile")}
             android_ripple={{ color: "#c39351" }}
             style={styles.innerContainerBox}
           >
-            <Text style={styles.innerText}>Profile</Text>
+            <Text style={styles.innerText}>ME</Text>
             <Image
               source={require("../assets/images/profile.png")}
               style={styles.innerContainerImg}
@@ -411,9 +411,9 @@ const styles = StyleSheet.create({
   },
 
   innerText: {
-    fontFamily: "HammersmithOne-Bold",
     marginTop: 10,
     fontSize: Dimensions.get("screen").width > 600 ? 16 : 12,
+    fontWeight: "bold",
   },
   container: {
     flex: 1,

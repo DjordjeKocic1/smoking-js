@@ -446,10 +446,10 @@ export const Mentor = ({ navigation }) => {
                 fontStyle: "italic",
                 marginTop: 10,
                 fontFamily: "HammersmithOne-Bold",
-                fontSize: 10,
+                fontSize: 12,
               }}
             >
-              No Subscription added
+              No Subscription
             </Text>
           )}
         </View>

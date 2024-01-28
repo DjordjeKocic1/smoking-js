@@ -5,98 +5,22 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
-import { deleteUser, selectUser, updateUser } from "../store/userReducer";
+import { selectUser, updateUser } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Alert } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BackButton } from "../components/BackButton";
+import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
-import { SubmitButton } from "../components/SubmitButton";
-import { useState } from "react";
 
 export const ProfileScreen = ({ navigation }) => {
   const { user, isLoading } = useSelector(selectUser);
   const dispatch = useDispatch();
 
-  const [userProfile, setUserProfile] = useState({
-    name: !!user && user.name ? user.name : "",
-    email: !!user && user.email ? user.email : "",
-    address: !!user && user.address ? user.address : "",
-    city: !!user && user.city ? user.city : "",
-    image: !!user && user.image ? user.image : "",
-  });
-
-  const onNameChangeHandler = (enteredValue) => {
-    setUserProfile((prev) => {
-      return {
-        ...prev,
-        name: enteredValue,
-      };
-    });
-  };
-
-  const onEmailChangeHandler = (enteredValue) => {
-    setUserProfile((prev) => {
-      return {
-        ...prev,
-        email: enteredValue,
-      };
-    });
-  };
-
-  const onAddressChangeHandler = (enteredValue) => {
-    setUserProfile((prev) => {
-      return {
-        ...prev,
-        address: enteredValue,
-      };
-    });
-  };
-
-  const onCityChangeHandler = (enteredValue) => {
-    setUserProfile((prev) => {
-      return {
-        ...prev,
-        city: enteredValue,
-      };
-    });
-  };
-
   const onUserTypeChangeHandler = (type) => {
     dispatch(updateUser({ type }, user._id));
-  };
-
-  const submittionHandler = () => {
-    const dataTosend = {
-      email: userProfile.email,
-      name: userProfile.name,
-      address: userProfile.address,
-      city: userProfile.city,
-    };
-    dispatch(updateUser(dataTosend, user._id));
-  };
-
-  const onRemoveAccount = () => {
-    Alert.alert("Remove Account", "Your are about to remove your account", [
-      {
-        text: "No",
-        onPress: () => null,
-        style: "cancel",
-      },
-      {
-        text: "Yes",
-        onPress: () => {
-          AsyncStorage.removeItem("@user").then(() => {
-            dispatch(deleteUser(user._id, navigation));
-          });
-        },
-      },
-    ]);
   };
 
   if (isLoading) {
@@ -110,159 +34,137 @@ export const ProfileScreen = ({ navigation }) => {
       endFillColor="#000"
       overScrollMode="never"
     >
-      <BackButton navigation={navigation} where={"UserScreen"} />
       <View style={styles.container}>
         <View style={styles.innerContainer}>
           <View style={styles.headerContainer}>
             <View style={[styles.imageContainer]}>
               <Image
-                style={{ width: "100%", height: "100%" }}
+                style={{ width: 50, height: 50 }}
                 source={require("../assets/images/user.png")}
               />
-              {!!user &&
-                !!user.subscription &&
-                user.subscription.subscriber && (
-                  <Image
-                    style={{
-                      width: 40,
-                      height: 40,
-                      position: "absolute",
-                      bottom: -5,
-                      right: -5,
-                    }}
-                    resizeMode="contain"
-                    source={require("../assets/images/goldB.png")}
-                  />
-                )}
             </View>
-            <Text style={styles.regText}>{!!user && user.name}</Text>
-            <Text style={styles.regText}>
-              Last updated:{" "}
-              {!!user && new Date(user.updatedAt).toLocaleDateString()}
-            </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text style={[styles.regText, { fontSize: 12 }]}>
-                change type:{" "}
-              </Text>
-              <Pressable
-                onPress={() => onUserTypeChangeHandler("user")}
-                android_ripple={{ color: "#6A7152" }}
-                style={{
-                  marginLeft: 3,
-                  marginTop: 10,
-                  backgroundColor:
-                    !!user && !!user.type && user.type == "user"
-                      ? "#222325"
-                      : "transparent",
-                  borderWidth: 1,
-                  padding: 5,
-                  borderRadius: 5,
-                }}
-              >
-                <Text
+            <View style={styles.userTypeContainer}>
+              <Text>user type</Text>
+              <View style={styles.userTypeInner}>
+                <Pressable
+                  onPress={() => onUserTypeChangeHandler("user")}
+                  android_ripple={{ color: "#6A7152" }}
                   style={{
-                    color:
+                    marginLeft: 3,
+                    marginTop: 10,
+                    backgroundColor:
                       !!user && !!user.type && user.type == "user"
-                        ? "white"
-                        : "black",
-                    fontFamily: "HammersmithOne-Bold",
-                    fontSize: 12,
+                        ? "#222325"
+                        : "transparent",
+                    borderWidth: 1,
+                    padding: 5,
+                    borderRadius: 5,
                   }}
                 >
-                  user
-                </Text>
-              </Pressable>
-              <Pressable
-                onPress={() => onUserTypeChangeHandler("mentor")}
-                android_ripple={{ color: "#6A7152" }}
-                style={{
-                  marginLeft: 3,
-                  marginTop: 10,
-                  backgroundColor:
-                    !!user && !!user.type && user.type == "mentor"
-                      ? "#222325"
-                      : "transparent",
-                  borderWidth: 1,
-                  padding: 5,
-                  borderRadius: 5,
-                }}
-              >
-                <Text
+                  <Text
+                    style={{
+                      color:
+                        !!user && !!user.type && user.type == "user"
+                          ? "white"
+                          : "black",
+                      fontFamily: "HammersmithOne-Bold",
+                      fontSize: 12,
+                    }}
+                  >
+                    user
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => onUserTypeChangeHandler("mentor")}
+                  android_ripple={{ color: "#6A7152" }}
                   style={{
-                    color:
+                    marginLeft: 3,
+                    marginTop: 10,
+                    backgroundColor:
                       !!user && !!user.type && user.type == "mentor"
-                        ? "white"
-                        : "black",
-                    fontFamily: "HammersmithOne-Bold",
-                    fontSize: 12,
+                        ? "#222325"
+                        : "transparent",
+                    borderWidth: 1,
+                    padding: 5,
+                    borderRadius: 5,
                   }}
                 >
-                  mentor
-                </Text>
-              </Pressable>
+                  <Text
+                    style={{
+                      color:
+                        !!user && !!user.type && user.type == "mentor"
+                          ? "white"
+                          : "black",
+                      fontFamily: "HammersmithOne-Bold",
+                      fontSize: 12,
+                    }}
+                  >
+                    mentor
+                  </Text>
+                </Pressable>
+              </View>
             </View>
           </View>
-          <View style={styles.inputsContent}>
-            <Text>Full Name</Text>
-            <TextInput
-              placeholder="enter full name"
-              onChangeText={onNameChangeHandler}
-              value={userProfile.name}
-              style={styles.input}
-            />
-          </View>
-          <View style={styles.inputsContent}>
-            <Text>Email</Text>
-            <TextInput
-              placeholder="enter email address"
-              onChangeText={onEmailChangeHandler}
-              value={userProfile.email}
-              style={styles.input}
-            />
-          </View>
-          <View style={styles.inputsContent}>
-            <Text>Address</Text>
-            <TextInput
-              placeholder="your street address"
-              onChangeText={onAddressChangeHandler}
-              value={userProfile.address}
-              style={styles.input}
-            />
-          </View>
-          <View style={styles.inputsContent}>
-            <Text>City</Text>
-            <TextInput
-              placeholder="your city"
-              onChangeText={onCityChangeHandler}
-              value={userProfile.city}
-              style={styles.input}
-            />
-          </View>
-          <View style={styles.lifestylecategoriesContainer}>
-            <Text style={styles.lifestylecategoriesContainerText}>
-              Favorite categories
-            </Text>
-            <Text
-              onPress={() => navigation.replace("CategoriesMy")}
-              style={styles.lifestylecategoriesContainerSubText}
+          <Text style={styles.headerText}>HEALTH DATA</Text>
+          <View style={styles.heathData}>
+            <View
+              onTouchEnd={() => navigation.navigate("Achievements")}
+              style={[styles.info, { borderBottomWidth: 0.2 }]}
             >
-              view
-            </Text>
+              <Text style={styles.infoText}>
+                <Ionicons name="medal-outline" size={17} color="black" /> My
+                achievements
+              </Text>
+              <AntDesign name="right" size={15} color="grey" />
+            </View>
+            <View style={[styles.info, { borderBottomWidth: 0.2 }]}>
+              <Text style={styles.infoText}>
+                <AntDesign name="book" size={17} color="black" /> My plans
+              </Text>
+              <AntDesign name="right" size={15} color="grey" />
+            </View>
+            <View
+              onTouchEnd={() => navigation.navigate("Task")}
+              style={[styles.info, { borderBottomWidth: 0.2 }]}
+            >
+              <Text style={styles.infoText}>
+                <FontAwesome name="sticky-note-o" size={17} color="black" /> My
+                Tasks
+              </Text>
+              <AntDesign name="right" size={15} color="grey" />
+            </View>
+            <View
+              onTouchEnd={() => navigation.navigate("MyData")}
+              style={[styles.info]}
+            >
+              <Text style={styles.infoText}>
+                <AntDesign name="barschart" size={17} color="black" /> My Data
+              </Text>
+              <AntDesign name="right" size={15} color="grey" />
+            </View>
           </View>
-        </View>
-        <SubmitButton onPress={submittionHandler}>Save Changes</SubmitButton>
-        <View style={styles.removeAccContainer}>
-          <Pressable onPress={onRemoveAccount} style={styles.removeAcc}>
-            <Text style={styles.removeAccText}>
-              <FontAwesome name="remove" color="grey" /> Remove account
-            </Text>
-          </Pressable>
+          <Text style={styles.headerText}>OTHER</Text>
+          <View style={styles.heathData}>
+            <View
+              onTouchEnd={() => navigation.navigate("Personal")}
+              style={[styles.info, { borderBottomWidth: 0.2 }]}
+            >
+              <Text style={styles.infoText}>
+                <AntDesign name="user" size={17} color="black" /> Personal info
+              </Text>
+              <AntDesign name="right" size={15} color="grey" />
+            </View>
+            <View
+              onTouchEnd={() => navigation.navigate("CategoriesMy")}
+              style={[styles.info]}
+            >
+              <Text style={styles.infoText}>
+                <Ionicons name="heart-circle-outline" size={17} color="black" />{" "}
+                Favorite categories
+              </Text>
+              <AntDesign name="right" size={15} color="grey" />
+            </View>
+          </View>
         </View>
       </View>
     </ScrollView>
@@ -273,7 +175,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#e1d5c9",
-    padding: 30,
+    paddingHorizontal: 20,
   },
   removeAccContainer: {
     alignItems: "center",
@@ -292,51 +194,22 @@ const styles = StyleSheet.create({
   innerContainer: {
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
     flex: 1,
-  },
-  inputsContent: {
-    width: "100%",
-    borderStyle: "solid",
-    borderBottomWidth: 1,
-    borderColor: "#222325",
-    marginTop: 20,
-  },
-  countryBox: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    flexWrap: "wrap",
-  },
-  countryBoxFlags: {
-    padding: 10,
-    width: 100,
-    borderWidth: 0.5,
-    borderRadius: 5,
-    overflow: "hidden",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  countryBoxText: {
-    textAlign: "center",
-    paddingVertical: 15,
-    fontFamily: "HammersmithOne-Bold",
   },
   headerContainer: {
     position: "relative",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: "row",
+    backgroundColor: "#ece5de",
+    justifyContent: "space-between",
+    padding: 10,
+    width: "100%",
+    borderRadius: 10,
   },
   headerContainer_text: {
     textAlign: "center",
   },
   imageContainer: {
-    width: 100,
-    height: 100,
     borderRadius: 100,
-    position: "relative",
-    justifyContent: "center",
-    alignItems: "center",
   },
   loadingContainer: {
     flex: 1,
@@ -384,5 +257,43 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     padding: Dimensions.get("screen").width > 600 ? 5 : 2,
     fontSize: Dimensions.get("screen").width > 600 ? 17 : 15,
+  },
+  info: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#ece5de",
+    margin: 5,
+    width: "100%",
+    padding: 15,
+    borderRadius: 5,
+    borderColor: "black",
+  },
+  infoText: {
+    fontSize: 18,
+  },
+  heathData: {
+    marginTop: 5,
+    width: "100%",
+    backgroundColor: "#ece5de",
+    alignItems: "center",
+    borderRadius: 10,
+    paddingHorizontal: 2,
+  },
+  userTypeContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  userTypeInner: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerText: {
+    marginTop: 20,
+    fontWeight: "bold",
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: 16,
   },
 });

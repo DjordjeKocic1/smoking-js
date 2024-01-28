@@ -15,12 +15,11 @@ import {
 } from "../../store/taskReducer";
 import { useDispatch, useSelector } from "react-redux";
 
-import { BackButton } from "../../components/BackButton";
 import { Loading } from "../../components/Loading";
 import { selectUser } from "../../store/userReducer";
 import { useState } from "react";
 
-export const Task = ({ navigation }) => {
+export const Task = () => {
   const dispatch = useDispatch();
   const { task, isLoading } = useSelector(selectTask);
   const { user } = useSelector(selectUser);
@@ -88,7 +87,6 @@ export const Task = ({ navigation }) => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      <BackButton navigation={navigation} where={"UserScreen"} />
       <Text style={styles.text}>Tasks</Text>
       <View style={styles.taskContainer}>
         {!!taskNotFin && !!taskNotFin.length ? (

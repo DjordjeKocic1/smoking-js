@@ -32,14 +32,6 @@ export const ScoreScreen = ({ navigation }) => {
   if (isLoading) {
     return <Loading />;
   }
-  let userArrayCopy = !!users && [...users];
-
-  let userLatestScoreArr =
-    !!userArrayCopy &&
-    userArrayCopy
-      .sort((a, b) => b.latestScore - a.latestScore)
-      .filter((v) => v.latestScore != 0);
-
   return (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -90,30 +82,6 @@ export const ScoreScreen = ({ navigation }) => {
             </View>
           );
         })}
-      <Text style={styles.latestScore}>Latest Rounds</Text>
-      <View style={{ width: "70%", marginBottom: 10 }}>
-        {!!userLatestScoreArr &&
-          userLatestScoreArr.map((v, i) => {
-            return (
-              <View
-                key={i}
-                style={[
-                  styles.userCont,
-                  {
-                    padding: 10,
-                    backgroundColor: "#bbbbbb85",
-                    margin: 5,
-                  },
-                ]}
-              >
-                <Text style={styles.latestScoreText}>{v.email}</Text>
-                <Text style={styles.latestScoreText}>
-                  {!!v.latestScore && v.latestScore}
-                </Text>
-              </View>
-            );
-          })}
-      </View>
     </ScrollView>
   );
 };
@@ -149,15 +117,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     padding: 10,
     fontFamily: "HammersmithOne-Bold",
-  },
-  latestScore: {
-    paddingTop: 60,
-    fontFamily: "HammersmithOne-Bold",
-    fontSize: 20,
-    paddingBottom: 10,
-  },
-  latestScoreText: {
-    fontFamily: "HammersmithOne-Bold",
-    fontSize: 12,
   },
 });

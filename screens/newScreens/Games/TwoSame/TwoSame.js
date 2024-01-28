@@ -110,7 +110,6 @@ export const TwoSame = ({ navigation }) => {
       updateUser(
         {
           gameScore: (!!user && !!user.gameScore ? user.gameScore : 0) + 5,
-          latestScore: 5,
         },
         user._id
       )

@@ -7,7 +7,9 @@ import { CigAnimation } from "../components/CigAnimation";
 import { Health } from "./newScreens/Health";
 import { Info } from "../components/Info";
 import { Mentor } from "./newScreens/Mentor";
+import { MyData } from "./MyData";
 import { Notification } from "./newScreens/Notification";
+import { PersonalInfo } from "./PersonalInfo";
 import { ProfileScreen } from "./ProfileScreen";
 import { QuitNow } from "./newScreens/QuitNow";
 import { Savings } from "./newScreens/Savings";
@@ -54,6 +56,7 @@ const HomeScreen = () => {
         >
           {!!user && <Stack.Screen name="UserScreen" component={UserScreen} />}
           <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Personal" component={PersonalInfo} />
           <Stack.Screen name="Tips" component={Tips} />
           <Stack.Screen name="Breath" component={Breath} />
           <Stack.Screen name="Savings" component={Savings} />
@@ -63,6 +66,7 @@ const HomeScreen = () => {
           <Stack.Screen name="QuitNow" component={QuitNow} />
           <Stack.Screen name="Task" component={Task} />
           <Stack.Screen name="Achievements" component={Achievements} />
+          <Stack.Screen name="MyData" component={MyData} />
           <Stack.Screen name="Mentor" component={Mentor} />
           <Stack.Screen name="CategoriesMy" component={Categories} />
           <Stack.Screen name="TwoSame" component={TwoSame} />

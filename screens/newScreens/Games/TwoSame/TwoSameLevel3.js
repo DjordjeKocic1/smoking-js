@@ -169,8 +169,6 @@ export const TwoSameLevel3 = ({ navigation }) => {
       updateUser(
         {
           gameScore: (!!user && !!user.gameScore ? user.gameScore : 0) + 15,
-          latestScore:
-            (!!user && !!user.latestScore ? user.latestScore : 0) + 15,
         },
         user._id
       )

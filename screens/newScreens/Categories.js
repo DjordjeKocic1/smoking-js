@@ -11,6 +11,7 @@ import { selectUser, updateUser, userHealth } from "../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
+import { BackButton } from "../../components/BackButton";
 import { FontAwesome } from "@expo/vector-icons";
 
 export const Categories = ({ navigation }) => {
@@ -78,6 +79,7 @@ export const Categories = ({ navigation }) => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
+      <BackButton navigation={navigation} where={"UserScreen"} />
       <Text style={styles.lifeStyleText}>Your lifestyle categories</Text>
       <View style={[styles.lifeStyle, { marginBottom: 50 }]}>
         {!!user && !!user.categories.length && !!selectedCats.length ? (
@@ -148,7 +150,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: "#e1d5c9",
     alignItems: "center",
-    paddingTop: 20,
+    paddingTop: 80,
   },
   lifeStyleText: {
     fontSize: 20,
