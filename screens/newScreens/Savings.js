@@ -164,8 +164,6 @@ export const Savings = ({ navigation }) => {
     }
   };
 
-  console.log(user.consumptionInfo);
-
   if (isLoading) {
     return <Loading />;
   }
@@ -285,7 +283,6 @@ export const Savings = ({ navigation }) => {
                   Cigarette/Pack
                 </Text>
                 <Text style={[styles.savingTextHeader, { color: "black" }]}>
-                  $
                   {!!user.consumptionInfo &&
                     user.consumptionInfo.cigarettesInPack}
                 </Text>

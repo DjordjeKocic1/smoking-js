@@ -112,14 +112,6 @@ export const Task = () => {
                       ? "done"
                       : "pending"}
                   </Text>
-                  <Text
-                    style={[
-                      styles.taskText,
-                      { textDecorationLine: "underline", marginBottom: 5 },
-                    ]}
-                  >
-                    {t.toDo}
-                  </Text>
                   <Text style={[styles.taskText, { fontSize: 12 }]}>
                     {t.comment}
                   </Text>
@@ -193,14 +185,6 @@ export const Task = () => {
                       : t.status == "done"
                       ? "done"
                       : "pending"}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.taskText,
-                      { textDecorationLine: "underline", marginBottom: 5 },
-                    ]}
-                  >
-                    {t.toDo}
                   </Text>
                   <Text style={[styles.taskText, { fontSize: 12 }]}>
                     {t.comment}

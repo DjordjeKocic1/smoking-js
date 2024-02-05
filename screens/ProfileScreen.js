@@ -45,6 +45,9 @@ export const ProfileScreen = ({ navigation }) => {
                 }}
                 source={require("../assets/images/user.png")}
               />
+              <Text style={{ fontSize: 12, marginTop: 5 }}>
+                {!!user && !!user.email && user.email}
+              </Text>
             </View>
             <View style={styles.userTypeContainer}>
               <Text
