@@ -170,20 +170,8 @@ export const Plans = () => {
                 ) : (
                   <>
                     <Text style={{ fontSize: 12, marginTop: 5 }}>
-                      Highest saver:
+                      Highest save:
                     </Text>
-                    {!!bestScoreUser.length && bestScoreUser[0].email ? (
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          marginTop: 5,
-                        }}
-                      >
-                        {bestScoreUser[0].email}
-                      </Text>
-                    ) : (
-                      <Text style={{ fontSize: 12, marginTop: 5 }}>N/a</Text>
-                    )}
                     <Text
                       style={[
                         styles.plansCompleted,
@@ -192,7 +180,7 @@ export const Plans = () => {
                         },
                       ]}
                     >
-                      saved +$
+                      +$
                       {!!bestScoreUser.length &&
                       !!bestScoreUser[0].consumptionInfo
                         ? bestScoreUser[0].consumptionInfo.cigarettesAvoidedCost

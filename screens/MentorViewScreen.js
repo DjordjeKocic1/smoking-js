@@ -105,10 +105,6 @@ export const MentorViewScreen = ({ navigation, route }) => {
       },
     ]);
   };
-
-  const onTaskValueChange = (e) => {
-    setTaskValue(e);
-  };
   const onTaskCommentValueChange = (e) => {
     setTaskCommentValue(e);
   };
@@ -406,12 +402,6 @@ export const MentorViewScreen = ({ navigation, route }) => {
               </Text>
             )}
           <View style={styles.lastSeenContainer}>
-            <Text style={[styles.basicText, { color: "gray" }]}>
-              last seen:{" "}
-              {!!mentorUser &&
-                !!mentorUser.updatedAt &&
-                new Date(mentorUser.updatedAt).toLocaleDateString()}
-            </Text>
             <Pressable
               android_ripple={{ color: "white" }}
               style={styles.pokeContainer}
@@ -528,14 +518,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
               Task
             </Text>
             <TextInput
-              placeholder="task title here"
-              selectionColor="#c39351"
-              onChangeText={onTaskValueChange}
-              value={taskValue}
-              style={styles.input}
-            />
-            <TextInput
-              placeholder="hit the task"
+              placeholder="type task text"
               selectionColor="#c39351"
               multiline={true}
               numberOfLines={10}
@@ -551,7 +534,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
             />
             <Pressable
               onPress={onAssignTaskHandler}
-              disabled={taskValue == "" && taskCommentValue == ""}
+              disabled={taskCommentValue == ""}
               android_ripple={{ color: "black" }}
               style={styles.pressebleContainerAdd}
             >
@@ -578,14 +561,6 @@ export const MentorViewScreen = ({ navigation, route }) => {
                 ]}
               >
                 <View style={{ width: "70%" }}>
-                  <Text style={styles.textTitle}>task title:</Text>
-                  <Text
-                    style={{
-                      fontFamily: "HammersmithOne-Bold",
-                    }}
-                  >
-                    {t.toDo}
-                  </Text>
                   <Text
                     style={{
                       fontFamily: "HammersmithOne-Bold",
@@ -739,6 +714,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
   },
   pressebleContainerExit: { position: "absolute", right: 30, top: 50 },
   cogs: {
@@ -818,7 +794,7 @@ const styles = StyleSheet.create({
   pokeContainer: {
     backgroundColor: "black",
     padding: 5,
-    marginLeft: 5,
+    marginTop: 5,
     borderRadius: 5,
   },
   pokeContainerText: {
