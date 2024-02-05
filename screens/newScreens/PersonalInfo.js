@@ -1,12 +1,19 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { paymentModalShow, selectPayment } from "../store/PaymentReducer";
-import { selectUser, updateUser } from "../store/userReducer";
+import {
+  Dimensions,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { paymentModalShow, selectPayment } from "../../store/PaymentReducer";
+import { selectUser, updateUser } from "../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { FontAwesome } from "@expo/vector-icons";
-import { Payment } from "../components/Payment";
-import { SubmitButton } from "../components/SubmitButton";
+import { Payment } from "../../components/Payment";
+import { SubmitButton } from "../../components/SubmitButton";
 
 export const PersonalInfo = () => {
   const { user } = useSelector(selectUser);
@@ -82,7 +89,7 @@ export const PersonalInfo = () => {
         <FontAwesome
           onPress={() => setEditable(!editable)}
           name="edit"
-          size={24}
+          size={Dimensions.get("screen").width > 600 ? 40 : 24}
           color="black"
         />
       </View>
@@ -167,9 +174,10 @@ export const PersonalInfo = () => {
               <Text style={styles.personalText}>Quit smoking day</Text>
               <Text>
                 {userProfile.smoking &&
-                  userProfile.smoking.isQuiting &&
-                  userProfile.smoking.dateOfQuiting &&
-                  userProfile.smoking.dateOfQuiting}
+                userProfile.smoking.isQuiting &&
+                userProfile.smoking.dateOfQuiting
+                  ? userProfile.smoking.dateOfQuiting
+                  : "N/a"}
               </Text>
             </View>
             <View style={[styles.inputsContent, { borderBottomWidth: 0 }]}>
@@ -212,8 +220,8 @@ const styles = StyleSheet.create({
   inputsContent: {
     width: "100%",
     borderStyle: "solid",
-    borderBottomWidth: 0.2,
-    borderColor: "black",
+    borderBottomWidth: 0.5,
+    borderColor: "grey",
     paddingHorizontal: 10,
     paddingVertical: 15,
   },
@@ -223,12 +231,15 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   headerText: {
-    fontSize: 20,
+    fontSize: Dimensions.get("screen").width > 600 ? 25 : 20,
     fontWeight: "bold",
+    fontFamily: "HammersmithOne-Bold",
   },
   personalText: {
     fontWeight: "bold",
     marginTop: 2,
+    fontFamily: "HammersmithOne-Bold",
+    fontSize: Dimensions.get("screen").width > 600 ? 20 : 16,
   },
   payment: {
     marginTop: 5,

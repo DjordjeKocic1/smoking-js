@@ -7,11 +7,10 @@ import {
   View,
 } from "react-native";
 import { getCategories, selectCategories } from "../../store/categorieReducer";
-import { selectUser, updateUser, userHealth } from "../../store/userReducer";
+import { selectUser, updateUser, userInfo } from "../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
-import { BackButton } from "../../components/BackButton";
 import { FontAwesome } from "@expo/vector-icons";
 
 export const Categories = ({ navigation }) => {
@@ -48,7 +47,7 @@ export const Categories = ({ navigation }) => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-      dispatch(userHealth({}, user._id));
+      dispatch(userInfo(user._id));
       dispatch(getCategories());
     }, 2000);
   };
@@ -79,7 +78,6 @@ export const Categories = ({ navigation }) => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      <BackButton navigation={navigation} where={"UserScreen"} />
       <Text style={styles.lifeStyleText}>Your lifestyle categories</Text>
       <View style={[styles.lifeStyle, { marginBottom: 50 }]}>
         {!!user && !!user.categories.length && !!selectedCats.length ? (

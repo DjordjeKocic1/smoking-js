@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
-import { selectUser, updateUser, userHealth } from "../../../store/userReducer";
+import { selectUser, updateUser, userInfo } from "../../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
@@ -71,7 +71,7 @@ export const Breath = ({ navigation }) => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-      dispatch(userHealth({}, user._id));
+      dispatch(userInfo(user._id));
     }, 2000);
   };
 

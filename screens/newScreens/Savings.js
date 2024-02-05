@@ -9,7 +9,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { selectUser, updateUserCosts } from "../../store/userReducer";
+import { selectUser, userInfo } from "../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
@@ -136,7 +136,7 @@ export const Savings = ({ navigation }) => {
           user.consumptionInfo.cigarettesAvoided,
       },
     };
-    dispatch(updateUserCosts(dataToSend, user._id));
+    dispatch(userInfo(user._id, dataToSend));
     setIsUpdate(false);
   };
 
@@ -163,6 +163,8 @@ export const Savings = ({ navigation }) => {
       }).start();
     }
   };
+
+  console.log(user.consumptionInfo);
 
   if (isLoading) {
     return <Loading />;

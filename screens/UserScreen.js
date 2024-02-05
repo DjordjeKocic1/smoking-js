@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
-import { selectUser, userHealth } from "../store/userReducer";
+import { selectUser, userInfo, userToken } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
@@ -34,17 +34,13 @@ Notifications.setNotificationHandler({
 const UserScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { user, isLoading } = useSelector(selectUser);
-  //const { task } = useSelector(selectTask);
   const [refreshing, setRefreshing] = useState(false);
-
-  // const tasknoStatus =
-  //   !!task && !!task.length && task.filter((v) => v.status != "done");
 
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-      dispatch(userHealth({}, user._id));
+      dispatch(userInfo(user._id));
       dispatch(getNotification(user._id));
       dispatch(getTasks(user._id));
     }, 2000);
@@ -68,7 +64,6 @@ const UserScreen = ({ navigation }) => {
           "Premission required",
           "Notification need the appropriate permissions."
         );
-        dispatch(userHealth({}, user._id));
         return;
       }
 
@@ -81,10 +76,9 @@ const UserScreen = ({ navigation }) => {
           notificationToken: pushTokenData.data,
         };
 
-        dispatch(userHealth(dataToSend, user._id));
+        dispatch(userToken(dataToSend, user._id));
       } catch (error) {
         console.log(error);
-        dispatch(userHealth({}, user._id));
       }
 
       if (Platform.OS === "android") {
@@ -118,8 +112,8 @@ const UserScreen = ({ navigation }) => {
         >
           <Image
             style={{
-              width: Dimensions.get("screen").width > 600 ? 80 : 30,
-              height: Dimensions.get("screen").width > 600 ? 80 : 30,
+              width: Dimensions.get("screen").width > 600 ? 50 : 30,
+              height: Dimensions.get("screen").width > 600 ? 50 : 30,
             }}
             resizeMode="contain"
             source={require("../assets/images/games/money.png")}
@@ -128,12 +122,7 @@ const UserScreen = ({ navigation }) => {
             style={[
               styles.statsheader,
               {
-                color:
-                  !!user &&
-                  !!user.consumptionInfo &&
-                  !!user.consumptionInfo.cigarettesAvoided
-                    ? "green"
-                    : "#222325",
+                color: "green",
               },
             ]}
           >
@@ -163,8 +152,8 @@ const UserScreen = ({ navigation }) => {
           >
             <Image
               style={{
-                width: Dimensions.get("screen").width > 600 ? 80 : 30,
-                height: Dimensions.get("screen").width > 600 ? 80 : 30,
+                width: Dimensions.get("screen").width > 600 ? 50 : 30,
+                height: Dimensions.get("screen").width > 600 ? 50 : 30,
               }}
               resizeMode="contain"
               source={require("../assets/images/games/heart.png")}
@@ -190,7 +179,7 @@ const UserScreen = ({ navigation }) => {
         >
           <MaterialIcons
             name="smoke-free"
-            size={Dimensions.get("screen").width > 600 ? 80 : 27}
+            size={Dimensions.get("screen").width > 600 ? 50 : 27}
             color="#222325"
           />
           <Text style={styles.statsheader}>
@@ -257,24 +246,6 @@ const UserScreen = ({ navigation }) => {
             />
           </Pressable>
         </View>
-        {/* <View style={styles.innerContainer}>
-          {!!tasknoStatus && !!tasknoStatus.length && (
-            <View style={styles.taskslength}>
-              <Text style={styles.taskslengthText}>{tasknoStatus.length}</Text>
-            </View>
-          )}
-          <Pressable
-            onPress={() => navigation.navigate("Task")}
-            android_ripple={{ color: "#c39351" }}
-            style={[styles.innerContainerBox]}
-          >
-            <Text style={styles.innerText}>Tasks</Text>
-            <Image
-              source={require("../assets/images/tasksImg.png")}
-              style={styles.innerContainerImg}
-            />
-          </Pressable>
-        </View> */}
         <View style={styles.innerContainer}>
           <AntDesign
             name="star"
@@ -340,19 +311,6 @@ const UserScreen = ({ navigation }) => {
             />
           </Pressable>
         </View>
-        {/* <View style={styles.innerContainer}>
-          <Pressable
-            onPress={() => navigation.navigate("Achievements")}
-            android_ripple={{ color: "#c39351" }}
-            style={styles.innerContainerBox}
-          >
-            <Text style={styles.innerText}>Achievements</Text>
-            <Image
-              source={require("../assets/images/ach.png")}
-              style={styles.innerContainerImg}
-            />
-          </Pressable>
-        </View> */}
         <View style={styles.innerContainer}>
           <Pressable
             onPress={() => navigation.navigate("Profile")}
@@ -426,13 +384,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignItems: "center",
     justifyContent: "center",
-    margin: 10,
+    margin: Dimensions.get("screen").width > 600 ? 50 : 10,
     borderRightWidth: 1,
     borderLeftWidth: 1,
     borderColor: "#22232533",
     borderRadius: 30,
-    width: Dimensions.get("screen").width > 600 ? 250 : 130,
-    height: Dimensions.get("screen").width > 600 ? 250 : 130,
+    width: Dimensions.get("screen").width > 600 ? 220 : 130,
+    height: Dimensions.get("screen").width > 600 ? 220 : 130,
     overflow: "hidden",
     position: "relative",
   },

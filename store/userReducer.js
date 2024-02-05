@@ -25,6 +25,20 @@ const userSlice = createSlice({
       state.mentorUser = null;
       state.isLoading = false;
     },
+    createUserPlan: (state, action) => {
+      state.user = {
+        ...state.user,
+        plans: [...state.user.plans, action.payload],
+      };
+      state.isLoading = false;
+    },
+    removeUserPlan: (state, action) => {
+      let removedPlan = state.user.plans.filter(
+        (v) => v._id !== action.payload._id
+      );
+      state.user.plans = removedPlan;
+      state.isLoading = false;
+    },
     updateUserMentors: (state, action) => {
       state.user = {
         ...state.user,
@@ -57,6 +71,8 @@ export const {
   updateUserMentors,
   removeUserMentors,
   updateMentorUser,
+  createUserPlan,
+  removeUserPlan,
 } = userSlice.actions;
 
 export const getUsers = () => {
@@ -104,27 +120,15 @@ export const updateUser = (data, id) => {
   };
 };
 
-export const updateUserNotificationToken = (data, id) => {
-  return (dispatch) => {
-    http
-      .updateUser(data, id)
-      .then(() => {})
-      .catch((e) => {
-        dispatch(fetchError());
-        dispatch(setError(e.response.data.error));
-      });
-  };
-};
-
-export const updateUserCosts = (data, id, navigation, where) => {
+export const userInfo = (id, data, navigation, where) => {
   return (dispatch) => {
     dispatch(fetchStart());
-    http
-      .updateUserCosts(data, id)
+    let httReq = data ? http.userInfoCalc(id, data) : http.userInfoCalc(id);
+    httReq
       .then((response) => {
         dispatch(fetchSuccess(response.data.user));
         if (navigation) {
-          navigation.replace(where);
+          navigation.navigate(where);
         }
       })
       .catch((e) => {
@@ -134,11 +138,11 @@ export const updateUserCosts = (data, id, navigation, where) => {
   };
 };
 
-export const userHealth = (data, id) => {
+export const userToken = (data, id) => {
   return (dispatch) => {
     dispatch(fetchStart());
     http
-      .userHealthGet(data, id)
+      .userNotificationToken(data, id)
       .then((response) => {
         dispatch(fetchSuccess(response.data.user));
       })
@@ -149,11 +153,11 @@ export const userHealth = (data, id) => {
   };
 };
 
-export const userHealthMentore = (data, id) => {
+export const userHealthMentore = (id, data) => {
   return (dispatch) => {
     dispatch(fetchStart());
-    http
-      .userHealthGet(data, id)
+    let httReq = data ? http.userInfoCalc(id, data) : http.userInfoCalc(id);
+    httReq
       .then((response) => {
         dispatch(updateMentorUser(response.data.user));
       })
@@ -207,6 +211,36 @@ export const pokeUser = (data) => {
       .catch((e) => {
         dispatch(fetchError());
         dispatch(show("Poking failed :("));
+        dispatch(setError(e.response.data.error));
+      });
+  };
+};
+
+export const createPlane = (data, userId) => {
+  return (dispatch) => {
+    dispatch(fetchStart());
+    http
+      .createPlan(data, userId)
+      .then((response) => {
+        dispatch(createUserPlan(response.data.plan));
+      })
+      .catch((e) => {
+        dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
+      });
+  };
+};
+
+export const deletePlan = (planId) => {
+  return (dispatch) => {
+    dispatch(fetchStart());
+    http
+      .deletePlan(planId)
+      .then(() => {
+        dispatch(removeUserPlan({ _id: planId }));
+      })
+      .catch((e) => {
+        dispatch(fetchError());
         dispatch(setError(e.response.data.error));
       });
   };

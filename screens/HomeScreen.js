@@ -9,7 +9,8 @@ import { Info } from "../components/Info";
 import { Mentor } from "./newScreens/Mentor";
 import { MyData } from "./MyData";
 import { Notification } from "./newScreens/Notification";
-import { PersonalInfo } from "./PersonalInfo";
+import { PersonalInfo } from "./newScreens/PersonalInfo";
+import { Plans } from "./newScreens/Plans";
 import { ProfileScreen } from "./ProfileScreen";
 import { QuitNow } from "./newScreens/QuitNow";
 import { Savings } from "./newScreens/Savings";
@@ -57,6 +58,7 @@ const HomeScreen = () => {
           {!!user && <Stack.Screen name="UserScreen" component={UserScreen} />}
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="Personal" component={PersonalInfo} />
+          <Stack.Screen name="Plans" component={Plans} />
           <Stack.Screen name="Tips" component={Tips} />
           <Stack.Screen name="Breath" component={Breath} />
           <Stack.Screen name="Savings" component={Savings} />

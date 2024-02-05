@@ -14,12 +14,12 @@ const updateUser = (data, id) => {
   return axios.put(url + `/update-user/${id}`, data);
 };
 
-const updateUserCosts = (data, id) => {
-  return axios.put(url + `/update-user-costs/${id}`, data);
+const userInfoCalc = (id, data) => {
+  return axios.post(url + `/user-info/${id}`, data);
 };
 
-const userHealthGet = (data, id) => {
-  return axios.post(url + `/user-health/${id}`, data);
+const userNotificationToken = (data, id) => {
+  return axios.post(url + `/user-token/${id}`, data);
 };
 
 const deleteUser = (id) => {
@@ -28,6 +28,18 @@ const deleteUser = (id) => {
 
 const pokeUser = (data) => {
   return axios.post(url + "/poke-user", data);
+};
+
+const createPlan = (data, userId) => {
+  return axios.post(url + `/create-plan/${userId}`, data);
+};
+
+const updatePlan = (data, planId) => {
+  return axios.put(url + `/update-plan/${planId}`, data);
+};
+
+const deletePlan = (planId) => {
+  return axios.delete(url + `/delete-plan/${planId}`);
 };
 
 const categoriesGet = () => {
@@ -117,10 +129,13 @@ export const http = {
   getUsers,
   createUser,
   updateUser,
-  updateUserCosts,
-  userHealthGet,
+  userInfoCalc,
+  userNotificationToken,
   deleteUser,
   pokeUser,
+  createPlan,
+  updatePlan,
+  deletePlan,
   categoriesGet,
   achievementGet,
   createMentor,

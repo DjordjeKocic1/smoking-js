@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import { selectUser, updateUserCosts } from "../store/userReducer";
+import { selectUser, userInfo } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Loading } from "../components/Loading";
@@ -62,12 +62,7 @@ const CigaretteCostScreen = ({ navigation }) => {
             text: "YES",
             onPress: () => {
               dispatch(
-                updateUserCosts(
-                  dataToSend,
-                  user._id,
-                  navigation,
-                  "SmokingScreen"
-                )
+                userInfo(user._id, dataToSend, navigation, "SmokingScreen")
               );
             },
           },
@@ -75,9 +70,7 @@ const CigaretteCostScreen = ({ navigation }) => {
       );
     }
 
-    dispatch(
-      updateUserCosts(dataToSend, user._id, navigation, "SmokingScreen")
-    );
+    dispatch(userInfo(user._id, dataToSend, navigation, "SmokingScreen"));
   };
 
   const onMentorChangeHandler = () => {
@@ -91,9 +84,7 @@ const CigaretteCostScreen = ({ navigation }) => {
         cigarettesAvoided: 0,
       },
     };
-    dispatch(
-      updateUserCosts(dataToSend, user._id, navigation, "LoadingScreen")
-    );
+    dispatch(userInfo(user._id, dataToSend, navigation, "LoadingScreen"));
   };
 
   if (isLoading) {

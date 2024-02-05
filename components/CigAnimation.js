@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { selectUser, updateUserCosts } from "../store/userReducer";
+import { selectUser, userInfo } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
@@ -102,7 +102,7 @@ export const CigAnimation = ({ onCigFinishHandler }) => {
           },
         };
 
-        dispatch(updateUserCosts(dataToUpdate, user._id));
+        dispatch(userInfo(user._id, dataToUpdate));
       }
     });
   };

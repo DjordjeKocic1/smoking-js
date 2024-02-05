@@ -2,6 +2,7 @@ import {
   Animated,
   Dimensions,
   Easing,
+  Pressable,
   StyleSheet,
   Text,
   View,

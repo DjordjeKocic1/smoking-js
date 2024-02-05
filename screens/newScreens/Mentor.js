@@ -24,7 +24,7 @@ import {
 import {
   deleteUserMentors,
   selectUser,
-  userHealth,
+  userInfo,
 } from "../../store/userReducer";
 import { fetchEmailData, selectEmail } from "../../store/emailReducer";
 import { paymentModalShow, selectPayment } from "../../store/PaymentReducer";
@@ -60,7 +60,7 @@ export const Mentor = ({ navigation }) => {
     setTimeout(() => {
       setRefreshing(false);
       dispatch(getMentor(user._id));
-      dispatch(userHealth({}, user._id));
+      dispatch(userInfo(user._id));
     }, 2000);
   };
 

@@ -39,12 +39,21 @@ export const ProfileScreen = ({ navigation }) => {
           <View style={styles.headerContainer}>
             <View style={[styles.imageContainer]}>
               <Image
-                style={{ width: 50, height: 50 }}
+                style={{
+                  width: Dimensions.get("screen").width > 600 ? 100 : 50,
+                  height: Dimensions.get("screen").width > 600 ? 100 : 50,
+                }}
                 source={require("../assets/images/user.png")}
               />
             </View>
             <View style={styles.userTypeContainer}>
-              <Text>user type</Text>
+              <Text
+                style={{
+                  fontSize: Dimensions.get("screen").width > 600 ? 20 : 12,
+                }}
+              >
+                user type
+              </Text>
               <View style={styles.userTypeInner}>
                 <Pressable
                   onPress={() => onUserTypeChangeHandler("user")}
@@ -68,7 +77,7 @@ export const ProfileScreen = ({ navigation }) => {
                           ? "white"
                           : "black",
                       fontFamily: "HammersmithOne-Bold",
-                      fontSize: 12,
+                      fontSize: Dimensions.get("screen").width > 600 ? 20 : 12,
                     }}
                   >
                     user
@@ -96,7 +105,7 @@ export const ProfileScreen = ({ navigation }) => {
                           ? "white"
                           : "black",
                       fontFamily: "HammersmithOne-Bold",
-                      fontSize: 12,
+                      fontSize: Dimensions.get("screen").width > 600 ? 20 : 12,
                     }}
                   >
                     mentor
@@ -112,35 +121,72 @@ export const ProfileScreen = ({ navigation }) => {
               style={[styles.info, { borderBottomWidth: 0.2 }]}
             >
               <Text style={styles.infoText}>
-                <Ionicons name="medal-outline" size={17} color="black" /> My
-                achievements
+                <Ionicons
+                  name="medal-outline"
+                  size={Dimensions.get("screen").width ? 20 : 17}
+                  color="black"
+                />{" "}
+                My achievements
               </Text>
-              <AntDesign name="right" size={15} color="grey" />
+              <AntDesign
+                name="right"
+                size={Dimensions.get("screen").width > 600 ? 20 : 15}
+                color="grey"
+              />
             </View>
-            <View style={[styles.info, { borderBottomWidth: 0.2 }]}>
+            <View
+              onTouchEnd={() => navigation.navigate("Plans")}
+              style={[styles.info, { borderBottomWidth: 0.2 }]}
+            >
               <Text style={styles.infoText}>
-                <AntDesign name="book" size={17} color="black" /> My plans
+                <AntDesign
+                  name="book"
+                  size={Dimensions.get("screen").width ? 20 : 17}
+                  color="black"
+                />{" "}
+                My plans
               </Text>
-              <AntDesign name="right" size={15} color="grey" />
+              <AntDesign
+                name="right"
+                size={Dimensions.get("screen").width > 600 ? 20 : 15}
+                color="grey"
+              />
             </View>
             <View
               onTouchEnd={() => navigation.navigate("Task")}
               style={[styles.info, { borderBottomWidth: 0.2 }]}
             >
               <Text style={styles.infoText}>
-                <FontAwesome name="sticky-note-o" size={17} color="black" /> My
-                Tasks
+                <FontAwesome
+                  name="sticky-note-o"
+                  size={Dimensions.get("screen").width ? 20 : 17}
+                  color="black"
+                />{" "}
+                My Tasks
               </Text>
-              <AntDesign name="right" size={15} color="grey" />
+              <AntDesign
+                name="right"
+                size={Dimensions.get("screen").width > 600 ? 20 : 15}
+                color="grey"
+              />
             </View>
             <View
               onTouchEnd={() => navigation.navigate("MyData")}
               style={[styles.info]}
             >
               <Text style={styles.infoText}>
-                <AntDesign name="barschart" size={17} color="black" /> My Data
+                <AntDesign
+                  name="barschart"
+                  size={Dimensions.get("screen").width ? 20 : 17}
+                  color="black"
+                />{" "}
+                My Data
               </Text>
-              <AntDesign name="right" size={15} color="grey" />
+              <AntDesign
+                name="right"
+                size={Dimensions.get("screen").width > 600 ? 20 : 15}
+                color="grey"
+              />
             </View>
           </View>
           <Text style={styles.headerText}>OTHER</Text>
@@ -150,9 +196,18 @@ export const ProfileScreen = ({ navigation }) => {
               style={[styles.info, { borderBottomWidth: 0.2 }]}
             >
               <Text style={styles.infoText}>
-                <AntDesign name="user" size={17} color="black" /> Personal info
+                <AntDesign
+                  name="user"
+                  size={Dimensions.get("screen").width > 600 ? 22 : 17}
+                  color="black"
+                />{" "}
+                Personal info
               </Text>
-              <AntDesign name="right" size={15} color="grey" />
+              <AntDesign
+                name="right"
+                size={Dimensions.get("screen").width > 600 ? 20 : 15}
+                color="grey"
+              />
             </View>
             <View
               onTouchEnd={() => navigation.navigate("CategoriesMy")}
@@ -162,7 +217,11 @@ export const ProfileScreen = ({ navigation }) => {
                 <Ionicons name="heart-circle-outline" size={17} color="black" />{" "}
                 Favorite categories
               </Text>
-              <AntDesign name="right" size={15} color="grey" />
+              <AntDesign
+                name="right"
+                size={Dimensions.get("screen").width > 600 ? 20 : 15}
+                color="grey"
+              />
             </View>
           </View>
         </View>
@@ -193,8 +252,10 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent:
+      Dimensions.get("screen").width > 600 ? "flex-start" : "center",
     flex: 1,
+    paddingTop: Dimensions.get("screen").width > 600 ? 50 : 0,
   },
   headerContainer: {
     position: "relative",
@@ -270,7 +331,7 @@ const styles = StyleSheet.create({
     borderColor: "black",
   },
   infoText: {
-    fontSize: 18,
+    fontSize: Dimensions.get("screen").width > 600 ? 22 : 18,
   },
   heathData: {
     marginTop: 5,
@@ -294,6 +355,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontWeight: "bold",
     fontFamily: "HammersmithOne-Bold",
-    fontSize: 16,
+    fontSize: Dimensions.get("screen").width > 600 ? 20 : 16,
   },
 });

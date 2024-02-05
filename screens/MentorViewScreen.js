@@ -44,7 +44,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
   const { user_idParam, mentorParam } = route.params;
 
   useEffect(() => {
-    dispatch(userHealthMentore({}, user_idParam));
+    dispatch(userHealthMentore(user_idParam));
   }, [dispatch, user_idParam]);
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-      dispatch(userHealthMentore({}, user_idParam));
+      dispatch(userHealthMentore(user_idParam));
       dispatch(getTasksByMentor(user_idParam, mentorParam._id));
     }, 2000);
   };
@@ -84,7 +84,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
           easing: Easing.ease,
           useNativeDriver: true,
         }).start();
-        dispatch(userHealthMentore({}, user_idParam));
+        dispatch(userHealthMentore(user_idParam));
         dispatch(getTasksByMentor(user_idParam, mentorParam._id));
       }
     });
