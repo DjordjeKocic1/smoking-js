@@ -12,14 +12,19 @@ import {
   View,
 } from "react-native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import {
+  fetchNotificationSuccess,
+  fetchSuccess,
+  getNotification,
+} from "../store/notificationReducer";
+import { fetchTaskSuccess, getTasks } from "../store/taskReducer";
 import { selectUser, userInfo, userToken } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { Loading } from "../components/Loading";
 import { Platform } from "react-native";
-import { getNotification } from "../store/notificationReducer";
-import { getTasks } from "../store/taskReducer";
+import openSocket from "socket.io-client";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => {
@@ -50,6 +55,17 @@ const UserScreen = ({ navigation }) => {
     dispatch(getNotification(user._id));
     dispatch(getTasks(user._id));
   }, [dispatch, user._id]);
+
+  useEffect(() => {
+    const socket = openSocket("https://whale-app-hkbku.ondigitalocean.app");
+    socket.on("live", (data) => {
+      const { action, notification, task, ID } = data;
+      if (action === "create" && user && user._id === ID) {
+        !!notification && dispatch(fetchNotificationSuccess(notification));
+        !!task && dispatch(fetchTaskSuccess(task));
+      }
+    });
+  }, [dispatch, user]);
 
   useEffect(() => {
     const confPushNotification = async () => {

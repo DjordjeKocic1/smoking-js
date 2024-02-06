@@ -12,7 +12,7 @@ const taskSlice = createSlice({
     fetchStart: (state) => {
       state.isLoading = true;
     },
-    fetchSuccess: (state, action) => {
+    fetchTaskSuccess: (state, action) => {
       state.task = action.payload;
       state.isLoading = false;
     },
@@ -22,7 +22,7 @@ const taskSlice = createSlice({
   },
 });
 
-export const { fetchStart, fetchSuccess, fetchError } = taskSlice.actions;
+export const { fetchStart, fetchTaskSuccess, fetchError } = taskSlice.actions;
 
 export const getTasks = (id) => {
   return (dispatch) => {
@@ -30,7 +30,7 @@ export const getTasks = (id) => {
     http
       .getTasks(id)
       .then((response) => {
-        dispatch(fetchSuccess(response.data.task));
+        dispatch(fetchTaskSuccess(response.data.task));
       })
       .catch((e) => {
         dispatch(fetchError());
@@ -45,7 +45,7 @@ export const getTasksByMentor = (userId, mentorId) => {
     http
       .getTasksMentor(userId, mentorId)
       .then((response) => {
-        dispatch(fetchSuccess(response.data.task));
+        dispatch(fetchTaskSuccess(response.data.task));
       })
       .catch((e) => {
         dispatch(fetchError());
@@ -60,8 +60,7 @@ export const createTask = (data) => {
     http
       .createTask(data)
       .then((response) => {
-        let tasks = getState().task.task || [];
-        dispatch(fetchSuccess([...tasks, response.data.task]));
+        dispatch(fetchTaskSuccess(response.data.task));
       })
       .catch((e) => {
         dispatch(fetchError());
@@ -71,21 +70,12 @@ export const createTask = (data) => {
 };
 
 export const updateTask = (data, id) => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch(fetchStart());
     http
       .updateTask(data, id)
       .then((response) => {
-        let task = getState().task.task;
-        let findTaskIndex = task.findIndex(
-          (task) => task._id == response.data.task._id
-        );
-        let newTaskArray = [...task];
-        newTaskArray[findTaskIndex] = {
-          ...newTaskArray[findTaskIndex],
-          ...data,
-        };
-        dispatch(fetchSuccess(newTaskArray));
+        dispatch(fetchTaskSuccess(response.data.task));
       })
       .catch((e) => {
         dispatch(fetchError());
@@ -99,10 +89,8 @@ export const deleteTask = (id) => {
     dispatch(fetchStart());
     http
       .deleteTask(id)
-      .then(() => {
-        let task = getState().task.task;
-        let updatedTask = task.filter((task) => task._id != id);
-        dispatch(fetchSuccess(updatedTask));
+      .then((response) => {
+        dispatch(fetchTaskSuccess(response.data.task));
       })
       .catch((e) => {
         dispatch(fetchError());

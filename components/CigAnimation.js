@@ -263,13 +263,13 @@ const styles = StyleSheet.create({
   },
   notificationIcon: {
     zIndex: 99999,
-    backgroundColor: "#c39351",
-    width: 18,
-    height: 18,
-    borderRadius: 18 / 2,
+    backgroundColor: "red",
+    width: 16,
+    height: 16,
+    borderRadius: 16 / 2,
     alignItems: "center",
     justifyContent: "center",
-    transform: [{ translateX: 10 }, { translateY: 5 }],
+    transform: [{ translateX: 12 }, { translateY: 15 }],
   },
   notificationIconText: {
     fontSize: 10,

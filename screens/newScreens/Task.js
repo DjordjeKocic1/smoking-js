@@ -25,9 +25,9 @@ export const Task = () => {
   const { user } = useSelector(selectUser);
   const [refreshing, setRefreshing] = useState(false);
   const taskCompleted =
-    !!task && !!task.length && task.filter((v) => v.status == "done");
+    !!task && !!task.length && task.filter((v) => v.status === "done");
   const taskNotFin =
-    !!task && !!task.length && task.filter((v) => v.status != "done");
+    !!task && !!task.length && task.filter((v) => v.status !== "done");
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -40,7 +40,7 @@ export const Task = () => {
   const onTaskStatusHandler = (status, id) => {
     Alert.alert(
       "Task",
-      `Are you sure ${status == "accept" && "you wont to accept task?"}`,
+      `Are you sure ${status === "accept" && "you wont to accept task?"}`,
       [
         {
           text: "No",

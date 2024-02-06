@@ -13,6 +13,7 @@ import {
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import {
   createTask,
+  fetchTaskSuccess,
   getTasksByMentor,
   selectTask,
   updateTask,
@@ -25,6 +26,7 @@ import { useEffect, useRef, useState } from "react";
 import { Easing } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
 import { Loading } from "../components/Loading";
+import openSocket from "socket.io-client";
 
 export const MentorViewScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -50,6 +52,16 @@ export const MentorViewScreen = ({ navigation, route }) => {
   useEffect(() => {
     dispatch(getTasksByMentor(user_idParam, mentorParam._id));
   }, [dispatch, user_idParam, mentorParam]);
+
+  useEffect(() => {
+    const socket = openSocket("https://whale-app-hkbku.ondigitalocean.app");
+    socket.on("live", (data) => {
+      const { action, task, ID } = data;
+      if (action === "create" && user_idParam && user_idParam === ID) {
+        !!task && dispatch(fetchTaskSuccess(task));
+      }
+    });
+  }, [dispatch, user_idParam]);
 
   useEffect(() => {
     if (task) {

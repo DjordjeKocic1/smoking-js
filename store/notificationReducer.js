@@ -12,7 +12,7 @@ const notificationSlice = createSlice({
     fetchStart: (state) => {
       state.isLoading = true;
     },
-    fetchSuccess: (state, action) => {
+    fetchNotificationSuccess: (state, action) => {
       state.notification = action.payload;
       state.isLoading = false;
     },
@@ -22,7 +22,7 @@ const notificationSlice = createSlice({
   },
 });
 
-export const { fetchStart, fetchSuccess, fetchError } =
+export const { fetchStart, fetchNotificationSuccess, fetchError } =
   notificationSlice.actions;
 
 export const getNotification = (id) => {
@@ -31,7 +31,7 @@ export const getNotification = (id) => {
     http
       .getNotification(id)
       .then((response) => {
-        dispatch(fetchSuccess(response.data.notification));
+        dispatch(fetchNotificationSuccess(response.data.notification));
       })
       .catch((e) => {
         dispatch(fetchError());
@@ -46,7 +46,7 @@ export const createNotification = (data) => {
     http
       .createNotification(data)
       .then((response) => {
-        dispatch(fetchSuccess(response.data.notification));
+        dispatch(fetchNotificationSuccess(response.data.notification));
       })
       .catch((e) => {
         dispatch(fetchError());
@@ -61,7 +61,7 @@ export const updateNotification = (data, id) => {
     http
       .updateNotification(data, id)
       .then((response) => {
-        dispatch(fetchSuccess(response));
+        dispatch(fetchNotificationSuccess(response));
       })
       .catch((e) => {
         dispatch(fetchError());
@@ -85,7 +85,7 @@ export const deleteNotification = (userId, isTask, isMentoring) => {
             return v;
           }
         });
-        dispatch(fetchSuccess(updatedNotifcation));
+        dispatch(fetchNotificationSuccess(updatedNotifcation));
       })
       .catch((e) => {
         dispatch(fetchError());
@@ -104,7 +104,7 @@ export const deleteAllNotification = (id) => {
         let updatedNotifcation = notificaitons.filter(
           (nots) => nots.userId != id
         );
-        dispatch(fetchSuccess(updatedNotifcation));
+        dispatch(fetchNotificationSuccess(updatedNotifcation));
       })
       .catch((e) => {
         dispatch(fetchError());
