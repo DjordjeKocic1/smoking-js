@@ -14,7 +14,6 @@ import {
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import {
   fetchNotificationSuccess,
-  fetchSuccess,
   getNotification,
 } from "../store/notificationReducer";
 import { fetchTaskSuccess, getTasks } from "../store/taskReducer";
