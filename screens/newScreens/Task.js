@@ -9,15 +9,17 @@ import {
 } from "react-native";
 import {
   deleteTask,
+  fetchTaskSuccess,
   getTasks,
   selectTask,
   updateTask,
 } from "../../store/taskReducer";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 import { Loading } from "../../components/Loading";
+import openSocket from "socket.io-client";
 import { selectUser } from "../../store/userReducer";
-import { useState } from "react";
 
 export const Task = () => {
   const dispatch = useDispatch();
@@ -36,6 +38,20 @@ export const Task = () => {
       dispatch(getTasks(user._id));
     }, 2000);
   };
+
+  useEffect(() => {
+    dispatch(getTasks(user._id));
+  }, [dispatch, user._id]);
+
+  useEffect(() => {
+    const socket = openSocket("https://whale-app-hkbku.ondigitalocean.app");
+    socket.on("live", (data) => {
+      const { action, task, ID } = data;
+      if (action === "create" && user && user._id === ID) {
+        !!task && dispatch(fetchTaskSuccess(task));
+      }
+    });
+  }, [dispatch, user]);
 
   const onTaskStatusHandler = (status, id) => {
     Alert.alert(

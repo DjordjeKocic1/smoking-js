@@ -17,12 +17,14 @@ import {
   createMentor,
   deleteMentor,
   fetchError,
+  fetchMentorSuccess,
   getMentor,
   selectMentor,
   updateMentor,
 } from "../../store/mentorReducer";
 import {
   deleteUserMentors,
+  fetchUserSuccess,
   selectUser,
   userInfo,
 } from "../../store/userReducer";
@@ -36,6 +38,7 @@ import { Easing } from "react-native";
 import { EmailModal } from "../../components/EmailModal";
 import { Loading } from "../../components/Loading";
 import { Payment } from "../../components/Payment";
+import openSocket from "socket.io-client";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -54,6 +57,18 @@ export const Mentor = ({ navigation }) => {
   useEffect(() => {
     dispatch(getMentor(user._id));
   }, [dispatch, user._id]);
+
+  useEffect(() => {
+    const socket = openSocket("https://whale-app-hkbku.ondigitalocean.app");
+    socket.on("live", (data) => {
+      const { action, mentors, userM, ID } = data;
+      if (action === "create" && user && user._id === ID) {
+        !!mentors && dispatch(fetchMentorSuccess(mentors));
+      }else if(action === "update" && user && user._id === ID){
+        !!userM && dispatch(fetchUserSuccess(userM))
+      }
+    });
+  }, [dispatch, user]);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -158,7 +173,7 @@ export const Mentor = ({ navigation }) => {
     }
     const dataToSend = {
       name: mentorNameValue.trim(),
-      email: mentorEmailValue.trim(),
+      email: mentorEmailValue.trim().toLowerCase(),
       user: {
         email: user.email,
         _id: user._id,

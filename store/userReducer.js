@@ -20,7 +20,7 @@ const userSlice = createSlice({
       state.mentorUser = null;
       state.isLoading = false;
     },
-    fetchSuccess: (state, action) => {
+    fetchUserSuccess: (state, action) => {
       state.user = action.payload;
       state.mentorUser = null;
       state.isLoading = false;
@@ -65,7 +65,7 @@ const userSlice = createSlice({
 
 export const {
   fetchStart,
-  fetchSuccess,
+  fetchUserSuccess,
   fetchError,
   fetchSuccessUsers,
   updateUserMentors,
@@ -96,7 +96,7 @@ export const createUser = (data) => {
     http
       .createUser(data)
       .then((response) => {
-        dispatch(fetchSuccess(response.data.user));
+        dispatch(fetchUserSuccess(response.data.user));
       })
       .catch((e) => {
         dispatch(fetchError());
@@ -111,7 +111,7 @@ export const updateUser = (data, id) => {
     http
       .updateUser(data, id)
       .then((response) => {
-        dispatch(fetchSuccess(response.data.user));
+        dispatch(fetchUserSuccess(response.data.user));
       })
       .catch((e) => {
         dispatch(fetchError());
@@ -126,7 +126,7 @@ export const userInfo = (id, data, navigation, where) => {
     let httReq = data ? http.userInfoCalc(id, data) : http.userInfoCalc(id);
     httReq
       .then((response) => {
-        dispatch(fetchSuccess(response.data.user));
+        dispatch(fetchUserSuccess(response.data.user));
         if (navigation) {
           navigation.navigate(where);
         }
@@ -144,7 +144,7 @@ export const userToken = (data, id) => {
     http
       .userNotificationToken(data, id)
       .then((response) => {
-        dispatch(fetchSuccess(response.data.user));
+        dispatch(fetchUserSuccess(response.data.user));
       })
       .catch((e) => {
         dispatch(fetchError());
@@ -190,7 +190,7 @@ export const deleteUser = (id, navigation) => {
       .deleteUser(id)
       .then(() => {
         if (navigation) {
-          dispatch(fetchSuccess(null));
+          dispatch(fetchUserSuccess(null));
           navigation.navigate("login");
         }
       })

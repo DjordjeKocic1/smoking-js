@@ -15,7 +15,7 @@ const mentorSlice = createSlice({
     fetchStart: (state) => {
       state.isMentorLoading = true;
     },
-    fetchSuccess: (state, action) => {
+    fetchMentorSuccess: (state, action) => {
       state.mentor = action.payload;
       state.isMentorLoading = false;
     },
@@ -37,7 +37,7 @@ const mentorSlice = createSlice({
 
 export const {
   fetchStart,
-  fetchSuccess,
+  fetchMentorSuccess,
   fetchError,
   removeMentoringUser,
   createMentorSuccess,
@@ -49,7 +49,7 @@ export const getMentor = (id) => {
     http
       .getMentor(id)
       .then((response) => {
-        dispatch(fetchSuccess(response.data.mentor));
+        dispatch(fetchMentorSuccess(response.data.mentor));
       })
       .catch((e) => {
         dispatch(fetchError());
@@ -94,7 +94,7 @@ export const updateMentor = (data, id) => {
     http
       .updateMentor(data, id)
       .then((response) => {
-        dispatch(fetchSuccess(response.data.mentor));
+        dispatch(fetchMentorSuccess(response.data.mentor));
       })
       .catch((e) => {
         dispatch(fetchError());

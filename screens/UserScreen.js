@@ -16,7 +16,6 @@ import {
   fetchNotificationSuccess,
   getNotification,
 } from "../store/notificationReducer";
-import { fetchTaskSuccess, getTasks } from "../store/taskReducer";
 import { selectUser, userInfo, userToken } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -46,22 +45,19 @@ const UserScreen = ({ navigation }) => {
       setRefreshing(false);
       dispatch(userInfo(user._id));
       dispatch(getNotification(user._id));
-      dispatch(getTasks(user._id));
     }, 2000);
   };
 
   useEffect(() => {
     dispatch(getNotification(user._id));
-    dispatch(getTasks(user._id));
   }, [dispatch, user._id]);
 
   useEffect(() => {
     const socket = openSocket("https://whale-app-hkbku.ondigitalocean.app");
     socket.on("live", (data) => {
-      const { action, notification, task, ID } = data;
+      const { action, notification, ID } = data;
       if (action === "create" && user && user._id === ID) {
         !!notification && dispatch(fetchNotificationSuccess(notification));
-        !!task && dispatch(fetchTaskSuccess(task));
       }
     });
   }, [dispatch, user]);
