@@ -2,7 +2,7 @@
   "expo": {
     "name": "istop",
     "slug": "istop",
-    "version": "2.1.0",
+    "version": "2.1.2",
     "scheme": "istop",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -36,7 +36,7 @@
       "bundleIdentifier": "com.istop.quitsmoking"
     },
     "android": {
-      "versionCode": 9,
+      "versionCode": 10,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
