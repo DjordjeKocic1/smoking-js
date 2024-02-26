@@ -146,13 +146,7 @@ export const Payment = () => {
         </Text>
         <Text style={[styles.paymentText, { marginBottom: 20, fontSize: 13 }]}>
           Try the new mentoring system for 30 days for only{" "}
-          <Text style={{ color: "blue" }}>
-            $
-            {!!user &&
-              !!user.consumptionInfo &&
-              user.consumptionInfo.packCigarettesPrice}
-            .
-          </Text>
+          <Text style={{ color: "blue" }}>$5.</Text>
         </Text>
         <Pressable onPress={paypalHandler} style={styles.paymentPay}>
           {isLoading ? (

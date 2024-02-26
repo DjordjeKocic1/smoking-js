@@ -1,4 +1,5 @@
 import {
+  Alert,
   Dimensions,
   Pressable,
   StyleSheet,
@@ -6,8 +7,8 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { deleteUser, selectUser, updateUser } from "../../store/userReducer";
 import { paymentModalShow, selectPayment } from "../../store/PaymentReducer";
-import { selectUser, updateUser } from "../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
@@ -15,7 +16,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Payment } from "../../components/Payment";
 import { SubmitButton } from "../../components/SubmitButton";
 
-export const PersonalInfo = () => {
+export const PersonalInfo = ({ navigation }) => {
   const { user } = useSelector(selectUser);
   const { isPaymentModalVisible } = useSelector(selectPayment);
   const dispatch = useDispatch();
@@ -80,6 +81,20 @@ export const PersonalInfo = () => {
     };
     dispatch(updateUser(dataTosend, user._id));
     setEditable(false);
+  };
+
+  const removeUser = () => {
+    Alert.alert("Remove Account", "Are you sure you want to remove account?", [
+      {
+        text: "Cancel",
+        onPress: () => null,
+        style: "cancel",
+      },
+      {
+        text: "YES",
+        onPress: () => dispatch(deleteUser(user._id, navigation)),
+      },
+    ]);
   };
 
   return (
@@ -202,6 +217,9 @@ export const PersonalInfo = () => {
           </>
         )}
       </View>
+      <Pressable onPress={removeUser}>
+        <Text style={styles.removeAccText}>Remove Account</Text>
+      </Pressable>
       {editable && (
         <SubmitButton onPress={submittionHandler}>Save Changes</SubmitButton>
       )}
@@ -248,6 +266,12 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     fontWeight: "bold",
     textAlign: "center",
+  },
+  removeAccText: {
+    textAlign: "center",
+    color: "red",
+    marginTop: 10,
+    fontWeight: "bold",
   },
   flex: {
     flexDirection: "row",
