@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const url = "https://whale-app-hkbku.ondigitalocean.app";
+const url = "http://192.168.0.11:8000";
+const liveUrl = "https://whale-app-hkbku.ondigitalocean.app";
 
 const getUsers = () => {
   return axios.get(url + "/users");
@@ -117,8 +118,8 @@ const paymentSheet = (data) => {
   return axios.post(url + "/payment-sheet", data);
 };
 
-const paypalPay = (data) => {
-  return axios.post(url + "/paypal-pay", data);
+const paypalPay = () => {
+  return axios.post(url + "/paypal-pay");
 };
 
 const createEmail = (data) => {

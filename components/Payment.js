@@ -69,13 +69,9 @@ export const Payment = () => {
   };
 
   const paypalHandler = async () => {
-    const cigPrice =
-      !!user &&
-      !!user.consumptionInfo &&
-      user.consumptionInfo.packCigarettesPrice;
     dispatch(paymentLoading(true));
     try {
-      const r = await http.paypalPay({ price: cigPrice });
+      const r = await http.paypalPay();
       addLinkingListener();
       await WebBrowser.openBrowserAsync(r.data.link);
       dispatch(paymentLoading(false));

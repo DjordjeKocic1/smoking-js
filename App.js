@@ -35,7 +35,6 @@ function cacheFonts(fonts) {
 }
 
 export default function App() {
-  // const [fontsLoaded, setFontsLoaded] = useState(false);
   const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {

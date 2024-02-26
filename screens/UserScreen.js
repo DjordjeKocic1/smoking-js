@@ -50,6 +50,7 @@ const UserScreen = ({ navigation }) => {
 
   useEffect(() => {
     dispatch(getNotification(user._id));
+    dispatch(userInfo(user._id));
   }, [dispatch, user._id]);
 
   useEffect(() => {

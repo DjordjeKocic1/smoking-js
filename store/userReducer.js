@@ -140,7 +140,6 @@ export const userInfo = (id, data, navigation, where) => {
 
 export const userToken = (data, id) => {
   return (dispatch) => {
-    dispatch(fetchStart());
     http
       .userNotificationToken(data, id)
       .then((response) => {
