@@ -2,7 +2,7 @@ import axios from "axios";
 
 const liveUrl = "https://whale-app-hkbku.ondigitalocean.app";
 const localUrl = "http://192.168.0.11:8000";
-const url = liveUrl;
+const url = localUrl;
 
 const getUsers = () => {
   return axios.get(url + "/users");

@@ -12,6 +12,7 @@ import { paymentModalShow, selectPayment } from "../../store/PaymentReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontAwesome } from "@expo/vector-icons";
 import { Payment } from "../../components/Payment";
 import { SubmitButton } from "../../components/SubmitButton";
@@ -92,7 +93,11 @@ export const PersonalInfo = ({ navigation }) => {
       },
       {
         text: "YES",
-        onPress: () => dispatch(deleteUser(user._id, navigation)),
+        onPress: () => {
+          AsyncStorage.removeItem("@user").then(() => {
+            dispatch(deleteUser(user._id, navigation));
+          });
+        },
       },
     ]);
   };

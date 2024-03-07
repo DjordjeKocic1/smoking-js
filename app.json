@@ -2,7 +2,7 @@
   "expo": {
     "name": "istop",
     "slug": "istop",
-    "version": "1.0.0",
+    "version": "3.0.0",
     "scheme": "istop",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
