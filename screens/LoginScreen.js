@@ -7,8 +7,10 @@ import {
   Easing,
   Image,
   NativeModules,
+  Pressable,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from "react-native";
 import { createUser, selectUser } from "../store/userReducer";
@@ -17,7 +19,6 @@ import { useEffect, useRef, useState } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Loading } from "../components/Loading";
-import { SubmitButton } from "../components/SubmitButton";
 
 const { UIManager } = NativeModules;
 
@@ -60,11 +61,33 @@ const LoginScreen = ({ navigation }) => {
     return () => {};
   }, [movingAnim]);
 
-  const opetAuthGoogle = async () => {
+  const openAuthGoogle = async () => {
     try {
       addLinkingListener();
       await WebBrowser.openBrowserAsync(
         `https://whale-app-hkbku.ondigitalocean.app/auth/google`
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const openAuthFacebook = async () => {
+    try {
+      addLinkingListener();
+      await WebBrowser.openBrowserAsync(
+        `https://whale-app-hkbku.ondigitalocean.app/auth/facebook`
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const openAuthLogin = async () => {
+    try {
+      addLinkingListener();
+      await WebBrowser.openBrowserAsync(
+        `https://whale-app-hkbku.ondigitalocean.app/account/registration/verification`
       );
     } catch (error) {
       console.log(error);
@@ -78,7 +101,7 @@ const LoginScreen = ({ navigation }) => {
   const handleRedirec = async (event) => {
     if (!event) return;
     let data = Linking.parse(event.url);
-    if (!!data && !!data.queryParams) {
+    if (!!data && !!data.queryParams && !!data.queryParams.email) {
       dispatch(createUser(data.queryParams));
       try {
         await AsyncStorage.setItem("@user", data.queryParams.email);
@@ -113,20 +136,57 @@ const LoginScreen = ({ navigation }) => {
             source={require("../assets/images/i_stop-logo.png")}
           />
         </View>
-        <SubmitButton disabled={submitClick} onPress={() => opetAuthGoogle()}>
-          {!submitClick ? (
-            "SIGN IN WITH GOOGLE"
-          ) : (
-            <View style={styles.loadingContainer}>
-              <Text style={styles.googleLoginText}>Auto Login</Text>
-              <ActivityIndicator
-                style={{ marginTop: 5 }}
-                size="large"
-                color="white"
-              />
+        {!submitClick ? (
+          <View style={{ width: "80%" }}>
+            <View>
+              <Pressable
+                android_ripple={{ color: "white" }}
+                style={[styles.google]}
+                onPress={openAuthFacebook}
+              >
+                <Image
+                  style={{ width: 30, height: 30, marginLeft: 5 }}
+                  source={require("../assets/images/facebook.png")}
+                />
+                <Text style={styles.googleText}>Login with Facebook</Text>
+              </Pressable>
+              <Pressable
+                android_ripple={{ color: "white" }}
+                style={styles.google}
+                onPress={openAuthGoogle}
+              >
+                <Image
+                  style={{ width: 30, height: 30, marginLeft: 5 }}
+                  source={require("../assets/images/google.png")}
+                />
+                <Text style={[styles.googleText]}>Login with Google</Text>
+              </Pressable>
             </View>
-          )}
-        </SubmitButton>
+            <Text style={{ textAlign: "center" }}>OR</Text>
+            <View>
+              <TextInput style={styles.input} placeholder="Email" />
+              <TextInput style={styles.input} placeholder="Password" />
+              <Pressable
+                android_ripple={{ color: "white" }}
+                style={styles.login}
+              >
+                <Text style={[styles.googleText]}>Login</Text>
+              </Pressable>
+            </View>
+            <View style={styles.forgot}>
+              <Text style={styles.passwordText}>Forgot Password?</Text>
+              <Text onPress={openAuthLogin} style={styles.newAcc}>
+                Sign up New Account
+              </Text>
+            </View>
+          </View>
+        ) : (
+          <ActivityIndicator
+            style={{ marginTop: 5 }}
+            size="large"
+            color="white"
+          />
+        )}
       </View>
     </View>
   );
@@ -140,6 +200,47 @@ const styles = StyleSheet.create({
   loadingText: {
     alignItems: "center",
     textAlign: "center",
+  },
+  google: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#222325",
+    marginBottom: 10,
+    borderRadius: 5,
+  },
+  login: {
+    backgroundColor: "#222325",
+    marginTop: 10,
+  },
+  forgot: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
+  },
+  passwordText: {
+    fontWeight: "bold",
+    color: "grey",
+  },
+  newAcc: {
+    fontWeight: "bold",
+    color: "green",
+  },
+  googleText: {
+    marginLeft: 5,
+    fontSize: 16,
+    color: "white",
+    padding: 10,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  input: {
+    height: 45,
+    width: "100%",
+    marginTop: 8,
+    borderWidth: 0.5,
+    borderColor: "black",
+    fontFamily: "HammersmithOne-Bold",
+    padding: 5,
   },
   imageContent: {
     textAlign: "center",

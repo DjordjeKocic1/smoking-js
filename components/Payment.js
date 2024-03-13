@@ -163,10 +163,10 @@ export const Payment = () => {
             />
           )}
         </Pressable>
-        <Text style={[styles.paymentText, { fontSize: 12, marginBottom: 5 }]}>
+        {/* <Text style={[styles.paymentText, { fontSize: 12, marginBottom: 5 }]}>
           or
-        </Text>
-        <StripeProvider
+        </Text> */}
+        {/* <StripeProvider
           publishableKey={publishableKey}
           merchantIdentifier="merchant.identifier" // required for Apple Pay
         >
@@ -199,7 +199,7 @@ export const Payment = () => {
               </>
             )}
           </Pressable>
-        </StripeProvider>
+        </StripeProvider> */}
         <View
           onTouchEnd={() => {
             dispatch(paymentModalShow(false));
