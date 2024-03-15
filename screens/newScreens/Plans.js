@@ -12,9 +12,10 @@ import { getMentor, selectMentor } from "../../store/mentorReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
+import { BackButton } from "../../components/BackButton";
 import { Entypo } from "@expo/vector-icons";
 
-export const Plans = () => {
+export const Plans = ({ navigation }) => {
   const dispatch = useDispatch();
   const { isLoading, user } = useSelector(selectUser);
   const { mentor } = useSelector(selectMentor);
@@ -125,6 +126,7 @@ export const Plans = () => {
       endFillColor="#000"
       overScrollMode="never"
     >
+      <BackButton navigation={navigation} where={"Profile"} />
       <Text style={styles.plansHeaderText}>My Plans</Text>
       {isLoading && (
         <View style={{ alignItems: "center" }}>

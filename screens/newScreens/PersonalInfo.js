@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BackButton } from "../../components/BackButton";
 import { FontAwesome } from "@expo/vector-icons";
 import { Payment } from "../../components/Payment";
 import { SubmitButton } from "../../components/SubmitButton";
@@ -104,6 +105,7 @@ export const PersonalInfo = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <BackButton navigation={navigation} where={"Profile"} />
       <View style={styles.flex}>
         <Text style={styles.headerText}>Personal Info</Text>
         <FontAwesome
@@ -236,9 +238,10 @@ export const PersonalInfo = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: "relative",
     backgroundColor: "#e1d5c9",
     paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingTop: 60,
   },
   inputsContent: {
     width: "100%",

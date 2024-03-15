@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const liveUrl = "https://whale-app-hkbku.ondigitalocean.app";
+const liveUrl = "https://istop.site";
 const localUrl = "http://192.168.0.11:8000";
-const url = localUrl;
+const url = liveUrl;
 
 const getUsers = () => {
   return axios.get(url + "/users");
@@ -14,6 +14,10 @@ const createUser = (data) => {
 
 const updateUser = (data, id) => {
   return axios.put(url + `/update-user/${id}`, data);
+};
+
+const loginUser = (data) => {
+  return axios.post(url + `/user-login`, data);
 };
 
 const userInfoCalc = (id, data) => {
@@ -131,6 +135,7 @@ export const http = {
   getUsers,
   createUser,
   updateUser,
+  loginUser,
   userInfoCalc,
   userNotificationToken,
   deleteUser,

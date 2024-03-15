@@ -59,13 +59,13 @@ export const Mentor = ({ navigation }) => {
   }, [dispatch, user._id]);
 
   useEffect(() => {
-    const socket = openSocket("https://whale-app-hkbku.ondigitalocean.app");
+    const socket = openSocket("https://istop.site");
     socket.on("live", (data) => {
       const { action, mentors, userM, ID } = data;
       if (action === "create" && user && user._id === ID) {
         !!mentors && dispatch(fetchMentorSuccess(mentors));
-      }else if(action === "update" && user && user._id === ID){
-        !!userM && dispatch(fetchUserSuccess(userM))
+      } else if (action === "update" && user && user._id === ID) {
+        !!userM && dispatch(fetchUserSuccess(userM));
       }
     });
   }, [dispatch, user]);

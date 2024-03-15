@@ -1,9 +1,10 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
+import { BackButton } from "../components/BackButton";
 import { selectUser } from "../store/userReducer";
 import { useSelector } from "react-redux";
 
-export const MyData = () => {
+export const MyData = ({ navigation }) => {
   const { user } = useSelector(selectUser);
 
   return (
@@ -13,6 +14,7 @@ export const MyData = () => {
       endFillColor="#000"
       overScrollMode="never"
     >
+      <BackButton navigation={navigation} where={"Profile"} />
       <View style={styles.container}>
         <Text style={styles.headerText}>HEALTH MEASUREMENTS</Text>
         <View style={styles.mesure}>

@@ -11,6 +11,7 @@ import { selectUser, updateUser } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 import { AntDesign } from "@expo/vector-icons";
+import { BackButton } from "../components/BackButton";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
@@ -34,6 +35,7 @@ export const ProfileScreen = ({ navigation }) => {
       endFillColor="#000"
       overScrollMode="never"
     >
+      <BackButton navigation={navigation} where={"UserScreen"} />
       <View style={styles.container}>
         <View style={styles.innerContainer}>
           <View style={styles.headerContainer}>
@@ -238,6 +240,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#e1d5c9",
     paddingHorizontal: 20,
+    paddingTop: 20,
   },
   removeAccContainer: {
     alignItems: "center",

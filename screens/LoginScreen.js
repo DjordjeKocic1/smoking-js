@@ -2,6 +2,12 @@ import * as Linking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
 
 import {
+  AccessToken,
+  GraphRequest,
+  GraphRequestManager,
+  LoginManager,
+} from "react-native-fbsdk";
+import {
   ActivityIndicator,
   Animated,
   Easing,
@@ -13,7 +19,7 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { createUser, selectUser } from "../store/userReducer";
+import { createUser, selectUser, userLogin } from "../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
@@ -32,6 +38,8 @@ const LoginScreen = ({ navigation }) => {
   const movingAnim = useRef(new Animated.Value(-10)).current;
   const { isLoading, user } = useSelector(selectUser);
   const [submitClick, setSubmitClick] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     AsyncStorage.getItem("@user").then((data) => {
@@ -64,34 +72,72 @@ const LoginScreen = ({ navigation }) => {
   const openAuthGoogle = async () => {
     try {
       addLinkingListener();
-      await WebBrowser.openBrowserAsync(
-        `https://whale-app-hkbku.ondigitalocean.app/auth/google`
-      );
+      await WebBrowser.openBrowserAsync(`https://istop.site/auth/google`);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const openAuthFacebook = async () => {
-    try {
-      addLinkingListener();
-      await WebBrowser.openBrowserAsync(
-        `https://whale-app-hkbku.ondigitalocean.app/auth/facebook`
-      );
-    } catch (error) {
-      console.log(error);
-    }
+  const getTokenFacebook = (token) => {
+    const PROFILE_REQUEST_PARAMS = {
+      fields: {
+        string: "id,name,first_name,last_name",
+      },
+    };
+    const profileRequest = new GraphRequest(
+      "/me",
+      { token, parameters: PROFILE_REQUEST_PARAMS },
+      (error, user) => {
+        if (error) {
+          console.log("login info has error: " + error);
+        } else {
+          console.log("result:", user);
+        }
+      }
+    );
+    new GraphRequestManager().addRequest(profileRequest).start();
+  };
+
+  const openAuthFacebook = () => {
+    LoginManager.logInWithPermissions(["public_profile"]).then(
+      (login) => {
+        if (login.isCancelled) {
+          console.log("Login cancelled");
+        } else {
+          AccessToken.getCurrentAccessToken().then((data) => {
+            const accessToken = data.accessToken.toString();
+            getInfoFromToken(accessToken);
+          });
+        }
+      },
+      (error) => {
+        console.log("Login fail with error: " + error);
+      }
+    );
   };
 
   const openAuthLogin = async () => {
     try {
       addLinkingListener();
       await WebBrowser.openBrowserAsync(
-        `https://whale-app-hkbku.ondigitalocean.app/account/registration/verification`
+        `https://istop.site/account/registration/verification`
       );
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const emailChangeHandler = (text) => {
+    setEmail(text);
+  };
+
+  const onPasswordChangeHandler = (text) => {
+    setPassword(text);
+  };
+
+  const onLogin = () => {
+    if (!email || !password) return;
+    dispatch(userLogin({ email, password }));
   };
 
   const addLinkingListener = () => {
@@ -138,7 +184,9 @@ const LoginScreen = ({ navigation }) => {
         </View>
         {!submitClick ? (
           <View style={{ width: "80%" }}>
-            <View>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
               <Pressable
                 android_ripple={{ color: "white" }}
                 style={[styles.google]}
@@ -152,23 +200,43 @@ const LoginScreen = ({ navigation }) => {
               </Pressable>
               <Pressable
                 android_ripple={{ color: "white" }}
-                style={styles.google}
+                style={[styles.google, { backgroundColor: "#f44235" }]}
                 onPress={openAuthGoogle}
               >
-                <Image
-                  style={{ width: 30, height: 30, marginLeft: 5 }}
-                  source={require("../assets/images/google.png")}
-                />
-                <Text style={[styles.googleText]}>Login with Google</Text>
+                <View
+                  style={[
+                    styles.googleImgContainer,
+                    { backgroundColor: "#c52d23" },
+                  ]}
+                >
+                  <Image
+                    style={styles.googleImg}
+                    source={require("../assets/images/googleIcon.png")}
+                  />
+                </View>
+                <Text style={[styles.googleText]}>Google</Text>
               </Pressable>
             </View>
             <Text style={{ textAlign: "center" }}>OR</Text>
             <View>
-              <TextInput style={styles.input} placeholder="Email" />
-              <TextInput style={styles.input} placeholder="Password" />
+              <TextInput
+                inputMode="email"
+                keyboardType="email-address"
+                onChangeText={emailChangeHandler}
+                value={email}
+                style={styles.input}
+                placeholder="Email"
+              />
+              <TextInput
+                onChangeText={onPasswordChangeHandler}
+                value={password}
+                style={styles.input}
+                placeholder="Password"
+              />
               <Pressable
                 android_ripple={{ color: "white" }}
                 style={styles.login}
+                onPress={onLogin}
               >
                 <Text style={[styles.googleText]}>Login</Text>
               </Pressable>
@@ -207,6 +275,27 @@ const styles = StyleSheet.create({
     backgroundColor: "#222325",
     marginBottom: 10,
     borderRadius: 5,
+    width: "48%",
+    overflow: "hidden",
+  },
+  googleImg: {
+    width: 20,
+    height: 20,
+    marginLeft: 5,
+    marginTop: 5,
+  },
+  googleText: {
+    marginLeft: 5,
+    fontSize: 16,
+    color: "white",
+    padding: 10,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  googleImgContainer: {
+    backgroundColor: "#243b68",
+    padding: 5,
+    height: "100%",
   },
   login: {
     backgroundColor: "#222325",
@@ -225,20 +314,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "green",
   },
-  googleText: {
-    marginLeft: 5,
-    fontSize: 16,
-    color: "white",
-    padding: 10,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
+
   input: {
     height: 45,
     width: "100%",
     marginTop: 8,
     borderWidth: 0.5,
-    borderColor: "black",
+    borderColor: "grey",
+    borderRadius: 5,
     fontFamily: "HammersmithOne-Bold",
     padding: 5,
   },

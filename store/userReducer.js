@@ -105,6 +105,21 @@ export const createUser = (data) => {
   };
 };
 
+export const userLogin = (data) => {
+  return (dispatch) => {
+    dispatch(fetchStart());
+    http
+      .loginUser(data)
+      .then((response) => {
+        dispatch(fetchUserSuccess(response.data.user));
+      })
+      .catch((e) => {
+        dispatch(fetchError());
+        dispatch(setError(e.response.data.error));
+      });
+  };
+};
+
 export const updateUser = (data, id) => {
   return (dispatch) => {
     dispatch(fetchStart());

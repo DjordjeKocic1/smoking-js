@@ -26,7 +26,7 @@ export const Achievements = ({ navigation }) => {
 
   return (
     <View style={[styles.mainContainer]}>
-      <BackButton navigation={navigation} where={"UserScreen"} />
+      <BackButton navigation={navigation} where={"Profile"} />
       <View style={{ alignItems: "center" }}>
         <Text style={styles.headerText}>Progress Overview</Text>
         <View style={styles.achievementsEarnContainer}>

@@ -54,7 +54,7 @@ const UserScreen = ({ navigation }) => {
   }, [dispatch, user._id]);
 
   useEffect(() => {
-    const socket = openSocket("https://whale-app-hkbku.ondigitalocean.app");
+    const socket = openSocket("https://istop.site");
     socket.on("live", (data) => {
       const { action, notification, ID } = data;
       if (action === "create" && user && user._id === ID) {

@@ -64,7 +64,7 @@ export const MentorViewScreen = ({ navigation, route }) => {
   }, [dispatch, mentorParam.userId]);
 
   useEffect(() => {
-    const socket = openSocket("https://whale-app-hkbku.ondigitalocean.app");
+    const socket = openSocket("https://istop.site/auth/google");
     socket.on("live", (data) => {
       const { action, task, ID } = data;
       if (action === "create" && user_idParam && user_idParam === ID) {

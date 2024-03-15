@@ -17,11 +17,12 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
+import { BackButton } from "../../components/BackButton";
 import { Loading } from "../../components/Loading";
 import openSocket from "socket.io-client";
 import { selectUser } from "../../store/userReducer";
 
-export const Task = () => {
+export const Task = ({ navigation }) => {
   const dispatch = useDispatch();
   const { task, isLoading } = useSelector(selectTask);
   const { user } = useSelector(selectUser);
@@ -44,7 +45,7 @@ export const Task = () => {
   }, [dispatch, user._id]);
 
   useEffect(() => {
-    const socket = openSocket("https://whale-app-hkbku.ondigitalocean.app");
+    const socket = openSocket("https://istop.site");
     socket.on("live", (data) => {
       const { action, task, ID } = data;
       if (action === "create" && user && user._id === ID) {
@@ -103,6 +104,7 @@ export const Task = () => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
+      <BackButton navigation={navigation} where={"Profile"} />
       <Text style={styles.text}>Tasks</Text>
       <View style={styles.taskContainer}>
         {!!taskNotFin && !!taskNotFin.length ? (

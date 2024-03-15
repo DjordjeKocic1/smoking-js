@@ -11,6 +11,7 @@ import { selectUser, updateUser, userInfo } from "../../store/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
+import { BackButton } from "../../components/BackButton";
 import { FontAwesome } from "@expo/vector-icons";
 
 export const Categories = ({ navigation }) => {
@@ -78,6 +79,7 @@ export const Categories = ({ navigation }) => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
+      <BackButton navigation={navigation} where={"Profile"} />
       <Text style={styles.lifeStyleText}>Your lifestyle categories</Text>
       <View style={[styles.lifeStyle, { marginBottom: 50 }]}>
         {!!user && !!user.categories.length && !!selectedCats.length ? (
