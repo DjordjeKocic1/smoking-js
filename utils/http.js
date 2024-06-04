@@ -1,11 +1,36 @@
-import axios from "axios";
+import axios, { Axios } from "axios";
 
 const liveUrl = "https://istop.site";
-const localUrl = "http://192.168.0.11:8000";
 const url = liveUrl;
 
+class HTTPbase {
+  token = "";
+  setToken(token) {
+    this.token = token;
+  }
+  getToken() {
+    return this.token;
+  }
+  get(path, data) {
+    return axios.get(url + path, data);
+  }
+  post(path, data) {
+    return axios.post(url + path, data);
+  }
+  delete(path, data) {
+    return axios.delete(url + path, data);
+  }
+  put(path, data) {
+    return axios.put(url + path, data);
+  }
+}
+
+export const $http = new HTTPbase();
+
 const getUsers = () => {
-  return axios.get(url + "/users");
+  return axios.get(url + "/users", {
+    headers: { Authorization: $http.getToken() },
+  });
 };
 
 const createUser = (data) => {

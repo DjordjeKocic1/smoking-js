@@ -1,5 +1,6 @@
+import { $http, http } from "../utils/http";
+
 import { createSlice } from "@reduxjs/toolkit";
-import { http } from "../utils/http";
 import { setError } from "./errorReducer";
 import { show } from "./infoReducer";
 
@@ -93,10 +94,11 @@ export const getUsers = () => {
 export const createUser = (data) => {
   return (dispatch) => {
     dispatch(fetchStart());
-    http
-      .createUser(data)
+    $http
+      .post("/create-user", data)
       .then((response) => {
         dispatch(fetchUserSuccess(response.data.user));
+        $http.setToken(response.data.token);
       })
       .catch((e) => {
         dispatch(fetchError());
@@ -112,6 +114,7 @@ export const userLogin = (data) => {
       .loginUser(data)
       .then((response) => {
         dispatch(fetchUserSuccess(response.data.user));
+        $http.setToken(response.data.user.token);
       })
       .catch((e) => {
         dispatch(fetchError());
@@ -119,7 +122,6 @@ export const userLogin = (data) => {
       });
   };
 };
-
 export const updateUser = (data, id) => {
   return (dispatch) => {
     dispatch(fetchStart());

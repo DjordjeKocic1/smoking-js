@@ -38,7 +38,6 @@ const UserScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { user, isLoading } = useSelector(selectUser);
   const [refreshing, setRefreshing] = useState(false);
-
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
@@ -316,7 +315,7 @@ const UserScreen = ({ navigation }) => {
             android_ripple={{ color: "#c39351" }}
             style={styles.innerContainerBox}
           >
-            <Text style={styles.innerText}>Breath Exercies</Text>
+            <Text style={styles.innerText}>Breath Exercises</Text>
             <Image
               source={require("../assets/images/lungsCartoon.png")}
               style={styles.innerContainerImg}

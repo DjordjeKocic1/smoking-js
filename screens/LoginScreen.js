@@ -1,12 +1,7 @@
 import * as Linking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
 
-import {
-  AccessToken,
-  GraphRequest,
-  GraphRequestManager,
-  LoginManager,
-} from "react-native-fbsdk";
+import { AccessToken, LoginManager } from "react-native-fbsdk";
 import {
   ActivityIndicator,
   Animated,
@@ -24,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Entypo } from "@expo/vector-icons";
 import { Loading } from "../components/Loading";
 
 const { UIManager } = NativeModules;
@@ -40,6 +36,7 @@ const LoginScreen = ({ navigation }) => {
   const [submitClick, setSubmitClick] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [secure, setSecure] = useState(true);
 
   useEffect(() => {
     AsyncStorage.getItem("@user").then((data) => {
@@ -76,26 +73,6 @@ const LoginScreen = ({ navigation }) => {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const getTokenFacebook = (token) => {
-    const PROFILE_REQUEST_PARAMS = {
-      fields: {
-        string: "id,name,first_name,last_name",
-      },
-    };
-    const profileRequest = new GraphRequest(
-      "/me",
-      { token, parameters: PROFILE_REQUEST_PARAMS },
-      (error, user) => {
-        if (error) {
-          console.log("login info has error: " + error);
-        } else {
-          console.log("result:", user);
-        }
-      }
-    );
-    new GraphRequestManager().addRequest(profileRequest).start();
   };
 
   const openAuthFacebook = () => {
@@ -187,17 +164,19 @@ const LoginScreen = ({ navigation }) => {
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
-              <Pressable
+              {/* <Pressable
                 android_ripple={{ color: "white" }}
-                style={[styles.google]}
+                style={[styles.google, { backgroundColor: "#385a97" }]}
                 onPress={openAuthFacebook}
               >
-                <Image
-                  style={{ width: 30, height: 30, marginLeft: 5 }}
-                  source={require("../assets/images/facebook.png")}
-                />
-                <Text style={styles.googleText}>Login with Facebook</Text>
-              </Pressable>
+                <View style={[styles.googleImgContainer]}>
+                  <Image
+                    style={styles.googleImg}
+                    source={require("../assets/images/facebook.png")}
+                  />
+                </View>
+                <Text style={styles.googleText}>Facebook</Text>
+              </Pressable> */}
               <Pressable
                 android_ripple={{ color: "white" }}
                 style={[styles.google, { backgroundColor: "#f44235" }]}
@@ -227,12 +206,22 @@ const LoginScreen = ({ navigation }) => {
                 style={styles.input}
                 placeholder="Email"
               />
-              <TextInput
-                onChangeText={onPasswordChangeHandler}
-                value={password}
-                style={styles.input}
-                placeholder="Password"
-              />
+              <View style={{ position: "relative" }}>
+                <TextInput
+                  onChangeText={onPasswordChangeHandler}
+                  value={password}
+                  style={styles.input}
+                  placeholder="Password"
+                  secureTextEntry={secure}
+                />
+                <Entypo
+                  name={secure ? "eye-with-line" : "eye"}
+                  size={20}
+                  color="black"
+                  onPress={() => setSecure(!secure)}
+                  style={{ position: "absolute", right: 10, top: 20 }}
+                />
+              </View>
               <Pressable
                 android_ripple={{ color: "white" }}
                 style={styles.login}
@@ -323,7 +312,7 @@ const styles = StyleSheet.create({
     borderColor: "grey",
     borderRadius: 5,
     fontFamily: "HammersmithOne-Bold",
-    padding: 5,
+    paddingHorizontal: 10,
   },
   imageContent: {
     textAlign: "center",
