@@ -162,7 +162,7 @@ const LoginScreen = ({ navigation }) => {
         {!submitClick ? (
           <View style={{ width: "80%" }}>
             <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
+              style={{ flexDirection: "row", justifyContent: "center" }}
             >
               {/* <Pressable
                 android_ripple={{ color: "white" }}
@@ -264,7 +264,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#222325",
     marginBottom: 10,
     borderRadius: 5,
-    width: "48%",
     overflow: "hidden",
   },
   googleImg: {
